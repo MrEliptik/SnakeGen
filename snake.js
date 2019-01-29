@@ -32,9 +32,9 @@ console.log(getIndexesOf(grid, objects.snake), getIndexesOf(grid, objects.food))
 console.log(getCoordinates(getIndexesOf(grid, objects.snake)), getCoordinates(getIndexesOf(grid, objects.food)))
 
 var coordinates = getCoordinates(getIndexesOf(grid, objects.snake));
-var snake = new component(coordinates[0], coordinates[1], snake_size, "#000000", 0, 0, "snake");
+var snake = new component(coordinates[0], coordinates[1], snake_size, "#000000", "snake");
 coordinates = getCoordinates(getIndexesOf(grid, objects.food));
-var food = new component(coordinates[0], coordinates[1], food_size, "#00FF00", 0, 0, "food");
+var food = new component(coordinates[0], coordinates[1], food_size, "#00FF00", "food");
 
 draw(grid);
 
@@ -42,12 +42,15 @@ function draw(grid) {
     //Clear previous component position to prevent traces
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth);
-    snake.newPos();
-    food.newPos();
-
+    //#TODO: See why food is drawn at the same spot 
+    snake.newPos(1, 2);
     snake.update();
+
+    food.newPos(5, 5);
     food.update();
+
+    // Draw board after to have the edges 
+    drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth);
 
     window.requestAnimationFrame(() => {
         draw(grid)
@@ -72,77 +75,74 @@ function drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth){
     ctx.stroke();
 }
 
-function component(posX, posY, size, color, length_x, length_y, type){
+function component(posX, posY, size, color, type){
     if(type == "snake"){
         this.size   = size;
         this.x      = posX;
         this.y      = posY;
         this.color  = color;
-        this.speedX = 0;
-        this.speedY = 0;
+        this.i = 0;
+        this.j = 0;
     }
     else if(type == "food"){
         this.size   = size;
         this.x      = posX;
         this.y      = posY;
         this.color  = color;
-        this.speedX = 0;
-        this.speedY = 0;
+        this.i = 0;
+        this.j = 0;
     }
     
 
     this.update = function() {
         if(type == "snake"){
             ctx.rect(this.x, this.y, this.size, this.size);
-            ctx.strokeStyle = this.color;
-            ctx.fillStyle = this.color;
+            ctx.strokeStyle     = "black";
+            ctx.fillStyle       = this.color;
             ctx.fill();
         }
         if(type == "food"){
             ctx.rect(this.x, this.y, this.size, this.size);
-            ctx.strokeStyle = this.color;
-            ctx.fillStyle = this.color;
+            ctx.strokeStyle     = "black";
+            ctx.fillStyle       = this.color;
             ctx.fill();
         }
     }
 
-    this.newPos = function() {
-        if(type == "snake"){
-            this.x += this.speedX;
-            this.y += this.speedY;
+    this.newPos = function(x, y) {
+        if(type == "snake" || type == "food"){
+            this.x = x;
+            this.y = y;
             this.hitBottom();
             this.hitTop();
             this.hitRightSide();
             this.hitLeftSide();
         }
     }
-
+    //TODO: Add endgame when hitting
     this.hitBottom = function() {
         var rockbottom = canvasHeight - size;
         if (this.y > rockbottom) {
             this.y = rockbottom;
-            this.speedY *= -1;
+            
         }
     }
     this.hitTop = function(){
         var rocktop = 0 + size;
         if (this.y < rocktop) {
             this.y = rocktop;
-            this.speedY *= -1;
         }
     }
     this.hitLeftSide = function(){
         var rockleftside = 0 + size;
         if (this.x < rockleftside) {
             this.x = rockleftside;
-            this.speedX *= -1;
         }
     }
     this.hitRightSide = function(){
         var rockrightside = canvasWidth - size;
         if (this.x > rockrightside) {
             this.x = rockrightside;
-            this.speedX *= -1;
         }
     }
 }
