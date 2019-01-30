@@ -28,22 +28,20 @@ console.log(rand1, rand2, rand3, rand4);
 grid[rand1][rand2] = objects.snake;
 grid[rand3][rand4] = objects.food;
 
-console.log(getIndexesOf(grid, objects.snake), getIndexesOf(grid, objects.food));
-console.log(getCoordinates(getIndexesOf(grid, objects.snake)), getCoordinates(getIndexesOf(grid, objects.food)))
-
 class Component {
-    constructor(posX, posY, size, color, type) {
+    constructor(i, j, size, color, type) {
         this.size   = size;
-        this.x      = posX;
-        this.y      = posY;
+        this.x      = 0;
+        this.y      = 0;
         this.color  = color;
-        this.i      = 0;
-        this.j      = 0;
+        this.i      = i;
+        this.j      = j;
     }
 
     // Adding a method to the constructor
     update() {
-        ctx.rect(this.x, this.y, this.size, this.size);
+        var coordinates = getCoordinates(getIndexesOf(grid, objects.snake));
+        ctx.rect(coordinates[0], coordinates[1], this.size, this.size);
         ctx.strokeStyle     = "black";
         ctx.fillStyle       = this.color;
         ctx.fill();
@@ -84,11 +82,8 @@ class Component {
     }
 }
 
-var coordinates = getCoordinates(getIndexesOf(grid, objects.snake));
-//var snake = new component(coordinates[0], coordinates[1], snake_size, "#000000", "snake");
-var snake = new Component(coordinates[0], coordinates[1], snake_size, "#000000", "snake");
-coordinates = getCoordinates(getIndexesOf(grid, objects.food));
-var food = new Component(coordinates[0], coordinates[1], food_size, "#00FF00", "food");
+var snake = new Component(rand1, rand2, snake_size, "#000000", "snake");
+var food = new Component(rand3, rand4, food_size, "#00FF00", "food");
 
 draw(grid);
 
