@@ -31,10 +31,64 @@ grid[rand3][rand4] = objects.food;
 console.log(getIndexesOf(grid, objects.snake), getIndexesOf(grid, objects.food));
 console.log(getCoordinates(getIndexesOf(grid, objects.snake)), getCoordinates(getIndexesOf(grid, objects.food)))
 
+class Component {
+    constructor(posX, posY, size, color, type) {
+        this.size   = size;
+        this.x      = posX;
+        this.y      = posY;
+        this.color  = color;
+        this.i      = 0;
+        this.j      = 0;
+    }
+
+    // Adding a method to the constructor
+    update() {
+        ctx.rect(this.x, this.y, this.size, this.size);
+        ctx.strokeStyle     = "black";
+        ctx.fillStyle       = this.color;
+        ctx.fill();
+    }
+
+    newPos() {
+        this.x = x;
+        this.y = y;
+        this.hitBottom();
+        this.hitTop();
+        this.hitRightSide();
+        this.hitLeftSide();
+    }
+
+    hitBottom() {
+        var rockbottom = canvasHeight - this.size;
+        if (this.y > rockbottom) {
+            this.y = rockbottom;     
+        }
+    }
+    hitTop (){
+        var rocktop = 0 + this.size;
+        if (this.y < rocktop) {
+            this.y = rocktop;
+        }
+    }
+    hitLeftSide(){
+        var rockleftside = 0 + this.size;
+        if (this.x < rockleftside) {
+            this.x = rockleftside;
+        }
+    }
+    hitRightSide(){
+        var rockrightside = canvasWidth - this.size;
+        if (this.x > rockrightside) {
+            this.x = rockrightside;
+        }
+    }
+}
+
 var coordinates = getCoordinates(getIndexesOf(grid, objects.snake));
-var snake = new component(coordinates[0], coordinates[1], snake_size, "#000000", "snake");
+//var snake = new component(coordinates[0], coordinates[1], snake_size, "#000000", "snake");
+var snake = new Component(coordinates[0], coordinates[1], snake_size, "#000000", "snake");
 coordinates = getCoordinates(getIndexesOf(grid, objects.food));
-var food = new component(coordinates[0], coordinates[1], food_size, "#00FF00", "food");
+var food = new Component(coordinates[0], coordinates[1], food_size, "#00FF00", "food");
 
 draw(grid);
 
@@ -43,10 +97,10 @@ function draw(grid) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     //#TODO: See why food is drawn at the same spot 
-    snake.newPos(1, 2);
+    //snake.newPos(1, 2);
     snake.update();
 
-    food.newPos(5, 5);
+    //food.newPos(5, 5);
     food.update();
 
     // Draw board after to have the edges 
@@ -73,78 +127,6 @@ function drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth){
 
     ctx.strokeStyle = "black";
     ctx.stroke();
-}
-
-function component(posX, posY, size, color, type){
-    if(type == "snake"){
-        this.size   = size;
-        this.x      = posX;
-        this.y      = posY;
-        this.color  = color;
-        this.i = 0;
-        this.j = 0;
-    }
-    else if(type == "food"){
-        this.size   = size;
-        this.x      = posX;
-        this.y      = posY;
-        this.color  = color;
-        this.i = 0;
-        this.j = 0;
-    }
-    
-
-    this.update = function() {
-        if(type == "snake"){
-            ctx.rect(this.x, this.y, this.size, this.size);
-            ctx.strokeStyle     = "black";
-            ctx.fillStyle       = this.color;
-            ctx.fill();
-        }
-        if(type == "food"){
-            ctx.rect(this.x, this.y, this.size, this.size);
-            ctx.strokeStyle     = "black";
-            ctx.fillStyle       = this.color;
-            ctx.fill();
-        }
-    }
-
-    this.newPos = function(x, y) {
-        if(type == "snake" || type == "food"){
-            this.x = x;
-            this.y = y;
-            this.hitBottom();
-            this.hitTop();
-            this.hitRightSide();
-            this.hitLeftSide();
-        }
-    }
-    //TODO: Add endgame when hitting
-    this.hitBottom = function() {
-        var rockbottom = canvasHeight - size;
-        if (this.y > rockbottom) {
-            this.y = rockbottom;
-            
-        }
-    }
-    this.hitTop = function(){
-        var rocktop = 0 + size;
-        if (this.y < rocktop) {
-            this.y = rocktop;
-        }
-    }
-    this.hitLeftSide = function(){
-        var rockleftside = 0 + size;
-        if (this.x < rockleftside) {
-            this.x = rockleftside;
-        }
-    }
-    this.hitRightSide = function(){
-        var rockrightside = canvasWidth - size;
-        if (this.x > rockrightside) {
-            this.x = rockrightside;
-        }
-    }
 }
 
 function getCoordinates(index){
