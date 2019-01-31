@@ -24,9 +24,10 @@ var rand2 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
 var rand3 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
 var rand4 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
 
-console.log(rand1, rand2, rand3, rand4);
 grid[rand1][rand2] = objects.snake;
 grid[rand3][rand4] = objects.food;
+
+
 
 class Component {
     constructor(i, j, size, color, type) {
@@ -37,6 +38,9 @@ class Component {
         this.i      = i;
         this.j      = j;
         this.type   = type;
+        if(type == 'snake'){
+            this.length = 1;
+        }
     }
 
     // Adding a method to the constructor
@@ -55,45 +59,64 @@ class Component {
         ctx.fill();
     }
 
-    newPos() {
-        this.x = x;
-        this.y = y;
-        this.hitBottom();
-        this.hitTop();
-        this.hitRightSide();
-        this.hitLeftSide();
+    newPos(direction) {
+
+        if(direction == "up"){
+            this.j -= 1;
+        }
+        else if(direction == "left"){
+            this.i -= 1;
+        }
+        else if(direction == "right"){
+            this.i += 1;
+        }
+        else if(direction == "down"){
+            this.j += 1;
+        }
+
+        if(this.hitBox()){
+            this.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+            this.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+        }
+
+        this.hitFood();
+
+        var idxs = getIndexesOf(grid, objects.snake);
+        grid[idxs[0]][idxs[1]] = 0;
+        grid[this.i][this.j] = objects.snake;
+
+        
     }
 
-    hitBottom() {
-        var rockbottom = canvasHeight - this.size;
-        if (this.y > rockbottom) {
-            this.y = rockbottom;     
+    hitBox() {
+        if(typeof grid[this.i] === 'undefined' || typeof grid[this.j] === 'undefined') {
+            console.log("you died!")
+            return true;
+        }
+        else{
+            return false
         }
     }
-    hitTop (){
-        var rocktop = 0 + this.size;
-        if (this.y < rocktop) {
-            this.y = rocktop;
-        }
-    }
-    hitLeftSide(){
-        var rockleftside = 0 + this.size;
-        if (this.x < rockleftside) {
-            this.x = rockleftside;
-        }
-    }
-    hitRightSide(){
-        var rockrightside = canvasWidth - this.size;
-        if (this.x > rockrightside) {
-            this.x = rockrightside;
+
+    hitFood(){
+        if(grid[this.i][this.j] == objects.food){
+            var idxs = getIndexesOf(grid, objects.food);
+            grid[idxs[0]][idxs[1]] = 0;
+
+            /*TODO: Use newPos() , for that overload the method to 
+                accept indexes and not only direction 
+            */
+            food.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+            food.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+            grid[food.i][food.j] = objects.food;
+            this.length += 1;
+            console.log("Snake length: " + this.length);
         }
     }
 }
 
 var snake = new Component(rand1, rand2, snake_size, "#000000", "snake");
 var food = new Component(rand3, rand4, food_size, "#00FF00", "food");
-
-draw(grid);
 
 function draw(grid) {
     //Clear previous component position to prevent traces
@@ -152,3 +175,23 @@ function getIndexesOf(arr, val){
 
     return idxs;
 }
+
+
+document.addEventListener('keyup', (event) => {
+    const key = event.keyCode;
+
+    if (key == '38') {
+        snake.newPos("up");
+    }
+    else if (key == '40') {
+        snake.newPos("down");
+    }
+    else if (key == '37') {
+        snake.newPos("left");
+    }
+    else if (key == '39') {
+        snake.newPos("right");
+    }
+}, false);
+
+draw(grid);
