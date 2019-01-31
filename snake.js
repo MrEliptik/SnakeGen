@@ -36,11 +36,19 @@ class Component {
         this.color  = color;
         this.i      = i;
         this.j      = j;
+        this.type   = type;
     }
 
     // Adding a method to the constructor
     update() {
-        var coordinates = getCoordinates(getIndexesOf(grid, objects.snake));
+        var coordinates = null;
+        if(this.type == 'snake'){
+            coordinates = getCoordinates(getIndexesOf(grid, objects.snake));
+        }
+        else if(this.type == 'food'){
+            coordinates = getCoordinates(getIndexesOf(grid, objects.food));
+        }
+        
         ctx.rect(coordinates[0], coordinates[1], this.size, this.size);
         ctx.strokeStyle     = "black";
         ctx.fillStyle       = this.color;
@@ -90,8 +98,7 @@ draw(grid);
 function draw(grid) {
     //Clear previous component position to prevent traces
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    //#TODO: See why food is drawn at the same spot 
+ 
     //snake.newPos(1, 2);
     snake.update();
 
