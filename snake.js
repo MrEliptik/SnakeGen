@@ -40,6 +40,7 @@ class Component {
         this.type   = type;
         if(type == 'snake'){
             this.length = 1;
+            this.body = [[i,j]];
         }
     }
 
@@ -47,16 +48,41 @@ class Component {
     update() {
         var coordinates = null;
         if(this.type == 'snake'){
+
+            for( var i=0; i < this.length; i++){
+              coordinates = getCoordinates(this.body[i]);
+              ctx.rect(coordinates[0], coordinates[1], this.size, this.size);
+            }
+
+            ctx.fill();
             coordinates = getCoordinates(getIndexesOf(grid, objects.snake));
         }
         else if(this.type == 'food'){
             coordinates = getCoordinates(getIndexesOf(grid, objects.food));
         }
-        
+
         ctx.rect(coordinates[0], coordinates[1], this.size, this.size);
+
         ctx.strokeStyle     = "black";
         ctx.fillStyle       = this.color;
+
         ctx.fill();
+    }
+
+    updateBody() {
+      if(this.type == 'snake'){
+        if(this.body[this.length-1][0]!=this.i || this.body[this.length-1][1]!=this.j) {
+
+          var tamp1 = this.body[this.length-1];
+          var tamp2 = 0;
+          for(var i=this.length-2; i>=0; i--) {
+            tamp2 = this.body[i];
+            this.body[i] = tamp1;
+            tamp1 = tamp2;
+          }
+          this.body[this.length-1] = [this.i, this.j];
+        }
+      }
     }
 
     newPos(direction) {
@@ -74,9 +100,12 @@ class Component {
             this.j += 1;
         }
 
-        if(this.hitBox()){
+        if(this.hitBox() || this.hitBody()){
+            // re-initialization of the snake object
             this.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             this.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+            this.length = 1;
+            this.body = [[this.i,this.j]];
         }
 
         this.hitFood();
@@ -85,7 +114,7 @@ class Component {
         grid[idxs[0]][idxs[1]] = 0;
         grid[this.i][this.j] = objects.snake;
 
-        
+
     }
 
     hitBox() {
@@ -103,15 +132,28 @@ class Component {
             var idxs = getIndexesOf(grid, objects.food);
             grid[idxs[0]][idxs[1]] = 0;
 
-            /*TODO: Use newPos() , for that overload the method to 
-                accept indexes and not only direction 
+            /*TODO: Use newPos() , for that overload the method to
+                accept indexes and not only direction
             */
             food.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             food.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             grid[food.i][food.j] = objects.food;
+
+            // Update the length of the body
             this.length += 1;
+            this.body.push([this.i, this.j]);
             console.log("Snake length: " + this.length);
         }
+    }
+
+    hitBody(){
+      for(var i=0; i < this.length-1; i++){
+        if( this.body[i][0] == this.i && this.body[i][1] == this.j){
+          console.log("You are eating yourself !!!");
+          return true;
+        }
+      }
+      return false;
     }
 }
 
@@ -119,16 +161,18 @@ var snake = new Component(rand1, rand2, snake_size, "#000000", "snake");
 var food = new Component(rand3, rand4, food_size, "#00FF00", "food");
 
 function draw(grid) {
+
     //Clear previous component position to prevent traces
     ctx.clearRect(0, 0, canvas.width, canvas.height);
- 
+
     //snake.newPos(1, 2);
+    snake.updateBody();
     snake.update();
 
     //food.newPos(5, 5);
     food.update();
 
-    // Draw board after to have the edges 
+    // Draw board after to have the edges
     drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth);
 
     window.requestAnimationFrame(() => {
