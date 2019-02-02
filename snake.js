@@ -19,15 +19,77 @@ const objects       = {}
 objects.food        = 2
 objects.snake       = 1
 
-var rand1 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-var rand2 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-var rand3 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-var rand4 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+class Grid{
+    constructor(gridRows, gridColumns, snake_idxs, food_idxs) {
+        // 2D array initialized with -1
+        this.grid = Array.from(Array(gridRows), _ => Array(gridColumns).fill(-1));
 
-grid[rand1][rand2] = objects.snake;
-grid[rand3][rand4] = objects.food;
+        this.grid[snake_idxs[0]][snake_idxs[1]] = objects.snake;
+        this.grid[food_idxs[0]][food_idxs[1]] = objects.food;
+    }
 
+    update(idxs, value){
 
+    }
+
+    draw(){
+        //Clear previous component position to prevent traces
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+        //snake.newPos(1, 2);
+        snake.update();
+
+        //food.newPos(5, 5);
+        food.update();
+
+        // Draw board after to have the edges 
+        this.drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth);
+
+        window.requestAnimationFrame(() => {
+            this.draw(this.grid)
+        });
+        frameCounter++;
+    }   
+
+    drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth){
+        ctx.beginPath();
+    
+        for(var i = 0; i <= gridRows; i++){
+            ctx.moveTo(0, (canvasHeight/gridRows)*i);
+            ctx.lineTo(canvasWidth, (canvasHeight/gridRows)*i);
+        }
+    
+        for(var i = 0; i <= gridColumns; i++){
+            ctx.moveTo((canvasWidth/gridColumns)*i, 0);
+            ctx.lineTo((canvasWidth/gridColumns)*i, canvasHeight);
+        }
+    
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+    }
+
+    getCoordinates(index){
+        var x = index[0] * (canvasWidth/gridRows);
+        var y = index[1] * (canvasHeight/gridColumns);
+    
+        return [x,y]
+    }
+    
+    getIndexesOf(val){
+        var idxs   = [-1, -1];
+    
+        for(var i = 0; i < this.grid.length; i++){
+            for(var j = 0; j < this.grid[i].length; j++){
+                if(this.grid[i][j] == val){
+                    idxs = [i,j];
+                    break;
+                }
+            }
+        }
+    
+        return idxs;
+    }
+}
 
 class Component {
     constructor(i, j, size, color, type) {
@@ -43,22 +105,21 @@ class Component {
         }
     }
 
-    // Adding a method to the constructor
+    // Update grid visualization
     update() {
         var coordinates = null;
         if(this.type == 'snake'){
-            coordinates = getCoordinates(getIndexesOf(grid, objects.snake));
+            coordinates = grid1.getCoordinates(grid1.getIndexesOf(objects.snake));
         }
         else if(this.type == 'food'){
-            coordinates = getCoordinates(getIndexesOf(grid, objects.food));
+            coordinates = grid1.getCoordinates(grid1.getIndexesOf(objects.food));
         }
-        
-        ctx.rect(coordinates[0], coordinates[1], this.size, this.size);
         ctx.strokeStyle     = "black";
         ctx.fillStyle       = this.color;
-        ctx.fill();
+        ctx.fillRect(coordinates[0], coordinates[1], this.size, this.size);
     }
 
+    // Define new position of object
     newPos(direction) {
 
         if(direction == "up"){
@@ -75,21 +136,23 @@ class Component {
         }
 
         if(this.hitBox()){
+            this.length = 1;
             this.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             this.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
         }
 
         this.hitFood();
 
-        var idxs = getIndexesOf(grid, objects.snake);
-        grid[idxs[0]][idxs[1]] = 0;
-        grid[this.i][this.j] = objects.snake;
+        var idxs = grid1.getIndexesOf(objects.snake);
+        grid1.grid[idxs[0]][idxs[1]] = 0;
+        grid1.grid[this.i][this.j] = objects.snake;
 
         
     }
 
+    // Check if object is going out of boundaries
     hitBox() {
-        if(typeof grid[this.i] === 'undefined' || typeof grid[this.j] === 'undefined') {
+        if(typeof grid1.grid[this.i] === 'undefined' || typeof grid1.grid[this.j] === 'undefined') {
             console.log("you died!")
             return true;
         }
@@ -98,84 +161,31 @@ class Component {
         }
     }
 
+    // Check if object hits food cell
     hitFood(){
-        if(grid[this.i][this.j] == objects.food){
-            var idxs = getIndexesOf(grid, objects.food);
-            grid[idxs[0]][idxs[1]] = 0;
+        if(grid1.grid[this.i][this.j] == objects.food){
+            var idxs = grid1.getIndexesOf(objects.food);
+            grid1.grid[idxs[0]][idxs[1]] = 0;
 
             /*TODO: Use newPos() , for that overload the method to 
                 accept indexes and not only direction 
             */
             food.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             food.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-            grid[food.i][food.j] = objects.food;
+            grid1.grid[food.i][food.j] = objects.food;
             this.length += 1;
             console.log("Snake length: " + this.length);
         }
     }
 }
 
+var rand1 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+var rand2 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+var rand3 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+var rand4 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+
 var snake = new Component(rand1, rand2, snake_size, "#000000", "snake");
 var food = new Component(rand3, rand4, food_size, "#00FF00", "food");
-
-function draw(grid) {
-    //Clear previous component position to prevent traces
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
- 
-    //snake.newPos(1, 2);
-    snake.update();
-
-    //food.newPos(5, 5);
-    food.update();
-
-    // Draw board after to have the edges 
-    drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth);
-
-    window.requestAnimationFrame(() => {
-        draw(grid)
-    });
-    frameCounter++;
-}
-
-function drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth){
-    ctx.beginPath();
-
-    for(var i = 0; i <= gridRows; i++){
-        ctx.moveTo(0, (canvasHeight/gridRows)*i);
-        ctx.lineTo(canvasWidth, (canvasHeight/gridRows)*i);
-    }
-
-    for(var i = 0; i <= gridColumns; i++){
-        ctx.moveTo((canvasWidth/gridColumns)*i, 0);
-        ctx.lineTo((canvasWidth/gridColumns)*i, canvasHeight);
-    }
-
-    ctx.strokeStyle = "black";
-    ctx.stroke();
-}
-
-function getCoordinates(index){
-    x = index[0] * (canvasWidth/gridRows);
-    y = index[1] * (canvasHeight/gridColumns);
-
-    return [x,y]
-}
-
-function getIndexesOf(arr, val){
-    var idxs   = [-1, -1];
-
-    for(var i = 0; i < arr.length; i++){
-        for(var j = 0; j < arr[i].length; j++){
-            if(arr[i][j] == val){
-                idxs = [i,j];
-                break;
-            }
-        }
-    }
-
-    return idxs;
-}
-
 
 document.addEventListener('keyup', (event) => {
     const key = event.keyCode;
@@ -194,4 +204,6 @@ document.addEventListener('keyup', (event) => {
     }
 }, false);
 
-draw(grid);
+
+grid1 = new Grid(gridRows, gridColumns, [rand1, rand2], [rand3, rand4]);
+grid1.draw()
