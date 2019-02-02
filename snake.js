@@ -1,6 +1,9 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
+var coinImage = new Image();
+coinImage.src = "sources/sprites.png";
+
 var frameCounter    = 0;
 
 const canvasWidth   = 600;
@@ -113,8 +116,6 @@ class Component {
         var idxs = getIndexesOf(grid, objects.snake);
         grid[idxs[0]][idxs[1]] = 0;
         grid[this.i][this.j] = objects.snake;
-
-
     }
 
     hitBox() {
