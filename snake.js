@@ -1,3 +1,20 @@
+document.addEventListener('keyup', (event) => {
+    const key = event.keyCode;
+
+    if (key == '38') {
+        snake.newPos("up");
+    }
+    else if (key == '40') {
+        snake.newPos("down");
+    }
+    else if (key == '37') {
+        snake.newPos("left");
+    }
+    else if (key == '39') {
+        snake.newPos("right");
+    }
+}, false);
+
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
@@ -16,8 +33,9 @@ const snake_size    = canvasWidth / gridRows;
 const food_size     = snake_size;
 
 const objects       = {}
-objects.food        = 2
+objects.food        = 3
 objects.snake       = 1
+objects.snake_tail  = 2 
 
 class Grid{
     constructor(gridRows, gridColumns, snake_idxs, food_idxs) {
@@ -28,8 +46,9 @@ class Grid{
         this.grid[food_idxs[0]][food_idxs[1]] = objects.food;
     }
 
+    //TODO : Use that instead of directly modifying the grid from other classes
     update(idxs, value){
-
+        this.grid[idxs[0]][idxs[1]] = value;
     }
 
     draw(){
@@ -76,13 +95,18 @@ class Grid{
     }
     
     getIndexesOf(val){
-        var idxs   = [-1, -1];
+        var idxs   = [];
     
         for(var i = 0; i < this.grid.length; i++){
             for(var j = 0; j < this.grid[i].length; j++){
                 if(this.grid[i][j] == val){
-                    idxs = [i,j];
-                    break;
+                    if(val == objects.snake_tail){
+                        idxs.push([i,j])
+                    }
+                    else{
+                        idxs = [i,j];
+                        break;
+                    }      
                 }
             }
         }
@@ -102,20 +126,27 @@ class Component {
         this.type   = type;
         if(type == 'snake'){
             this.length = 1;
+            this.tail   = [];
         }
     }
 
     // Update grid visualization
     update() {
         var coordinates = null;
+
+        ctx.strokeStyle     = "black";
+        ctx.fillStyle       = this.color;    
+
         if(this.type == 'snake'){
             coordinates = grid1.getCoordinates(grid1.getIndexesOf(objects.snake));
+            grid1.getIndexesOf(objects.snake_tail).forEach((entry) => {
+                tail_coor = grid1.getCoordinates(entry);
+                ctx.fillRect(tail_coor[0], tail_coor[1], this.size, this.size);
+            });
         }
         else if(this.type == 'food'){
             coordinates = grid1.getCoordinates(grid1.getIndexesOf(objects.food));
-        }
-        ctx.strokeStyle     = "black";
-        ctx.fillStyle       = this.color;
+        }    
         ctx.fillRect(coordinates[0], coordinates[1], this.size, this.size);
     }
 
@@ -135,7 +166,7 @@ class Component {
             this.j += 1;
         }
 
-        if(this.hitBox()){
+        if(this.hitBoundaries()){
             this.length = 1;
             this.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             this.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
@@ -143,15 +174,25 @@ class Component {
 
         this.hitFood();
 
+        // TODO: Fix logic for tail
         var idxs = grid1.getIndexesOf(objects.snake);
+        // Update the tail
+        for(var i = this.length; i >= 0; i--){
+            // Take old head position
+            if(i == 0){
+                this.tail[0] = idxs;
+            }
+            //Propagate the path along the tail
+            else{
+                this.tail[i] = this.tail[i-1];
+            }
+        }
         grid1.grid[idxs[0]][idxs[1]] = 0;
-        grid1.grid[this.i][this.j] = objects.snake;
-
-        
+        grid1.grid[this.i][this.j] = objects.snake;      
     }
 
     // Check if object is going out of boundaries
-    hitBox() {
+    hitBoundaries() {
         if(typeof grid1.grid[this.i] === 'undefined' || typeof grid1.grid[this.j] === 'undefined') {
             console.log("you died!")
             return true;
@@ -170,40 +211,28 @@ class Component {
             /*TODO: Use newPos() , for that overload the method to 
                 accept indexes and not only direction 
             */
+
+            // New random position for food
             food.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             food.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             grid1.grid[food.i][food.j] = objects.food;
+
+            // Snake grows
             this.length += 1;
+            this.tail.push = [this.i, this.j];
             console.log("Snake length: " + this.length);
         }
     }
 }
 
-var rand1 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-var rand2 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-var rand3 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-var rand4 = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+var snake_x = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+var snake_y = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+var food_x = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+var food_y = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
 
-var snake = new Component(rand1, rand2, snake_size, "#000000", "snake");
-var food = new Component(rand3, rand4, food_size, "#00FF00", "food");
-
-document.addEventListener('keyup', (event) => {
-    const key = event.keyCode;
-
-    if (key == '38') {
-        snake.newPos("up");
-    }
-    else if (key == '40') {
-        snake.newPos("down");
-    }
-    else if (key == '37') {
-        snake.newPos("left");
-    }
-    else if (key == '39') {
-        snake.newPos("right");
-    }
-}, false);
+var snake = new Component(snake_x, snake_y, snake_size, "#000000", "snake");
+var food = new Component(food_x, food_y, food_size, "#00FF00", "food");
 
 
-grid1 = new Grid(gridRows, gridColumns, [rand1, rand2], [rand3, rand4]);
+grid1 = new Grid(gridRows, gridColumns, [snake_x, snake_y], [food_x, food_y]);
 grid1.draw()
