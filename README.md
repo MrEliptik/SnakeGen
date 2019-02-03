@@ -1,2 +1,2 @@
 # SnakeGen
-Generative algorithm on snake
+Genetic algorithm on snake
