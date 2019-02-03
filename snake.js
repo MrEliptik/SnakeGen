@@ -29,21 +29,22 @@ const canvasHeight  = 600;
 const gridRows      = 12;
 const gridColumns   = 12;
 
-// -1:nothing, 1:snake, 2:food
-var grid            = Array.from(Array(gridRows), _ => Array(gridColumns).fill(-1));
-
-const snake_size    = canvasWidth / gridRows;
-const food_size     = snake_size;
-
 const objects       = {}
 objects.food        = 3
 objects.snake       = 1
 objects.snake_tail  = 2
+objects.empty       = -1
+
+//var grid            = Array.from(Array(gridRows), _ => Array(gridColumns).fill(objects.empty));
+
+const snake_size    = canvasWidth / gridRows;
+const food_size     = snake_size;
+
 
 class Grid{
     constructor(gridRows, gridColumns, snake_idxs, food_idxs) {
         // 2D array initialized with -1
-        this.grid = Array.from(Array(gridRows), _ => Array(gridColumns).fill(-1));
+        this.grid = Array.from(Array(gridRows), _ => Array(gridColumns).fill(objects.empty));
 
         this.grid[snake_idxs[0]][snake_idxs[1]] = objects.snake;
         this.grid[food_idxs[0]][food_idxs[1]] = objects.food;
@@ -193,7 +194,7 @@ class Component {
             this.tail[0] = idxs;
         }
 
-        grid1.grid[idxs[0]][idxs[1]] = 0;
+        grid1.grid[idxs[0]][idxs[1]] = objects.empty;
         grid1.grid[this.i][this.j] = objects.snake;
     }
 
@@ -228,15 +229,22 @@ class Component {
     hitFood(){
         if(grid1.grid[this.i][this.j] == objects.food){
             var idxs = grid1.getIndexesOf(objects.food);
-            grid1.grid[idxs[0]][idxs[1]] = 0;
+            grid1.grid[idxs[0]][idxs[1]] = objects.empty;
 
             /*TODO: Use newPos() , for that overload the method to
                 accept indexes and not only direction
             */
 
             // New random position for food
-            food.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-            food.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+            // Make sure food is not on an occupied cell
+            var i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+            var j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+            while(grid1.grid[i][j] != objects.empty){
+                i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+                j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+            }
+            food.i = i;
+            food.j = j;
             grid1.grid[food.i][food.j] = objects.food;
 
             // Snake grows
@@ -261,14 +269,23 @@ class Component {
     }
 }
 
+
+
+
 var snake_x = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
 var snake_y = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+
+// Make sure food is not on an occupied cell
 var food_x = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
 var food_y = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+while(snake_x == food_x && snake_y == food_y){
+    food_x = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+    food_y = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
+}
 
 var snake = new Component(snake_x, snake_y, snake_size, "#000000", "snake");
 var food = new Component(food_x, food_y, food_size, "#00FF00", "food");
 
-
 grid1 = new Grid(gridRows, gridColumns, [snake_x, snake_y], [food_x, food_y]);
+
 grid1.draw()
