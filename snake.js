@@ -172,7 +172,7 @@ class Component {
             this.j += 1;
         }
 
-        if(this.hitBoundaries()){
+        if(this.hitBoundaries() || this.hitBody()){
             this.length = 1;
             this.tail = [];
             this.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
@@ -181,10 +181,9 @@ class Component {
 
         this.hitFood();
 
-        // TODO: Fix logic for tail
+        // Update the tail
         var idxs = grid1.getIndexesOf(objects.snake);
 
-        // Update the tail
         if( this.length > 1){
           for(var i = this.length-2; i > 0; i--){
               //Propagate the path along the tail
@@ -247,11 +246,15 @@ class Component {
         }
     }
 
+    // Check if the snake is touching is own body
     hitBody(){
+      // Check the entire queue except the last item (will move)
       for(var i=0; i < this.length-1; i++){
-        if( this.body[i][0] == this.i && this.body[i][1] == this.j){
-          console.log("You are eating yourself !!!");
-          return true;
+        if( this.tail[i][0] == this.i && this.tail[i][1] == this.j){
+          if( i != (this.length-2) || this.length == 2){
+            console.log("You are eating yourself !!!");
+            return true;
+          }
         }
       }
       return false;
