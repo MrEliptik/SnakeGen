@@ -12,11 +12,14 @@ class Game{
     this.grid = Array.from(Array(gridRows), _ => Array(gridColumns).fill(objects.empty));
 
     // Parameters of the draw grid
+    // number of cells
     this.gridRows = gridRows;
     this.gridColumns = gridColumns;
+    // in pixel
     this.size = size;
     this.canvasHeight = canvasHeight;
     this.canvasWidth = canvasWidth;
+    // Object containing the canvas
     this.canvasCtx = canvasCtx;
 
     // Creation of the components
@@ -24,7 +27,7 @@ class Game{
     this.nb_fruits = nb_fruits;
   }
 
-  drawGrid( canvasHeight, canvasWidth){
+  drawGrid(){
       this.canvasCtx.beginPath();
 
       for(var i = 0; i <= this.gridRows; i++){
@@ -32,7 +35,7 @@ class Game{
           this.canvasCtx.lineTo(this.canvasWidth, (this.canvasHeight/this.gridRows)*i);
       }
 
-      for(var i = 0; i <= gridColumns; i++){
+      for(var i = 0; i <= this.gridColumns; i++){
           this.canvasCtx.moveTo((this.canvasWidth/this.gridColumns)*i, 0);
           this.canvasCtx.lineTo((this.canvasWidth/this.gridColumns)*i, this.canvasHeight);
       }
@@ -41,8 +44,11 @@ class Game{
       this.canvasCtx.stroke();
   }
 
-  plot(){
-    return "aaaaaa"
+  getCoordinates(index){
+      var x = index[0] * (this.canvasWidth/this.gridRows);
+      var y = index[1] * (this.canvasHeight/this.gridColumns);
+
+      return [x,y];
   }
 };
 

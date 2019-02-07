@@ -74,30 +74,6 @@ class Grid{
         frameCounter++;
     }
 
-    drawBoard(gridRows, gridColumns, canvasHeight, canvasWidth){
-        ctx.beginPath();
-
-        for(var i = 0; i <= gridRows; i++){
-            ctx.moveTo(0, (canvasHeight/gridRows)*i);
-            ctx.lineTo(canvasWidth, (canvasHeight/gridRows)*i);
-        }
-
-        for(var i = 0; i <= gridColumns; i++){
-            ctx.moveTo((canvasWidth/gridColumns)*i, 0);
-            ctx.lineTo((canvasWidth/gridColumns)*i, canvasHeight);
-        }
-
-        ctx.strokeStyle = "black";
-        ctx.stroke();
-    }
-
-    getCoordinates(index){
-        var x = index[0] * (canvasWidth/gridRows);
-        var y = index[1] * (canvasHeight/gridColumns);
-
-        return [x,y]
-    }
-
     getIndexesOf(val){
         var idxs   = [];
 
