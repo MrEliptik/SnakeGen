@@ -1,3 +1,9 @@
+const objects       = {}
+objects.food        = 3
+objects.snake       = 1
+objects.snake_tail  = 2
+objects.empty       = -1
+
 class Game{
   constructor( gridRows, gridColumns, size, canvasHeight, canvasWidth, canvasCtx, nb_snakes, nb_fruits, mode) {
 
@@ -36,8 +42,10 @@ class Game{
   }
 
   plot(){
-    console.log("aaaaaa")
+    return "aaaaaa"
   }
 };
 
-module.exports = Game;
+module.exports = {
+  Game: Game
+};
