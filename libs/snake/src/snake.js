@@ -28,7 +28,6 @@ class Snake extends lib.Component{
 
       // Check if the snake can moove in this position
       var impossiblePos = this.tail[0];
-      console.log(newPos + " VS " + impossiblePos);
       if( this.length<2 || (this.length>1 && (impossiblePos[0] != newPos[0] || impossiblePos[1] != newPos[1]))){
 
         // Update the tail
@@ -46,11 +45,14 @@ class Snake extends lib.Component{
       return false;
     }
 
+    // Increase the length of the snake
     grow(){
       this.length++;
       this.tail.push(this.pos);
     }
 
+    // Return true if the position given in parameter is one element of
+    // the tail array
     isOnTail( posToTest){
       for( var x=0; x < this.length-1; x++){
         var posToCheck = this.tail[x];

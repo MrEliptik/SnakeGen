@@ -50,6 +50,14 @@ class Game{
     this.snakes = [new libSnake.Snake( [snake_x, snake_y], colorSnake, null)];
   }
 
+  // Returns the coordinates in pixel of the cell with the index given in parameter
+  getCoordinates(index){
+    var x = index[0] * (this.canvasWidth/this.gridRows);
+    var y = index[1] * (this.canvasHeight/this.gridColumns);
+
+    return [x,y];
+  }
+
   // Draw the grid layout
   drawGrid(){
       this.canvasCtx.beginPath();
@@ -70,8 +78,6 @@ class Game{
 
   // Draw the game at every state
   draw(){
-
-      console.log("draw");
 
       //Clear previous component position to prevent traces
       this.canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
@@ -114,91 +120,12 @@ class Game{
       this.drawGrid();
   }
 
-  update( index, direction){
-
-      // move the snake
-      if( this.snakes[0].move( direction)){
-
-        console.log("New position : " + this.snakes[0].getPos());
-
-        // f true -> Reset the Snake
-        if( this.hitBoundaries( this.snakes[0]) || this.hitBody( 0, this.snakes[0])){
-
-          // Make sure food is not on an occupied cell
-          var snake_x = Math.floor(Math.random() * ((this.gridColumns-1) - 0 + 1)) + 0;
-          var snake_y = Math.floor(Math.random() * ((this.gridRows-1) - 0 + 1)) + 0;
-          while( [snake_x, snake_y] == this.fruits[0].getPos()){
-            snake_x = Math.floor(Math.random() * ((this.gridColumns-1) - 0 + 1)) + 0;
-            snake_y = Math.floor(Math.random() * ((this.gridRows-1) - 0 + 1)) + 0;
-          }
-
-          this.snakes[0] = new libSnake.Snake( [snake_x, snake_y], colorSnake, null);
-
-        }else {
-
-          var hitIndex = this.hitFruit( this.snakes[0]);
-
-          // != -1 -> Snake grows & reset the fruit
-          if( hitIndex != -1){
-
-            console.log("hit! : " + hitIndex);
-
-            var findGoodPos = false;
-            var fruit_x;
-            var fruit_y;
-
-            // Make sure fruit is not on an occupied cell
-            while( findGoodPos == false){
-
-              fruit_x = Math.floor(Math.random() * ((this.gridColumns-1) - 0 + 1)) + 0;
-              fruit_y = Math.floor(Math.random() * ((this.gridRows-1) - 0 + 1)) + 0;
-
-              findGoodPos = true;
-
-              // Check fruits
-              for(var j=0; j < this.nb_fruits; j++){
-                var posToCheck = this.fruits[j].pos;
-                if(fruit_x == posToCheck[0] && fruit_y == posToCheck[1] ){
-                  findGoodPos = false;
-                  break;
-                }
-              }
-
-              if( findGoodPos){
-                // Check snakes
-                for( var j=0; j < this.nb_snakes; j++){
-                  posToCheck = this.snakes[j].getPos();
-                  if(fruit_x == posToCheck[0] && fruit_y == posToCheck[1] ){
-                    findGoodPos = false;
-                    break;
-                  }
-                  // Check the tail
-                  if( this.snakes[j].isOnTail( [fruit_x, fruit_y])){
-                    findGoodPos = false;
-                    break;
-                  }
-                }
-              }
-            }
-
-            // Reset the fruit
-            this.fruits[hitIndex] = new libFruit.Fruit( [fruit_x, fruit_y], colorFruit  , null);
-            // Update the snake
-            this.snakes[0].grow();
-          }
-        }
-
-        this.draw();
-      }
-  }
-
   // Checks if the snake object is going out of boundaries
   hitBoundaries( snakeToTest) {
 
       var posToTest = snakeToTest.getPos();
 
       if(typeof this.grid[posToTest[0]] === 'undefined' || typeof this.grid[posToTest[1]] === 'undefined') {
-          console.log("you died!")
           return true;
       }
       else{
@@ -224,6 +151,7 @@ class Game{
     return -1;
   }
 
+  // Check if the snake hits another boy or his own body
   hitBody( index, snakeToTest){
 
     var posToTest = snakeToTest.getPos();
@@ -243,12 +171,104 @@ class Game{
     }
   }
 
-  // Returns the coordinates in pixel of the cell with the index given in parameter
-  getCoordinates(index){
-      var x = index[0] * (this.canvasWidth/this.gridRows);
-      var y = index[1] * (this.canvasHeight/this.gridColumns);
+  // Reset the snake with the index given in parameter
+  resetSnake( index){
 
-      return [x,y];
+    var newPos = this.findNewPosition();
+
+    // Reset the snake
+    this.snakes[ index] = new libSnake.Snake( newPos, colorSnake, null);
+  }
+
+  // Reset the fruit with the index given in parameter
+  resetFruit( index){
+
+    var newPos = this.findNewPosition();
+
+    // Reset the snake
+    this.fruits[ index] = new libFruit.Fruit( newPos, colorFruit, null);
+  }
+
+  // Find coordinates for a new component
+  // Make sure the component is not on an occupied cell
+  findNewPosition() {
+
+    var findGoodPos = false;
+
+    while( findGoodPos == false){
+
+      findGoodPos = true;
+
+      // Make sure food is not on an occupied cell
+      var new_x = Math.floor(Math.random() * ((this.gridColumns-1) - 0 + 1)) + 0;
+      var new_y = Math.floor(Math.random() * ((this.gridRows-1) - 0 + 1)) + 0;
+
+      // Check fruits
+      for(var j=0; j < this.nb_fruits; j++){
+        var posToCheck = this.fruits[j].pos;
+        if(new_x == posToCheck[0] && new_y == posToCheck[1] ){
+          findGoodPos = false;
+          break;
+        }
+      }
+
+      if( findGoodPos){
+        // Check snakes
+        for( var j=0; j < this.nb_snakes; j++){
+          posToCheck = this.snakes[j].getPos();
+          if(new_x == posToCheck[0] && new_y == posToCheck[1] ){
+            findGoodPos = false;
+            break;
+          }
+          // Check the tail
+          if( this.snakes[j].isOnTail( [new_x, new_y])){
+            findGoodPos = false;
+            break;
+          }
+        }
+      }
+    }
+
+    return [new_x, new_y];
+  }
+
+  // Update the entire game by moving one snake
+  update( index, direction){
+
+    console.log("Direction : " + direction);
+
+    // move the snake
+    if( this.snakes[0].move( direction)){
+
+      console.log("New position : " + this.snakes[0].getPos());
+
+      // f true -> Reset the Snake
+      if( this.hitBoundaries( this.snakes[0]) || this.hitBody( 0, this.snakes[0])){
+
+        console.log("You died!")
+
+        // Reset the dead   snake
+        this.resetSnake(0);
+
+      }else {
+
+        var hitIndex = this.hitFruit( this.snakes[0]);
+
+        // != -1 -> Snake grows & reset the fruit
+        if( hitIndex != -1){
+
+          // Reset the fruit eaten
+          this.resetFruit(0);
+
+          // Update the snake
+          this.snakes[0].grow();
+
+          console.log("Fruit eaten, length : " + this.snakes[0].length);
+        }
+      }
+
+      this.draw();
+    }
   }
 };
 
