@@ -9,7 +9,7 @@ document.addEventListener('keyup', (event) => {
     const key = event.keyCode;
 
     if (key == '38') {
-        game.update( 0, "up");
+        console.log(game.update( 0, "up"));
     }
     else if (key == '40') {
         game.update( 0, "down");
@@ -22,5 +22,4 @@ document.addEventListener('keyup', (event) => {
     }
 }, false);
 
-// test
-game.draw()
+game.draw();

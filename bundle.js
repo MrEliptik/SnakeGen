@@ -85,6 +85,14 @@ class Game{
     this.snakes = [new libSnake.Snake( [snake_x, snake_y], colorSnake, null)];
   }
 
+  // Returns the coordinates in pixel of the cell with the index given in parameter
+  getCoordinates(index){
+    var x = index[0] * (this.canvasWidth/this.gridRows);
+    var y = index[1] * (this.canvasHeight/this.gridColumns);
+
+    return [x,y];
+  }
+
   // Draw the grid layout
   drawGrid(){
       this.canvasCtx.beginPath();
@@ -145,44 +153,6 @@ class Game{
 
       // Draw board after to have the edges
       this.drawGrid();
-  }
-
-  update( index, direction){
-
-    console.log("Direction : " + direction);
-
-    // move the snake
-    if( this.snakes[0].move( direction)){
-
-      console.log("New position : " + this.snakes[0].getPos());
-
-      // f true -> Reset the Snake
-      if( this.hitBoundaries( this.snakes[0]) || this.hitBody( 0, this.snakes[0])){
-
-        console.log("You died!")
-
-        // Reset the dead   snake
-        this.resetSnake(0);
-
-      }else {
-
-        var hitIndex = this.hitFruit( this.snakes[0]);
-
-        // != -1 -> Snake grows & reset the fruit
-        if( hitIndex != -1){
-
-          // Reset the fruit eaten
-          this.resetFruit(0);
-
-          // Update the snake
-          this.snakes[0].grow();
-
-          console.log("Fruit eaten, length : " + this.snakes[0].length);
-        }
-      }
-
-      this.draw();
-    }
   }
 
   // Checks if the snake object is going out of boundaries
@@ -256,7 +226,7 @@ class Game{
 
   // Find coordinates for a new component
   // Make sure the component is not on an occupied cell
-  findNewPosition() {
+  findNewPosition(){
 
     var findGoodPos = false;
 
@@ -297,12 +267,71 @@ class Game{
     return [new_x, new_y];
   }
 
-  // Returns the coordinates in pixel of the cell with the index given in parameter
-  getCoordinates(index){
-      var x = index[0] * (this.canvasWidth/this.gridRows);
-      var y = index[1] * (this.canvasHeight/this.gridColumns);
+  upgradeGrid(){
 
-      return [x,y];
+    // Creation of the grid
+    // 2D array initialized with -1
+    this.grid = Array.from(Array(this.gridRows), _ => Array(this.gridColumns).fill(objects.empty));
+
+    for(var i=0; i<this.nb_snakes; i++){
+
+      // Update the grid with the tails positions
+      for(var j=0; j<this.snakes[i].length-1; j++){
+        pos = this.snakes[i].tail[j];
+        this.grid[pos[0]][pos[1]] = objects.snake_tail;
+      }
+
+      // Update the grid with the snakes positions
+      var pos = this.snakes[i].getPos();
+      this.grid[pos[0]][pos[1]] = objects.snake;
+    }
+
+    // Update the grid with the fruits positions
+    for(var i=0; i<this.nb_fruits; i++){
+      var pos = this.fruits[i].getPos();
+      this.grid[pos[0]][pos[1]] = objects.food;
+    }
+  }
+
+  // Update the entire game by moving one snake
+  update( index, direction){
+
+    console.log("Direction : " + direction);
+
+    // move the snake
+    if( this.snakes[0].move( direction)){
+
+      console.log("New position : " + this.snakes[0].getPos());
+
+      // f true -> Reset the Snake
+      if( this.hitBoundaries( this.snakes[0]) || this.hitBody( 0, this.snakes[0])){
+
+        console.log("You died!")
+
+        // Reset the dead   snake
+        this.resetSnake(0);
+
+      }else {
+
+        var hitIndex = this.hitFruit( this.snakes[0]);
+
+        // != -1 -> Snake grows & reset the fruit
+        if( hitIndex != -1){
+
+          // Reset the fruit eaten
+          this.resetFruit(0);
+
+          // Update the snake
+          this.snakes[0].grow();
+
+          console.log("Fruit eaten, length : " + this.snakes[0].length);
+        }
+      }
+
+      this.draw();
+      this.upgradeGrid();
+      return this.grid;
+    }
   }
 };
 
@@ -359,11 +388,14 @@ class Snake extends lib.Component{
       return false;
     }
 
+    // Increase the length of the snake
     grow(){
       this.length++;
       this.tail.push(this.pos);
     }
 
+    // Return true if the position given in parameter is one element of
+    // the tail array
     isOnTail( posToTest){
       for( var x=0; x < this.length-1; x++){
         var posToCheck = this.tail[x];
@@ -392,7 +424,7 @@ document.addEventListener('keyup', (event) => {
     const key = event.keyCode;
 
     if (key == '38') {
-        game.update( 0, "up");
+        console.log(game.update( 0, "up"));
     }
     else if (key == '40') {
         game.update( 0, "down");
@@ -404,8 +436,5 @@ document.addEventListener('keyup', (event) => {
         game.update( 0, "right");
     }
 }, false);
-
-// test
-game.draw()
 
 },{"./libs/snake/src/Game.js":3}]},{},[5]);

@@ -191,7 +191,7 @@ class Game{
 
   // Find coordinates for a new component
   // Make sure the component is not on an occupied cell
-  findNewPosition() {
+  findNewPosition(){
 
     var findGoodPos = false;
 
@@ -232,6 +232,32 @@ class Game{
     return [new_x, new_y];
   }
 
+  // Update the grid by placing the components on it
+  upgradeGrid(){
+
+    // Creation of the grid : 2D array initialized with -1
+    this.grid = Array.from(Array(this.gridRows), _ => Array(this.gridColumns).fill(objects.empty));
+
+    for(var i=0; i<this.nb_snakes; i++){
+
+      // Update the grid with the tails positions
+      for(var j=0; j<this.snakes[i].length-1; j++){
+        pos = this.snakes[i].tail[j];
+        this.grid[pos[0]][pos[1]] = objects.snake_tail;
+      }
+
+      // Update the grid with the snakes positions
+      var pos = this.snakes[i].getPos();
+      this.grid[pos[0]][pos[1]] = objects.snake;
+    }
+
+    // Update the grid with the fruits positions
+    for(var i=0; i<this.nb_fruits; i++){
+      var pos = this.fruits[i].getPos();
+      this.grid[pos[0]][pos[1]] = objects.food;
+    }
+  }
+
   // Update the entire game by moving one snake
   update( index, direction){
 
@@ -267,7 +293,12 @@ class Game{
         }
       }
 
+      // Draw the game
       this.draw();
+
+      // Update and return the grid
+      this.upgradeGrid();
+      return this.grid;
     }
   }
 };
