@@ -154,22 +154,6 @@ class Component {
         grid1.grid[this.i][this.j] = objects.snake;
     }
 
-    updateBody() {
-      if(this.type == 'snake'){
-        if(this.body[this.length-1][0]!=this.i || this.body[this.length-1][1]!=this.j) {
-
-          var tamp1 = this.body[this.length-1];
-          var tamp2 = 0;
-          for(var i=this.length-2; i>=0; i--) {
-            tamp2 = this.body[i];
-            this.body[i] = tamp1;
-            tamp1 = tamp2;
-          }
-          this.body[this.length-1] = [this.i, this.j];
-        }
-      }
-    }
-
     // Check if object is going out of boundaries
     hitBoundaries() {
         if(typeof grid1.grid[this.i] === 'undefined' || typeof grid1.grid[this.j] === 'undefined') {

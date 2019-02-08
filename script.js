@@ -10,19 +10,15 @@ document.addEventListener('keyup', (event) => {
 
     if (key == '38') {
         game.update( 0, "up");
-        console.log("up");
     }
     else if (key == '40') {
         game.update( 0, "down");
-        console.log("down");
     }
     else if (key == '37') {
         game.update( 0, "left");
-        console.log("left");
     }
     else if (key == '39') {
         game.update( 0, "right");
-        console.log("right");
     }
 }, false);
 
