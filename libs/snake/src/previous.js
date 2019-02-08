@@ -135,63 +135,6 @@ class Component {
             this.i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
             this.j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
         }
-
-        this.hitFood();
-
-        // Update the tail
-        var idxs = grid1.getIndexesOf(objects.snake);
-
-        if( this.length > 1){
-          for(var i = this.length-2; i > 0; i--){
-              //Propagate the path along the tail
-              this.tail[i] = this.tail[i-1];
-          }
-            // Take head position
-            this.tail[0] = idxs;
-        }
-
-        grid1.grid[idxs[0]][idxs[1]] = objects.empty;
-        grid1.grid[this.i][this.j] = objects.snake;
-    }
-
-    // Check if object is going out of boundaries
-    hitBoundaries() {
-        if(typeof grid1.grid[this.i] === 'undefined' || typeof grid1.grid[this.j] === 'undefined') {
-            console.log("you died!")
-            return true;
-        }
-        else{
-            return false
-        }
-    }
-
-    // Check if object hits food cell
-    hitFood(){
-        if(grid1.grid[this.i][this.j] == objects.food){
-            var idxs = grid1.getIndexesOf(objects.food);
-            grid1.grid[idxs[0]][idxs[1]] = objects.empty;
-
-            /*TODO: Use newPos() , for that overload the method to
-                accept indexes and not only direction
-            */
-
-            // New random position for food
-            // Make sure food is not on an occupied cell
-            var i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-            var j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-            while(grid1.grid[i][j] != objects.empty){
-                i = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-                j = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
-            }
-            food.i = i;
-            food.j = j;
-            grid1.grid[food.i][food.j] = objects.food;
-
-            // Snake grows
-            this.length += 1;
-            this.tail.push([this.i, this.j]);
-            console.log("Snake length: " + this.length);
-        }
     }
 
     // Check if the snake is touching is own body

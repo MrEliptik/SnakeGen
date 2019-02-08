@@ -50,6 +50,16 @@ class Snake extends lib.Component{
       this.length++;
       this.tail.push(this.pos);
     }
+
+    isOnTail( posToTest){
+      for( var x=0; x < this.length-1; x++){
+        var posToCheck = this.tail[x];
+        if( posToTest[0] == posToCheck[0] && posToTest[1] == posToCheck[1]){
+          return true;
+        }
+      }
+      return false;
+    }
 };
 
 // Exportation of the class Fruit

@@ -119,10 +119,10 @@ class Game{
       // move the snake
       if( this.snakes[0].move( direction)){
 
-        console.log(this.snakes[0].getPos());
+        console.log("New position : " + this.snakes[0].getPos());
 
         // f true -> Reset the Snake
-        if( this.hitBoundaries( this.snakes[0])){
+        if( this.hitBoundaries( this.snakes[0]) || this.hitBody( 0, this.snakes[0])){
 
           // Make sure food is not on an occupied cell
           var snake_x = Math.floor(Math.random() * ((this.gridColumns-1) - 0 + 1)) + 0;
@@ -148,7 +148,7 @@ class Game{
             var fruit_y;
 
             // Make sure fruit is not on an occupied cell
-            while( !findGoodPos){
+            while( findGoodPos == false){
 
               fruit_x = Math.floor(Math.random() * ((this.gridColumns-1) - 0 + 1)) + 0;
               fruit_y = Math.floor(Math.random() * ((this.gridRows-1) - 0 + 1)) + 0;
@@ -157,22 +157,25 @@ class Game{
 
               // Check fruits
               for(var j=0; j < this.nb_fruits; j++){
-                if([fruit_x, fruit_y] == this.fruits[j].getPos()){
+                var posToCheck = this.fruits[j].pos;
+                if(fruit_x == posToCheck[0] && fruit_y == posToCheck[1] ){
                   findGoodPos = false;
-                  continue;
+                  break;
                 }
               }
 
-              // Check snakes
-              for( var j=0; j < this.nb_snakes; j++){
-                if([fruit_x, fruit_y] == this.snakes[j].getPos()){
-                  findGoodPos = false;
-                  continue;
-                }
-                for( var x=0; x < this.snakes[j].length-1; x++){
-                  if([fruit_x, fruit_y] == this.snakes[j].tail[x]){
+              if( findGoodPos){
+                // Check snakes
+                for( var j=0; j < this.nb_snakes; j++){
+                  posToCheck = this.snakes[j].getPos();
+                  if(fruit_x == posToCheck[0] && fruit_y == posToCheck[1] ){
                     findGoodPos = false;
-                    continue;
+                    break;
+                  }
+                  // Check the tail
+                  if( this.snakes[j].isOnTail( [fruit_x, fruit_y])){
+                    findGoodPos = false;
+                    break;
                   }
                 }
               }
@@ -219,6 +222,25 @@ class Game{
 
     // The snake did not hit a fruit
     return -1;
+  }
+
+  hitBody( index, snakeToTest){
+
+    var posToTest = snakeToTest.getPos();
+
+    for(var i=0; i < this.nb_snakes; i++){
+
+      if( i != index){
+        var currentPos = this.snakes[i].getPos();
+        if( posToTest[0] == currentPos[0] && posToTest[1] == currentPos[1]) {
+          return true;
+        }
+      }
+
+      if( this.snakes[i].isOnTail( posToTest)){
+        return true;
+      }
+    }
   }
 
   // Returns the coordinates in pixel of the cell with the index given in parameter
