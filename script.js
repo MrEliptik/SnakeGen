@@ -2,6 +2,21 @@
 var lib = require('./libs/snake/src/Game.js');
 
 var canvas = document.getElementById("canvas");
+
+class Sprite{
+  constructor(){
+
+  }
+
+  render(){
+    var coinImage = new Image();
+    coinImage.src = "./libs/snake/ressources/sprites.png";
+     document.getElementById("canvas").getContext("2d").drawImage( coinImage, 0, 0, 500, 500, 0, 0, 100, 100);
+  }
+};
+
+var sprite = new Sprite ();
+
 var game = new lib.Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, 1)
 
 // Add an event listener from the keyboard
@@ -22,4 +37,6 @@ document.addEventListener('keyup', (event) => {
     }
 }, false);
 
-game.draw();
+//game.draw();
+
+sprite.render();
