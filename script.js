@@ -3,28 +3,16 @@ var lib = require('./libs/snake/src/Game.js');
 
 var canvas = document.getElementById("canvas");
 
-class Sprite{
-  constructor(){
+var game = new lib.Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF") // default mode
 
-  }
-
-  render(){
-    var coinImage = new Image();
-    coinImage.src = "./libs/snake/ressources/sprites.png";
-     document.getElementById("canvas").getContext("2d").drawImage( coinImage, 0, 0, 500, 500, 0, 0, 100, 100);
-  }
-};
-
-var sprite = new Sprite ();
-
-var game = new lib.Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, 1)
+//var game = new lib.Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "SP") // sprite mode [BROKEN]
 
 // Add an event listener from the keyboard
 document.addEventListener('keyup', (event) => {
     const key = event.keyCode;
 
     if (key == '38') {
-        console.log(game.update( 0, "up"));
+        game.update( 0, "up");
     }
     else if (key == '40') {
         game.update( 0, "down");
@@ -37,6 +25,4 @@ document.addEventListener('keyup', (event) => {
     }
 }, false);
 
-//game.draw();
-
-sprite.render();
+game.draw();

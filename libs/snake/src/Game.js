@@ -1,6 +1,7 @@
 // Include the modules from lib/snake
 var libFruit = require('./Fruit.js');
 var libSnake = require('./Snake.js');
+var libSprite = require('./Sprites.js');
 
 const objects       = {}
 objects.food        = 3
@@ -45,9 +46,46 @@ class Game{
       snake_y = Math.floor(Math.random() * ((gridRows-1) - 0 + 1)) + 0;
     }
 
+    if( mode=="SP") {
+      // mode using sprites
+      var spriteSnake = [libSprite.Sprite({
+                          context: this.canvasCtx,
+                          sX: 0,
+                          sY: 500,
+                          sWidth: 500,
+                          sHeight: 500,
+                          dX: 0,
+                          dY: 0,
+                          dWidth: 50,
+                          dHeight: 50}),
+                        libSprite.Sprite({
+                          context: this.canvasCtx,
+                          sX: 500,
+                          sY: 500,
+                          sWidth: 500,
+                          sHeight: 500,
+                          dX: 0,
+                          dY: 0,
+                          dWidth: 50,
+                          dHeight: 50})];
+       var spriteFruit = libSprite.Sprite({
+                          context: this.canvasCtx,
+                          sX: 0,
+                          sY: 0,
+                          sWidth: 500,
+                          sHeight: 500,
+                          dX: 0,
+                          dY: 0,
+                          dWidth: 50,
+                          dHeight: 50});
+    }else { // DF mode or default mode
+      var spriteSnake = null;
+      var spriteFruit = null;
+    }
+
     // Components of the game
-    this.fruits = [new libFruit.Fruit( [fruit_x, fruit_y], colorFruit, null)];
-    this.snakes = [new libSnake.Snake( [snake_x, snake_y], colorSnake, null)];
+    this.fruits = [new libFruit.Fruit( [fruit_x, fruit_y], colorFruit, spriteFruit)];
+    this.snakes = [new libSnake.Snake( [snake_x, snake_y], colorSnake, spriteSnake)];
   }
 
   // Returns the coordinates in pixel of the cell with the index given in parameter
@@ -89,30 +127,76 @@ class Game{
 
       // Draw the fruits
       for(var i=0; i<this.nb_fruits; i++){
-        // get the color
-        this.canvasCtx.fillStyle = this.fruits[i].color;
-        // get the coordinates
-        var coord = this.getCoordinates(this.fruits[i].getPos());
-        // draw the color
-        this.canvasCtx.fillRect(coord[0], coord[1], this.size, this.size);
+
+        if( this.fruits[i].sprite==null) {
+          // mode without sprites
+
+          // get the color
+          this.canvasCtx.fillStyle = this.fruits[i].color;
+          // get the coordinates
+          var coord = this.getCoordinates(this.fruits[i].getPos());
+          // draw the color
+          this.canvasCtx.fillRect(coord[0], coord[1], this.size, this.size);
+
+        }else {
+          // mode with sprites
+
+          // get the coordinates
+          var coord = this.getCoordinates(this.fruits[i].getPos());
+          this.fruits[i].sprite.setPos( coord[0], coord[1]);
+          // draw the sprite
+          this.fruits[i].sprite.render();
+        }
       }
 
       //this.canvasCtx.fill()
 
       // Draw the snake
       for(var i=0; i<this.nb_snakes; i++){
-        // get the color
-        this.canvasCtx.fillStyle = this.snakes[i].color;
-        // get the coordinates$log
-        var coord = this.getCoordinates(this.snakes[i].getPos());
-        // draw the color
-        this.canvasCtx.fillRect(coord[0], coord[1], this.size, this.size);
-        // draw the tail
-        for(var j=0; j < this.snakes[i].length-1; j++){
+
+        if( this.fruits[i].sprite==null) {
+          // mode without sprites
+
+          // get the color
+          this.canvasCtx.fillStyle = this.snakes[i].color;
           // get the coordinates
-          coord = this.getCoordinates(this.snakes[i].tail[j]);
+          var coord = this.getCoordinates(this.snakes[i].getPos());
           // draw the color
           this.canvasCtx.fillRect(coord[0], coord[1], this.size, this.size);
+        }else {
+          // mode with sprites
+
+          // get the coordinates
+          var coord = this.getCoordinates(this.snakes[i].getPos());
+          this.snakes[i].sprite[0].setPos( coord[0], coord[1]);
+          // draw the sprite
+          this.snakes[i].sprite[0].render();
+        }
+
+        // Test for the sprite drawing
+        var spiteToDraw = [this.snakes[i].length-1];
+
+        // draw the tail
+        for(var j=0; j < this.snakes[i].length-1; j++){
+          if( this.fruits[i].sprite==null) {
+            // mode without sprites
+
+            // get the color
+            this.canvasCtx.fillStyle = this.snakes[i].color;
+            // get the coordinates
+            coord = this.getCoordinates(this.snakes[i].tail[j]);
+            // draw the color
+            this.canvasCtx.fillRect(coord[0], coord[1], this.size, this.size);
+          }else {
+            // mode with sprites
+
+            // get the coordinates
+            coord = this.getCoordinates(this.snakes[i].tail[j]);
+            spiteToDraw[j] = this.snakes[i].sprite[1];
+            spiteToDraw[j].setPos( coord[0], coord[1]);
+            // draw the sprite
+            spiteToDraw[j].render();
+          }
         }
       }
 
@@ -177,7 +261,7 @@ class Game{
     var newPos = this.findNewPosition();
 
     // Reset the snake
-    this.snakes[ index] = new libSnake.Snake( newPos, colorSnake, null);
+    this.snakes[ index] = new libSnake.Snake( newPos, colorSnake, this.snakes[ index].sprite);
   }
 
   // Reset the fruit with the index given in parameter
@@ -186,7 +270,7 @@ class Game{
     var newPos = this.findNewPosition();
 
     // Reset the snake
-    this.fruits[ index] = new libFruit.Fruit( newPos, colorFruit, null);
+    this.fruits[ index] = new libFruit.Fruit( newPos, colorFruit, this.fruits[ index].sprite);
   }
 
   // Find coordinates for a new component
