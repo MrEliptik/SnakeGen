@@ -83,6 +83,10 @@ class Game{
     this.snakes = [new Snake( [snake_x, snake_y], colorSnake, spriteSnake)];
   }
 
+  getSnakesPosition(){
+    return this.snakes[0].pos;
+  }
+
   // Returns the coordinates in pixel of the cell with the index given in parameter
   getCoordinates(index){
     var x = index[0] * (this.canvasWidth/this.gridRows);
