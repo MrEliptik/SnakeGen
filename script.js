@@ -1,11 +1,8 @@
-// Include the modules from lib/snake
-var lib = require('./libs/snake/src/Game.js');
-
 var canvas = document.getElementById("canvas");
 
-var game = new lib.Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF") // default mode
+var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF") // default mode
 
-//var game = new lib.Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "SP") // sprite mode [BROKEN]
+//var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "SP") // sprite mode [BROKEN]
 
 // Add an event listener from the keyboard
 document.addEventListener('keyup', (event) => {

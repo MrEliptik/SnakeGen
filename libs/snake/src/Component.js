@@ -10,8 +10,3 @@ class Component {
       return this.pos;
     }
 };
-
-// Exportation of the class Component
-module.exports = {
-  Component: Component
-};

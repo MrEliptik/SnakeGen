@@ -1,8 +1,3 @@
-// Include the modules from lib/snake
-var libFruit = require('./Fruit.js');
-var libSnake = require('./Snake.js');
-var libSprite = require('./Sprites.js');
-
 const objects       = {}
 objects.food        = 3
 objects.snake       = 1
@@ -48,7 +43,7 @@ class Game{
 
     if( mode=="SP") {
       // mode using sprites
-      var spriteSnake = [libSprite.Sprite({
+      var spriteSnake = [Sprite({
                           context: this.canvasCtx,
                           sX: 0,
                           sY: 500,
@@ -58,7 +53,7 @@ class Game{
                           dY: 0,
                           dWidth: 50,
                           dHeight: 50}),
-                        libSprite.Sprite({
+                        Sprite({
                           context: this.canvasCtx,
                           sX: 500,
                           sY: 500,
@@ -68,7 +63,7 @@ class Game{
                           dY: 0,
                           dWidth: 50,
                           dHeight: 50})];
-       var spriteFruit = libSprite.Sprite({
+       var spriteFruit = Sprite({
                           context: this.canvasCtx,
                           sX: 0,
                           sY: 0,
@@ -84,8 +79,8 @@ class Game{
     }
 
     // Components of the game
-    this.fruits = [new libFruit.Fruit( [fruit_x, fruit_y], colorFruit, spriteFruit)];
-    this.snakes = [new libSnake.Snake( [snake_x, snake_y], colorSnake, spriteSnake)];
+    this.fruits = [new Fruit( [fruit_x, fruit_y], colorFruit, spriteFruit)];
+    this.snakes = [new Snake( [snake_x, snake_y], colorSnake, spriteSnake)];
   }
 
   // Returns the coordinates in pixel of the cell with the index given in parameter
@@ -261,7 +256,7 @@ class Game{
     var newPos = this.findNewPosition();
 
     // Reset the snake
-    this.snakes[ index] = new libSnake.Snake( newPos, colorSnake, this.snakes[ index].sprite);
+    this.snakes[ index] = new Snake( newPos, colorSnake, this.snakes[ index].sprite);
   }
 
   // Reset the fruit with the index given in parameter
@@ -270,7 +265,7 @@ class Game{
     var newPos = this.findNewPosition();
 
     // Reset the snake
-    this.fruits[ index] = new libFruit.Fruit( newPos, colorFruit, this.fruits[ index].sprite);
+    this.fruits[ index] = new Fruit( newPos, colorFruit, this.fruits[ index].sprite);
   }
 
   // Find coordinates for a new component
@@ -385,9 +380,4 @@ class Game{
       return this.grid;
     }
   }
-};
-
-// Exportation of the class Game
-module.exports = {
-  Game: Game
 };

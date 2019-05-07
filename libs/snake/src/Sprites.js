@@ -39,8 +39,3 @@ function sprite (options) {
 
     return that;
 }
-
-// Exportation of the class Fruit
-module.exports = {
-  Sprite: sprite
-};
