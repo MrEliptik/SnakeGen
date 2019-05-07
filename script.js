@@ -8,10 +8,11 @@ var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF")
     100 neurons : hidden layer
     3 outputs : right, forward, left
 */
-var nn = NeuralNetwork(3, 100, 3)
+var nn = new NeuralNetwork(3, 100, 3)
 
 // Call nn every seconds
 window.setInterval(function(){
+    console.log(game.getSnakesPosition())
     nn.predict()
 }, 1000);
 
