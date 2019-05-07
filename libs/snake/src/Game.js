@@ -338,7 +338,7 @@ class Game{
   }
 
   // Update the entire game by moving one snake
-  update( index, direction){
+  update(index, direction){
 
     console.log("Direction : " + direction);
 
