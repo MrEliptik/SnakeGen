@@ -1,6 +1,8 @@
 var canvas = document.getElementById("canvas");
 
-var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF") // default mode
+var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF", true) // default mode, display on
+//var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF", false) // default mode, display off
+//var game = new Game( 12, 12, 100, 100, 100, canvas.getContext("2d"), 1, 1, "DF", true) // default mode, display on, small size
 //var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "SP") // sprite mode [BROKEN]
 
    /* 
@@ -35,5 +37,3 @@ document.addEventListener('keyup', (event) => {
         game.update( 0, "right");
     }
 }, false);
-
-game.draw();

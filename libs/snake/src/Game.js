@@ -17,13 +17,16 @@ class Game {
     canvasCtx,
     nb_snakes,
     nb_fruits,
-    mode
+    mode,
+    display
   ) {
     // Creation of the grid
     // 2D array initialized with -1
     this.grid = Array.from(Array(gridRows), _ =>
       Array(gridColumns).fill(objects.empty)
     );
+
+    this.display = display;
 
     // Parameters of the draw grid
     // number of cells
@@ -98,6 +101,11 @@ class Game {
     // Components of the game
     this.fruits = [new Fruit([fruit_x, fruit_y], colorFruit, spriteFruit)];
     this.snakes = [new Snake([snake_x, snake_y], colorSnake, spriteSnake)];
+
+    // Initial drawing
+    if(this.display){
+      this.draw();
+    }
   }
 
   getGrid(){
@@ -393,9 +401,11 @@ class Game {
         }
       }
 
-      // Draw the game
-      this.draw();
-
+      if(this.display){
+        // Draw the game
+        this.draw();
+      }
+      
       // Update and return the grid
       this.upgradeGrid();
       return this.grid;
