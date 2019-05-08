@@ -1,0 +1,33 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color: rgb(70, 70, 70);
+}
+
+.wrapper{
+    text-align: center;
+}
+
+.title{
+    display: inline-block;
+}
+
+.top-navbar{
+    margin: 10px 0px 10px 0px;
+}
+
+.content{
+    height: 100%;
+    width: 100%;
+}
+
+.canvas{
+    float: left;
+}
+
+.right-navbar{
+    float: right;
+}
