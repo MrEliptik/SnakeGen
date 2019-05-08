@@ -95,22 +95,13 @@ class Game {
       var spriteFruit = null;
     }
 
-    /* 
-    3 inputs : right, front, left
-    100 neurons : hidden layer
-    3 outputs : right, forward, left
-    */
-    var nn = new NeuralNetwork(3, 100, 3);
-
-    // Call nn every seconds
-    window.setInterval(function() {
-      console.log(snake.getPos());
-      nn.predict();
-    }, 1000);
-
     // Components of the game
     this.fruits = [new Fruit([fruit_x, fruit_y], colorFruit, spriteFruit)];
     this.snakes = [new Snake([snake_x, snake_y], colorSnake, spriteSnake)];
+  }
+
+  getGrid(){
+    return this.grid;
   }
 
   // Returns the coordinates in pixel of the cell with the index given in parameter
@@ -120,7 +111,6 @@ class Game {
 
     return [x, y];
   }
-
   // Draw the grid layout
   drawGrid() {
     this.canvasCtx.beginPath();
