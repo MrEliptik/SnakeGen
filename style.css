@@ -1,56 +1,164 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
+body {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-a{
-    text-decoration: none;
-    color: rgb(70, 70, 70);
+a {
+  text-decoration: none;
+  color: rgb(70, 70, 70);
 }
 
-.wrapper{
-    text-align: center;
+button {
+  background-color: #363636; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
 }
 
-.title{
-    display: inline-block;
+button:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.wrapper {
+  text-align: center;
+}
+
+.title {
+  display: inline-block;
 }
 
 /* TOP NAVBAR */
-.top-navbar{
-    margin: 5px 0px 40px 0px;
-    list-style-type: none;
+.top-navbar {
+  margin: 5px 0px 40px 0px;
+  list-style-type: none;
 }
 
-.top-navbar li{
-    display: inline;
-    margin: 0px 5px 0px 5px;
+.top-navbar li {
+  display: inline;
+  margin: 0px 5px 0px 5px;
 }
 
-.top-navbar a{
-    text-decoration: none;
-    color: rgb(27, 27, 27);
+.top-navbar a {
+  text-decoration: none;
+  color: rgb(27, 27, 27);
 }
 
-.top-navbar a:hover{
-    text-decoration: none;
-    color: rgb(90, 90, 90);
+.top-navbar a:hover {
+  text-decoration: none;
+  color: rgb(90, 90, 90);
 }
 
-.content{
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    grid-gap: 2px;
-    grid-auto-rows: minmax(100px, 100);
+.content {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-gap: 2px;
+  grid-auto-rows: minmax(100px, 100);
 }
 
-.canvas{
-    grid-column: 1 / 2;
-    grid-row: 1;
-    justify-self: stretch;
-    border: 2px;
+.canvas {
+  grid-column: 1 / 2;
+  grid-row: 1;
+  justify-self: stretch;
+  border: 2px;
 }
 
-.right-navbar{
-    grid-column: 2 / 2;
-    grid-row: 1;
+.right-navbar {
+  grid-column: 2 / 2;
+  grid-row: 1;
 }
+
+/* SLIDERS */
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 7.95px 0;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2.1px;
+  cursor: pointer;
+  box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
+  background: rgba(0, 0, 0, 0.17);
+  border-radius: 1.3px;
+  border: 0px solid #000000;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 0px solid #000000;
+  height: 18px;
+  width: 18px;
+  border-radius: 11px;
+  background: #766a60;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7.95px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: rgba(13, 13, 13, 0.17);
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 2.1px;
+  cursor: pointer;
+  box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
+  background: rgba(0, 0, 0, 0.17);
+  border-radius: 1.3px;
+  border: 0px solid #000000;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 0px solid #000000;
+  height: 18px;
+  width: 18px;
+  border-radius: 11px;
+  background: #766a60;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 2.1px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: rgba(0, 0, 0, 0.17);
+  border: 0px solid #000000;
+  border-radius: 2.6px;
+  box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: rgba(0, 0, 0, 0.17);
+  border: 0px solid #000000;
+  border-radius: 2.6px;
+  box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 0px solid #000000;
+  height: 18px;
+  width: 18px;
+  border-radius: 11px;
+  background: #766a60;
+  cursor: pointer;
+  height: 2.1px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: rgba(0, 0, 0, 0.17);
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: rgba(13, 13, 13, 0.17);
+}
+
