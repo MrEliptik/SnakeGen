@@ -27,6 +27,10 @@ button:hover {
   color: white;
 }
 
+canvas{
+  margin: 5px 5px 5px 5px;
+}
+
 .wrapper {
   text-align: center;
 }
@@ -63,7 +67,7 @@ button:hover {
   grid-auto-rows: minmax(100px, 100);
 }
 
-.canvas {
+.canvas-container {
   grid-column: 1 / 2;
   grid-row: 1;
   justify-self: stretch;
@@ -76,16 +80,25 @@ button:hover {
 }
 
 /* SLIDERS */
+.slider{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.slider-value{
+  width: 10%;
+}
+
 input[type=range] {
   -webkit-appearance: none;
-  width: 100%;
+  width: 80%;
   margin: 7.95px 0;
 }
 input[type=range]:focus {
   outline: none;
 }
 input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
+  width: 80%;
   height: 2.1px;
   cursor: pointer;
   box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
@@ -108,7 +121,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   background: rgba(13, 13, 13, 0.17);
 }
 input[type=range]::-moz-range-track {
-  width: 100%;
+  width: 80%;
   height: 2.1px;
   cursor: pointer;
   box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
@@ -126,7 +139,7 @@ input[type=range]::-moz-range-thumb {
   cursor: pointer;
 }
 input[type=range]::-ms-track {
-  width: 100%;
+  width: 80%;
   height: 2.1px;
   cursor: pointer;
   background: transparent;

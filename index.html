@@ -24,15 +24,21 @@
             <li><a href="#">Contact</a></li>
         </ul>
         <div class="content">
-            <div class="canvas">
-                <canvas id="canvas" width="600" height="600"></canvas>
+            <div class="canvas-container">
+                <!-- canvas are added with js -->
             </div>
             <div class="right-navbar">
+                <button id="btn_create">Create</button>
                 <button>Test</button>
                 <button>Test</button>
-                <button>Test</button>
-                <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-                <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+                <div class="slider">
+                    <input type="range" min="1" max="100" value="5" class="slider" id="slider_games">
+                    <input class="slider-value" type="text" id="input_slider_games" value="">
+                </div>
+                <div class="slider">
+                    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+                    <input class="slider-value" type="text" id="textInput" value="">
+                </div>
             </div>
         </div>
     </div>
