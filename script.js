@@ -1,8 +1,8 @@
 var canvas = document.getElementById("canvas");
 
-var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF", true) // default mode, display on
+//var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF", true) // default mode, display on
 //var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF", false) // default mode, display off
-//var game = new Game( 12, 12, 100, 100, 100, canvas.getContext("2d"), 1, 1, "DF", true) // default mode, display on, small size
+var game = new Game( 12, 12, 100, 100, 100, canvas.getContext("2d"), 1, 1, "DF", true) // default mode, display on, small size
 //var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "SP") // sprite mode [BROKEN]
 
    /* 
@@ -37,3 +37,21 @@ document.addEventListener('keyup', (event) => {
         game.update( 0, "right");
     }
 }, false);
+
+window.addEventListener("resize", (e) =>{
+    var canvas = document.getElementById("canvas");
+    var canvas_container = document.querySelector(".canvas");
+    //console.log(canvas_container.offsetWidth);
+
+    //canvas.width = canvas_container.offsetWidth;
+    //canvas.height = canvas_container.offsetHeight;
+
+    canvas.width = document.documentElement.clientWidth * 2/3;
+    canvas.height = document.documentElement.clientHeight * 2/3;
+    
+    if(game.display){
+        game.draw();
+    }
+
+}, false);
+

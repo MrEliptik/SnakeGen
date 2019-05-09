@@ -108,6 +108,10 @@ class Game {
     }
   }
 
+  getDisplay(){
+    return this.display;
+  }
+
   getGrid(){
     return this.grid;
   }
