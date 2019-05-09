@@ -14,7 +14,7 @@ class Game {
     size,
     canvasHeight,
     canvasWidth,
-    canvasCtx,
+    canvas,
     nb_snakes,
     nb_fruits,
     mode,
@@ -27,6 +27,7 @@ class Game {
     );
 
     this.display = display;
+    this.canvas = canvas;
 
     // Parameters of the draw grid
     // number of cells
@@ -37,7 +38,7 @@ class Game {
     this.canvasHeight = canvasHeight;
     this.canvasWidth = canvasWidth;
     // Object containing the canvas
-    this.canvasCtx = canvasCtx;
+    this.canvasCtx = this.canvas.getContext('2d');
 
     // Creation of the components
     this.nb_snakes = nb_snakes;
@@ -150,7 +151,7 @@ class Game {
   // Draw the game at every state
   draw() {
     //Clear previous component position to prevent traces
-    this.canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     //snake.newPos(1, 2);
     //snake.update();

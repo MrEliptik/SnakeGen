@@ -34,7 +34,7 @@ function createGames() {
     canvas_container.appendChild(canvas);
 
     games.push(
-      new Game(12, 12, 100, 100, 100, canvas.getContext("2d"), 1, 1, "DF", true)
+      new Game(12, 12, 100, 100, 100, canvas, 1, 1, "DF", true)
     );
   }
 }
