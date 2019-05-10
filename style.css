@@ -71,12 +71,23 @@ canvas{
   grid-column: 1 / 2;
   grid-row: 1;
   justify-self: stretch;
+  border-color: #000000;
   border: 2px;
 }
 
 .right-navbar {
   grid-column: 2 / 2;
   grid-row: 1;
+}
+
+.danger{
+  background-color: rgb(182, 10, 10); /* Green */
+  color: white;
+}
+
+.warning{
+  background-color: rgb(219, 162, 70); /* Green */
+  color: white;
 }
 
 /* SLIDERS */
