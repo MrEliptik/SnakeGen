@@ -51,6 +51,9 @@ function allDefaultUI() {
     slider_population.dispatchEvent(event);
     slider_games_visible.dispatchEvent(event);
     slider_grid_size.dispatchEvent(event);
+
+    // Set speed to '1x'
+    radios_speed[0].checked = "checked";
   }
 }
 
