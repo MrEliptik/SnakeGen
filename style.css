@@ -65,19 +65,20 @@ canvas{
   grid-template-columns: 3fr 1fr;
   grid-gap: 2px;
   grid-auto-rows: minmax(100px, 100);
+  max-height: 100%;
 }
 
 .canvas-container {
   grid-column: 1 / 2;
   grid-row: 1;
   justify-self: stretch;
-  border-color: #000000;
-  border: 2px;
+  border: 2px solid #363636;
 }
 
 .right-navbar {
   grid-column: 2 / 2;
   grid-row: 1;
+  background-color: #ffffff;
 }
 
 .danger{
