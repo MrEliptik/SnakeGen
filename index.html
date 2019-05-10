@@ -29,16 +29,34 @@
             </div>
             <div class="right-navbar">
                 <button id="btn_create">Create</button>
-                <button>Test</button>
+                <button class="danger" id="btn_delete">Delete</button>
                 <button>Test</button>
                 <div class="slider">
-                    <input type="range" min="1" max="100" value="5" class="slider" id="slider_games">
-                    <input class="slider-value" type="text" id="input_slider_games" value="">
+                    <label for="slider_population">Population size</label>
+                    <input type="range" min="1" max="100" value="50" class="slider" id="slider_population"
+                        name="slider_population">
+                    <input class="slider-value" type="text" id="input_slider_population" value="50">
                 </div>
                 <div class="slider">
-                    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-                    <input class="slider-value" type="text" id="textInput" value="">
+                    <label for="slider_games_visible">Number of visible games</label>
+                    <input type="range" min="1" max="100" value="50" class="slider" id="slider_games_visible"
+                        name="slider_games_visible">
+                    <input class="slider-value" type="text" id="input_slider_games_visble" value="50">
                 </div>
+                <div class="slider">
+                    <label for="slider_games">Number of visible games</label>
+                    <input type="range" min="1" max="100" value="50" class="slider" id="slider_games_visible"
+                        name="slider_games_visible">
+                    <input class="slider-value" type="text" id="textInput" value="50">
+                </div>
+                <label for="speed">Speed</label>
+                <div>
+                    <input checked="checked" name="speed" type="radio" name="age" value="1">1x<br>
+                    <input name="speed" type="radio" name="age" value="2">2x<br>
+                    <input name="speed" type="radio" name="age" value="10">10x<br>
+                    <input name="speed" type="radio" name="age" value="max">max<br>
+                </div>
+                <button class="warning" id="btn_default">Reset default</button>
             </div>
         </div>
     </div>
