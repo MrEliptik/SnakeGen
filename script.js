@@ -1,11 +1,17 @@
+var canvas_container = document.querySelector(".canvas-container");
+
 var slider_population = document.getElementById("slider_population");
 var slider_games_visible = document.getElementById("slider_games_visible");
+var slider_grid_size = document.getElementById("slider_grid_size");
+
 var input_population = document.getElementById("input_slider_population");
 var input_games_visible = document.getElementById("input_slider_games_visble");
-var canvas_container = document.querySelector(".canvas-container");
+var input_grid_size = document.getElementById("input_slider_grid_size");
+
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
 var btn_default = document.getElementById("btn_default");
+
 var radios_speed = document.getElementsByName("speed");
 
 var games = [];
@@ -31,31 +37,66 @@ var nn = new NeuralNetwork(11, 100, 3);
    }, 1000);
    */
 
-function allDefaultUI() {}
+function allDefaultUI() {
+  if (
+    askUserConfirmation("This is going to reset all parameters to default!")
+  ) {
+    slider_population.value = 50;
+    slider_games_visible.value = 10;
+    slider_grid_size.value = 10;
+
+    // Create a new 'change' event
+    var event = new Event("change");
+    // Dispatch it.
+    slider_population.dispatchEvent(event);
+    slider_games_visible.dispatchEvent(event);
+    slider_grid_size.dispatchEvent(event);
+  }
+}
 
 function createGames() {
   // First delete previously created games
   deleteGames();
   var visible = 0;
   for (var i = 0; i < input_population.value; i++) {
-    if(visible < input_games_visible.value){
+    if (visible < input_games_visible.value) {
       var canvas = document.createElement("canvas");
       canvas.id = "canvas_" + String(i);
-      if(canvas_container.offsetWidth / input_population.value < 90) canvas.width = 90;
-      else canvas.width = canvas_container.offsetWidth / input_population.value;
+      if (canvas_container.offsetWidth / input_games_visible.value < 90)
+        canvas.width = 90;
+      else
+        canvas.width = canvas_container.offsetWidth / input_games_visible.value;
       canvas.height = canvas.width;
       canvas_container.appendChild(canvas);
       games.push(
-        new Game(12, 12, canvas.height, canvas.width, canvas, 1, 1, "DF", true)
+        new Game(
+          input_grid_size.value,
+          input_grid_size.value,
+          canvas.height,
+          canvas.width,
+          canvas,
+          1,
+          1,
+          "DF",
+          true
+        )
       );
       visible++;
-    }
-    else{
+    } else {
       games.push(
-        new Game(12, 12, canvas.height, canvas.width, canvas, 1, 1, "DF", false)
+        new Game(
+          input_grid_size.value,
+          input_grid_size.value,
+          canvas.height,
+          canvas.width,
+          canvas,
+          1,
+          1,
+          "DF",
+          false
+        )
       );
     }
-    
   }
 }
 
@@ -146,6 +187,10 @@ slider_population.addEventListener("change", () => {
 
 slider_games_visible.addEventListener("change", () => {
   input_games_visible.value = slider_games_visible.value;
+});
+
+slider_grid_size.addEventListener("change", () => {
+  input_grid_size.value = slider_grid_size.value;
 });
 
 btn_create.addEventListener("click", () => {
