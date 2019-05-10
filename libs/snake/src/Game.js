@@ -11,7 +11,6 @@ class Game {
   constructor(
     gridRows,
     gridColumns,
-    size,
     canvasHeight,
     canvasWidth,
     canvas,
