@@ -19,19 +19,24 @@ class Game {
     mode,
     display
   ) {
-    // Creation of the grid
-    // 2D array initialized with -1
-    this.grid = Array.from(Array(gridRows), _ =>
-      Array(gridColumns).fill(objects.empty)
-    );
 
     this.display = display;
     this.canvas = canvas;
 
     // Parameters of the draw grid
     // number of cells
-    this.gridRows = gridRows;
-    this.gridColumns = gridColumns;
+    this.gridRows = parseInt(gridRows);
+    this.gridColumns = parseInt(gridColumns);
+
+    var row = this.gridRows;
+    var col = this.gridColumns;
+
+    // Creation of the grid
+    // 2D array initialized with -1
+    this.grid = Array.from(Array(this.gridRows), _ =>
+      Array(this.gridColumns).fill(objects.empty)
+    );
+
     // in pixel
     this.size = canvasWidth / gridRows;
     this.canvasHeight = canvasHeight;
