@@ -61,6 +61,18 @@ function createGames() {
   // First delete previously created games
   deleteGames();
   var visible = 0;
+  if (input_games_visible.value > input_population.value) {
+    if (
+      askUserConfirmation(
+        "Number of visible games can't be > than population size, \
+        it's going to be set as equal."
+      )
+    ) {
+      input_games_visible.value = input_population.value;
+    } else {
+      return;
+    }
+  }
   for (var i = 0; i < input_population.value; i++) {
     if (visible < input_games_visible.value) {
       var canvas = document.createElement("canvas");
