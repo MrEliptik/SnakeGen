@@ -77,10 +77,11 @@ function createGames() {
     if (visible < input_games_visible.value) {
       var canvas = document.createElement("canvas");
       canvas.id = "canvas_" + String(i);
-      if (canvas_container.offsetWidth / input_games_visible.value < 90)
+      if (canvas_container.offsetWidth / input_games_visible.value < 90) {
         canvas.width = 90;
-      else
+      } else {
         canvas.width = canvas_container.offsetWidth / input_games_visible.value;
+      }
       canvas.height = canvas.width;
       canvas_container.appendChild(canvas);
       games.push(
