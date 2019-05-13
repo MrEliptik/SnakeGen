@@ -15,7 +15,8 @@ class Agent {
 
   /**
    * Play X games until timeout
-   * @param {user_input}
+   * @param {iterations} Number of games to be played before averaging
+   * @param {timeOut} Time units before the end of the game
    */
   play(iterations, timeOut) {
     let Qacc;
