@@ -121,6 +121,13 @@ class Game {
     return this.grid;
   }
 
+  getSnakeState(){
+    return {
+      "position":this.snakes[0].getPos(),
+      "orientation":this.snakes[0].getOrientation()
+    };
+  }
+
   // Returns the coordinates in pixel of the cell with the index given in parameter
   getCoordinates(index) {
     var x = index[0] * (this.canvasWidth / this.gridRows);
