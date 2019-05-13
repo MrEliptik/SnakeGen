@@ -3,6 +3,11 @@ class Snake extends Component{
         super( pos, color, sprite);
         this.length = 1;
         this.tail = [];
+        this.orientation = "up";
+    }
+
+    getOrientation(){
+      return this.orientation;
     }
 
     // Return true if the movement is possible
@@ -13,12 +18,16 @@ class Snake extends Component{
 
       if( direction == "up") {
         newPos = [this.pos[0], this.pos[1]-1];
+        this.orientation = "up";
       }else if( direction == "left"){
         newPos = [this.pos[0]-1, this.pos[1]];
+        this.orientation = "left";
       }else if( direction == "right"){
         newPos = [this.pos[0]+1, this.pos[1]];
+        this.orientation = "right";
       }else if( direction == "down"){
         newPos = [this.pos[0], this.pos[1]+1];
+        this.orientation = "bottom";
       }else{
         return false;
       }
