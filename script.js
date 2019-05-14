@@ -150,101 +150,123 @@ function getSpeedValue() {
   }
 }
 
-function testyTest(){
+function testyTest() {
   var grid = games[0].getGrid();
   var snakeState = games[0].getSnakeState();
 
-  console.log(calculateLineOfSights(grid, snakeState['position'], snakeState['orientation']));
+  console.log(calculateLinesOfSight(grid, snakeState['position'], snakeState['orientation']));
 }
 
 /**
    * Returns an array of LOS from the snake's perspective
    * @param {grid} - The game's grid
-   * @param {positoon} - Tuple for the snake's positon
+   * @param {position} - Tuple for the snake's positon
    * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
-   * @returns {lineOfSights} - Array of LOS [up, left, right]
+   * @returns {linesOfSight} - Array of LOS [up, left, right]
    */
-function calculateLineOfSights(grid, position, orientation){
+function calculateLinesOfSight(grid, position, orientation) {
   this.position = position;
   this.orientation = orientation;
   this.grid = grid;
-  
-  var lineOfSights = [];
 
-  function frontLineOfSight(){
-      var i = this.position[0];
-      var j = this.position[1];
-      var distance = 0;
-      do {
-          distance += 1;
+  var linesOfSight = [];
 
-          if(this.orientation == "down"){ 
-              j += 1;
-          }
-          else if(this.orientation == "up"){ 
-              j -= 1;
-          }
-          else if(this.orientation == "left"){ 
-              i -= 1;
-          }
-          else if(this.orientation == "right"){ 
-              i += 1;
-          }
-      } while ((i in this.grid && j in this.grid[i]));
-      return distance-1;
+  function frontLineOfSight() {
+    var i = this.position[0];
+    var j = this.position[1];
+    var distance = 0;
+    do {
+      distance += 1;
+
+      if (this.orientation == "down") {
+        j += 1;
+      }
+      else if (this.orientation == "up") {
+        j -= 1;
+      }
+      else if (this.orientation == "left") {
+        i -= 1;
+      }
+      else if (this.orientation == "right") {
+        i += 1;
+      }
+    } while ((i in this.grid && j in this.grid[i]));
+    return distance - 1;
   }
 
-  function leftLineOfSight(){
-      var i = this.position[0];
-      var j = this.position[1];
-      var distance = 0;
-      do {
-          distance += 1;
+  function leftLineOfSight() {
+    var i = this.position[0];
+    var j = this.position[1];
+    var distance = 0;
+    do {
+      distance += 1;
 
-          if(this.orientation == "down"){ 
-              i += 1;
-          }
-          else if(this.orientation == "up"){ 
-              i -= 1;
-          }
-          else if(this.orientation == "left"){ 
-              j += 1;
-          }
-          else if(this.orientation == "right"){ 
-              j -= 1;
-          }
-      } while ((i in this.grid && j in this.grid[i]));
-      return distance-1;
+      if (this.orientation == "down") {
+        i += 1;
+      }
+      else if (this.orientation == "up") {
+        i -= 1;
+      }
+      else if (this.orientation == "left") {
+        j += 1;
+      }
+      else if (this.orientation == "right") {
+        j -= 1;
+      }
+    } while ((i in this.grid && j in this.grid[i]));
+    return distance - 1;
   }
 
-  function rightLineOfSight(){
-      var i = this.position[0];
-      var j = this.position[1];
-      var distance = 0;
-      do {
-          distance += 1;
+  function rightLineOfSight() {
+    var i = this.position[0];
+    var j = this.position[1];
+    var distance = 0;
+    do {
+      distance += 1;
 
-          if(this.orientation == "down"){ 
-              i -= 1;
-          }
-          else if(this.orientation == "up"){ 
-              i += 1;
-          }
-          else if(this.orientation == "left"){ 
-              j -= 1;
-          }
-          else if(this.orientation == "right"){ 
-              j += 1;
-          }
-      } while ((i in this.grid && j in this.grid[i]));
-      return distance-1;
+      if (this.orientation == "down") {
+        i -= 1;
+      }
+      else if (this.orientation == "up") {
+        i += 1;
+      }
+      else if (this.orientation == "left") {
+        j -= 1;
+      }
+      else if (this.orientation == "right") {
+        j += 1;
+      }
+    } while ((i in this.grid && j in this.grid[i]));
+    return distance - 1;
   }
-  
-  lineOfSights[0] = frontLineOfSight();
-  lineOfSights[1] = leftLineOfSight();
-  lineOfSights[2] = rightLineOfSight();
 
-  return lineOfSights;
+  linesOfSight[0] = frontLineOfSight();
+  linesOfSight[1] = leftLineOfSight();
+  linesOfSight[2] = rightLineOfSight();
+
+  return linesOfSight;
+}
+
+/**
+   * Returns an array of COS from the snake's perspective
+   * @param {grid} - The game's grid
+   * @param {position} - Tuple for the snake's positon
+   * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
+   * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
+   */
+function calculateConesOfSight(grid, position, orientation) {
+  this.position = position;
+  this.orientation = orientation;
+  this.grid = grid;
+
+  var conesOfSight = []
+
+  for(var i = 0; i < this.grid.length; i++) {
+    var row = this.grid[i];
+    for(var j = 0; j < row.length; j++) {
+    } 
+  }
+  return conesOfSight;
 }
 
 // Add an event listener from the keyboard
@@ -321,7 +343,7 @@ btn_default.addEventListener("click", () => {
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
-  radios_speed[i].onclick = function() {
+  radios_speed[i].onclick = function () {
     speed = this.value;
   };
 }
