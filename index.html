@@ -8,6 +8,8 @@
     <title>SnakeGen</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <!-- Load tensorflow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
 </head>
@@ -28,34 +30,63 @@
                 <!-- canvas are added with js -->
             </div>
             <div class="right-navbar">
-                <button id="btn_create">Create</button>
-                <button class="danger" id="btn_delete">Delete</button>
-                <button>Test</button>
-                <div class="slider">
-                    <label for="slider_population">Population size</label>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="slider_population"
-                        name="slider_population">
-                    <input class="slider-value" type="text" id="input_slider_population" value="50">
+                <div class="navbar-section">
+                    <h2>Global</h2>
+                    <button id="btn_create">Create</button>
+                    <button class="danger" id="btn_delete">Delete</button>
+                    <div>
+                        <button class="controls" id="btn_restart"><i class="fas fa-undo-alt"></i></button>
+                        <button class="controls" id="btn_start"><i class="fas fa-play"></i></button>
+                        <button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>
+                        <!--<i class="fas fa-stop"></i>-->
+                    </div>
+
+
+                    <div>
+                        <label for="speed"><i class="fas fa-tachometer-alt"></i></label>
+                        <input checked="checked" name="speed" type="radio" name="age" value="1">1x<br>
+                        <input name="speed" type="radio" name="age" value="2">2x<br>
+                        <input name="speed" type="radio" name="age" value="10">10x<br>
+                        <input name="speed" type="radio" name="age" value="max">max<br>
+                    </div>
                 </div>
-                <div class="slider">
-                    <label for="slider_games_visible">Number of visible games</label>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="slider_games_visible"
-                        name="slider_games_visible">
-                    <input class="slider-value" type="text" id="input_slider_games_visble" value="50">
+                <div class="navbar-section">
+                    <h2>Population</h2>
+                    <div class="slider">
+                        <label for="slider_population"><i class="fas fa-users"></i> Population size</label>
+                        <input type="range" min="1" max="100" value="50" class="slider" id="slider_population"
+                            name="slider_population">
+                        <input class="slider-value" type="text" id="input_slider_population" value="50">
+                    </div>
+                    <div class="slider">
+                        <label for="slider_games_visible"><i class="fas fa-eye"></i> Number of visible games</label>
+                        <input type="range" min="1" max="100" value="50" class="slider" id="slider_games_visible"
+                            name="slider_games_visible">
+                        <input class="slider-value" type="text" id="input_slider_games_visble" value="50">
+                    </div>
+                    <div class="slider">
+                        <label for="slider_grid_size"><i class="fas fa-th"></i> Grid size</label>
+                        <input type="range" min="1" max="15" value="10" class="slider" id="slider_grid_size"
+                            name="slider_grid_size">
+                        <input class="slider-value" type="text" id="input_slider_grid_size" value="10">
+                    </div>
                 </div>
-                <div class="slider">
-                    <label for="slider_grid_size">Grid size</label>
-                    <input type="range" min="1" max="15" value="10" class="slider" id="slider_grid_size"
-                        name="slider_grid_size">
-                    <input class="slider-value" type="text" id="input_slider_grid_size" value="10">
+                <div class="navbar-section">
+                    <h2>Neural network</h2>
+                    <div class="slider">
+                        <label for="slider_hidden_layers"><i class="fas fa-layer-group"></i> Hidden layers</label>
+                        <input type="range" min="1" max="10" value="1" class="slider" id="slider_hidden_layers"
+                            name="slider_hidden_layers">
+                        <input class="slider-value" type="text" id="input_slider_hidden_layers" value="1">
+                    </div>
+                    <div class="slider">
+                        <label for="slider_neurons"><i class="fas fa-genderless"></i> Neurons in hidden layer</label>
+                        <input type="range" min="1" max="1000" value="100" class="slider" id="slider_neurons"
+                            name="slider_neurons">
+                        <input class="slider-value" type="text" id="input_slider_neurons" value="100">
+                    </div>
                 </div>
-                <label for="speed">Speed</label>
-                <div>
-                    <input checked="checked" name="speed" type="radio" name="age" value="1">1x<br>
-                    <input name="speed" type="radio" name="age" value="2">2x<br>
-                    <input name="speed" type="radio" name="age" value="10">10x<br>
-                    <input name="speed" type="radio" name="age" value="max">max<br>
-                </div>
+
                 <button class="warning" id="btn_default">Reset default</button>
             </div>
         </div>

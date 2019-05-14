@@ -3,10 +3,14 @@ var canvas_container = document.querySelector(".canvas-container");
 var slider_population = document.getElementById("slider_population");
 var slider_games_visible = document.getElementById("slider_games_visible");
 var slider_grid_size = document.getElementById("slider_grid_size");
+var slider_hidden_layers = document.getElementById("slider_hidden_layers");
+var slider_neurons = document.getElementById("slider_neurons");
 
 var input_population = document.getElementById("input_slider_population");
 var input_games_visible = document.getElementById("input_slider_games_visble");
 var input_grid_size = document.getElementById("input_slider_grid_size");
+var input_hidden_layers = document.getElementById("input_slider_hidden_layers");
+var input_slider_neurons = document.getElementById("input_slider_neurons");
 
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
@@ -16,6 +20,9 @@ var radios_speed = document.getElementsByName("speed");
 
 var env = null;
 var speed = 1;
+var nb_input_neurons = 3;
+var nb_hidden_neurons = 100;
+var nb_output_neurons = 3;
 /* 
     11 inputs : right, front, left
     100 neurons : hidden layer
@@ -116,10 +123,10 @@ function createGames() {
     "DF",
     input_population.value,
     100,
-    1,
-    3,
-    100,
-    3,
+    speed,
+    nb_input_neurons,
+    parseInt(input_slider_neurons.value),
+    nb_output_neurons,
     100,
   );
 }
@@ -313,11 +320,13 @@ window.addEventListener(
     //canvas.width = (document.documentElement.clientWidth * 2) / 3;
     //canvas.height = (document.documentElement.clientHeight * 2) / 3;
 
+    /*
     games.forEach(game => {
       if (game.display) {
         game.draw();
       }
     });
+    */
   },
   false
 );
@@ -332,6 +341,14 @@ slider_games_visible.addEventListener("change", () => {
 
 slider_grid_size.addEventListener("change", () => {
   input_grid_size.value = slider_grid_size.value;
+});
+
+slider_hidden_layers.addEventListener("change", () => {
+  input_hidden_layers.value = slider_hidden_layers.value;
+});
+
+slider_neurons.addEventListener("change", () => {
+  input_slider_neurons.value = slider_neurons.value;
 });
 
 btn_create.addEventListener("click", () => {
