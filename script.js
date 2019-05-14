@@ -157,6 +157,13 @@ function testyTest(){
   console.log(calculateLineOfSights(grid, snakeState['position'], snakeState['orientation']));
 }
 
+/**
+   * Returns an array of LOS from the snake's perspective
+   * @param {grid} - The game's grid
+   * @param {positoon} - Tuple for the snake's positon
+   * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
+   * @returns {lineOfSights} - Array of LOS [up, left, right]
+   */
 function calculateLineOfSights(grid, position, orientation){
   this.position = position;
   this.orientation = orientation;
