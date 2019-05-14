@@ -11,12 +11,12 @@ class Game {
   constructor(
     gridRows,
     gridColumns,
-    canvasHeight,
-    canvasWidth,
-    canvas,
+    canvasHeight = null,
+    canvasWidth = null,
+    canvas = null,
     nb_snakes,
     nb_fruits,
-    mode,
+    mode = 'DF',
     display
   ) {
 
@@ -37,13 +37,58 @@ class Game {
       Array(this.gridColumns).fill(objects.empty)
     );
 
-    // in pixel
-    this.size = canvasWidth / gridRows;
-    this.canvasHeight = canvasHeight;
-    this.canvasWidth = canvasWidth;
-    // Object containing the canvas
-    this.canvasCtx = this.canvas.getContext('2d');
+    if(this.display){
+      // in pixel
+      this.size = canvasWidth / gridRows;
+      this.canvasHeight = canvasHeight;
+      this.canvasWidth = canvasWidth;
+      // Object containing the canvas
+      this.canvasCtx = this.canvas.getContext('2d');
 
+      if (mode == "SP") {
+        // mode using sprites
+        var spriteSnake = [
+          Sprite({
+            context: this.canvasCtx,
+            sX: 0,
+            sY: 500,
+            sWidth: 500,
+            sHeight: 500,
+            dX: 0,
+            dY: 0,
+            dWidth: 50,
+            dHeight: 50
+          }),
+          Sprite({
+            context: this.canvasCtx,
+            sX: 500,
+            sY: 500,
+            sWidth: 500,
+            sHeight: 500,
+            dX: 0,
+            dY: 0,
+            dWidth: 50,
+            dHeight: 50
+          })
+        ];
+        var spriteFruit = Sprite({
+          context: this.canvasCtx,
+          sX: 0,
+          sY: 0,
+          sWidth: 500,
+          sHeight: 500,
+          dX: 0,
+          dY: 0,
+          dWidth: 50,
+          dHeight: 50
+        });
+      } else {
+        // DF mode or default mode
+        var spriteSnake = null;
+        var spriteFruit = null;
+      }
+    }
+    
     // Creation of the components
     this.nb_snakes = nb_snakes;
     this.nb_fruits = nb_fruits;
@@ -58,49 +103,6 @@ class Game {
     while ([snake_x, snake_y] == [fruit_x, fruit_y]) {
       snake_x = Math.floor(Math.random() * (gridColumns - 1 - 0 + 1)) + 0;
       snake_y = Math.floor(Math.random() * (gridRows - 1 - 0 + 1)) + 0;
-    }
-
-    if (mode == "SP") {
-      // mode using sprites
-      var spriteSnake = [
-        Sprite({
-          context: this.canvasCtx,
-          sX: 0,
-          sY: 500,
-          sWidth: 500,
-          sHeight: 500,
-          dX: 0,
-          dY: 0,
-          dWidth: 50,
-          dHeight: 50
-        }),
-        Sprite({
-          context: this.canvasCtx,
-          sX: 500,
-          sY: 500,
-          sWidth: 500,
-          sHeight: 500,
-          dX: 0,
-          dY: 0,
-          dWidth: 50,
-          dHeight: 50
-        })
-      ];
-      var spriteFruit = Sprite({
-        context: this.canvasCtx,
-        sX: 0,
-        sY: 0,
-        sWidth: 500,
-        sHeight: 500,
-        dX: 0,
-        dY: 0,
-        dWidth: 50,
-        dHeight: 50
-      });
-    } else {
-      // DF mode or default mode
-      var spriteSnake = null;
-      var spriteFruit = null;
     }
 
     // Components of the game
