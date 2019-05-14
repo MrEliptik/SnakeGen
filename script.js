@@ -26,39 +26,33 @@ var speed = 1;
 var nn = new NeuralNetwork(3, 100, 3);
 
 // Call nn every seconds
-/*
+
 window.setInterval(function () {
-  var grid = games[0].getGrid();
-  var snakeState = games[0].getSnakeState();
 
-  var los = calculateLinesOfSight(grid, snakeState['position'], snakeState['orientation']);
-  out = nn.predict(los);
-  console.log(out);
+  games.forEach(game => {
+    var grid = games[0].getGrid();
+    var snakeState = games[0].getSnakeState();
 
+    var los = calculateLinesOfSight(grid, snakeState['position'], snakeState['orientation']);
+    out = nn.predict(los);
 
-  // '...' is the spread operator and in ECMA6
-  // corresponds to the apply() method
+    // '...' is the spread operator and in ECMA6
+    // corresponds to the apply() method
 
-  max = Math.max(...out);
-  console.log(max);
+    max = Math.max(...out);
 
-  if (out[0] == max) {
-    games.forEach(game => {
+    if (out[0] == max) {
       game.update(0, "down");
-    });
-  }
-  else if (out[1] == max) {
-    games.forEach(game => {
+    }
+    else if (out[1] == max) {
       game.update(0, "right");
-    });
-  }
-  else if (out[2] == max) {
-    games.forEach(game => {
+    }
+    else if (out[2] == max) {
       game.update(0, "left");
-    });
-  }
+    }
+  });
 }, 1000);
-*/
+
 
 function allDefaultUI() {
   if (
