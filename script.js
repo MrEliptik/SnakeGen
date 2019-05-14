@@ -16,26 +16,49 @@ var radios_speed = document.getElementsByName("speed");
 
 var games = [];
 var speed = 1;
-
-//var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF", true); // default mode, display on
-//var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "DF", false); // default mode, display off
-//var game = new Game( 12, 12, 100, 100, 100, canvas.getContext("2d"), 1, 1, "DF", true); // default mode, display on, small size
-//var game = new Game( 12, 12, 100, 600, 600, canvas.getContext("2d"), 1, 1, "SP"); // sprite mode [BROKEN]
-
 /* 
-    3 inputs : right, front, left
+    11 inputs : right, front, left
     100 neurons : hidden layer
     3 outputs : right, forward, left
     */
-var nn = new NeuralNetwork(11, 100, 3);
+//var nn = new NeuralNetwork(11, 100, 3);
+
+var nn = new NeuralNetwork(3, 100, 3);
 
 // Call nn every seconds
 /*
-   window.setInterval(function() {
-     console.log(game.getGrid());
-     //nn.predict();
-   }, 1000);
-   */
+window.setInterval(function () {
+  var grid = games[0].getGrid();
+  var snakeState = games[0].getSnakeState();
+
+  var los = calculateLinesOfSight(grid, snakeState['position'], snakeState['orientation']);
+  out = nn.predict(los);
+  console.log(out);
+
+
+  // '...' is the spread operator and in ECMA6
+  // corresponds to the apply() method
+
+  max = Math.max(...out);
+  console.log(max);
+
+  if (out[0] == max) {
+    games.forEach(game => {
+      game.update(0, "down");
+    });
+  }
+  else if (out[1] == max) {
+    games.forEach(game => {
+      game.update(0, "right");
+    });
+  }
+  else if (out[2] == max) {
+    games.forEach(game => {
+      game.update(0, "left");
+    });
+  }
+}, 1000);
+*/
 
 function allDefaultUI() {
   if (
@@ -261,10 +284,10 @@ function calculateConesOfSight(grid, position, orientation) {
 
   var conesOfSight = []
 
-  for(var i = 0; i < this.grid.length; i++) {
+  for (var i = 0; i < this.grid.length; i++) {
     var row = this.grid[i];
-    for(var j = 0; j < row.length; j++) {
-    } 
+    for (var j = 0; j < row.length; j++) {
+    }
   }
   return conesOfSight;
 }
