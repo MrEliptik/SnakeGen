@@ -14,7 +14,7 @@ var btn_default = document.getElementById("btn_default");
 
 var radios_speed = document.getElementsByName("speed");
 
-var games = [];
+var env = null;
 var speed = 1;
 /* 
     11 inputs : right, front, left
@@ -23,12 +23,12 @@ var speed = 1;
     */
 //var nn = new NeuralNetwork(11, 100, 3);
 
-var nn = new NeuralNetwork(3, 100, 3);
+//var nn = new NeuralNetwork(3, 100, 3);
 
 // Call nn every seconds
 
-window.setInterval(function () {
-
+window.setInterval(function() {
+  /*
   games.forEach(game => {
     var grid = games[0].getGrid();
     var snakeState = games[0].getSnakeState();
@@ -51,8 +51,8 @@ window.setInterval(function () {
       game.update(0, "left");
     }
   });
+  */
 }, 1000);
-
 
 function allDefaultUI() {
   if (
@@ -77,7 +77,7 @@ function allDefaultUI() {
 function createGames() {
   // First delete previously created games
   deleteGames();
-  var visible = 0;
+
   if (input_games_visible.value > input_population.value) {
     if (
       askUserConfirmation(
@@ -90,52 +90,43 @@ function createGames() {
       return;
     }
   }
-  for (var i = 0; i < input_population.value; i++) {
-    if (visible < input_games_visible.value) {
-      var canvas = document.createElement("canvas");
-      canvas.id = "canvas_" + String(i);
-      if (canvas_container.offsetWidth / input_games_visible.value < 90) {
-        canvas.width = 90;
-      } else {
-        canvas.width = canvas_container.offsetWidth / input_games_visible.value;
-      }
-      canvas.height = canvas.width;
-      canvas_container.appendChild(canvas);
-      games.push(
-        new Game(
-          input_grid_size.value,
-          input_grid_size.value,
-          canvas.height,
-          canvas.width,
-          canvas,
-          1,
-          1,
-          "DF",
-          true
-        )
-      );
-      visible++;
+
+  var canvases = [];
+
+  // Create the required number of canvas to display games
+  for(var i = 0; i < input_games_visible.value; i++) {
+    var canvas = document.createElement("canvas");
+    canvas.id = "canvas_" + String(i);
+    if (canvas_container.offsetWidth / input_games_visible.value < 90) {
+      canvas.width = 90;
     } else {
-      games.push(
-        new Game(
-          input_grid_size.value,
-          input_grid_size.value,
-          canvas.height,
-          canvas.width,
-          canvas,
-          1,
-          1,
-          "DF",
-          false
-        )
-      );
+      canvas.width = canvas_container.offsetWidth / input_games_visible.value;
     }
+    canvas.height = canvas.width;
+    canvas_container.appendChild(canvas);
+    canvases.push(canvas);
   }
+
+  env = new Environment(
+    canvases,
+    input_grid_size.value,
+    input_grid_size.value,
+    1,
+    1,
+    "DF",
+    input_population.value,
+    100,
+    1,
+    3,
+    100,
+    3,
+    100,
+  );
 }
 
 function deleteGames() {
   // Ask for user's confirmation first
-  if (games.length > 0) {
+  if (env != null) {
     if (
       askUserConfirmation(
         "This is going to delete currently created games, are you sure?"
@@ -146,7 +137,7 @@ function deleteGames() {
         canvas_container.removeChild(canvas_container.firstChild);
       }
       // Empty the games array object
-      games = [];
+      env = null;
     }
   }
 }
@@ -171,16 +162,22 @@ function testyTest() {
   var grid = games[0].getGrid();
   var snakeState = games[0].getSnakeState();
 
-  console.log(calculateLinesOfSight(grid, snakeState['position'], snakeState['orientation']));
+  console.log(
+    calculateLinesOfSight(
+      grid,
+      snakeState["position"],
+      snakeState["orientation"]
+    )
+  );
 }
 
 /**
-   * Returns an array of LOS from the snake's perspective
-   * @param {grid} - The game's grid
-   * @param {position} - Tuple for the snake's positon
-   * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
-   * @returns {linesOfSight} - Array of LOS [up, left, right]
-   */
+ * Returns an array of LOS from the snake's perspective
+ * @param {grid} - The game's grid
+ * @param {position} - Tuple for the snake's positon
+ * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
+ * @returns {linesOfSight} - Array of LOS [up, left, right]
+ */
 function calculateLinesOfSight(grid, position, orientation) {
   this.position = position;
   this.orientation = orientation;
@@ -197,17 +194,14 @@ function calculateLinesOfSight(grid, position, orientation) {
 
       if (this.orientation == "down") {
         j += 1;
-      }
-      else if (this.orientation == "up") {
+      } else if (this.orientation == "up") {
         j -= 1;
-      }
-      else if (this.orientation == "left") {
+      } else if (this.orientation == "left") {
         i -= 1;
-      }
-      else if (this.orientation == "right") {
+      } else if (this.orientation == "right") {
         i += 1;
       }
-    } while ((i in this.grid && j in this.grid[i]));
+    } while (i in this.grid && j in this.grid[i]);
     return distance - 1;
   }
 
@@ -220,17 +214,14 @@ function calculateLinesOfSight(grid, position, orientation) {
 
       if (this.orientation == "down") {
         i += 1;
-      }
-      else if (this.orientation == "up") {
+      } else if (this.orientation == "up") {
         i -= 1;
-      }
-      else if (this.orientation == "left") {
+      } else if (this.orientation == "left") {
         j += 1;
-      }
-      else if (this.orientation == "right") {
+      } else if (this.orientation == "right") {
         j -= 1;
       }
-    } while ((i in this.grid && j in this.grid[i]));
+    } while (i in this.grid && j in this.grid[i]);
     return distance - 1;
   }
 
@@ -243,17 +234,14 @@ function calculateLinesOfSight(grid, position, orientation) {
 
       if (this.orientation == "down") {
         i -= 1;
-      }
-      else if (this.orientation == "up") {
+      } else if (this.orientation == "up") {
         i += 1;
-      }
-      else if (this.orientation == "left") {
+      } else if (this.orientation == "left") {
         j -= 1;
-      }
-      else if (this.orientation == "right") {
+      } else if (this.orientation == "right") {
         j += 1;
       }
-    } while ((i in this.grid && j in this.grid[i]));
+    } while (i in this.grid && j in this.grid[i]);
     return distance - 1;
   }
 
@@ -265,23 +253,22 @@ function calculateLinesOfSight(grid, position, orientation) {
 }
 
 /**
-   * Returns an array of COS from the snake's perspective
-   * @param {grid} - The game's grid
-   * @param {position} - Tuple for the snake's positon
-   * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
-   * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
-   */
+ * Returns an array of COS from the snake's perspective
+ * @param {grid} - The game's grid
+ * @param {position} - Tuple for the snake's positon
+ * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
+ * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
+ */
 function calculateConesOfSight(grid, position, orientation) {
   this.position = position;
   this.orientation = orientation;
   this.grid = grid;
 
-  var conesOfSight = []
+  var conesOfSight = [];
 
   for (var i = 0; i < this.grid.length; i++) {
     var row = this.grid[i];
-    for (var j = 0; j < row.length; j++) {
-    }
+    for (var j = 0; j < row.length; j++) {}
   }
   return conesOfSight;
 }
@@ -360,7 +347,7 @@ btn_default.addEventListener("click", () => {
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
-  radios_speed[i].onclick = function () {
+  radios_speed[i].onclick = function() {
     speed = this.value;
   };
 }
