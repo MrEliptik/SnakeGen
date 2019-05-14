@@ -27,7 +27,7 @@ class Snake extends Component{
         this.orientation = "right";
       }else if( direction == "down"){
         newPos = [this.pos[0], this.pos[1]+1];
-        this.orientation = "bottom";
+        this.orientation = "down";
       }else{
         return false;
       }
