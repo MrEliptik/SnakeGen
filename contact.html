@@ -87,12 +87,24 @@
 	<script src="contact/vendor/select2/select2.min.js"></script>
 	<!--===============================================================================================-->
 	<script src="contact/js/main.js"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag() { dataLayer.push(arguments); }
-		gtag('js', new Date());
 
-		gtag('config', 'UA-23581568-13');
+	<script src="https://smtpjs.com/v3/smtp.js"></script>
+
+	<script>
+		function sendMail() {
+			Email.send({
+				Host: "smtp.yourisp.com",
+				Username: "username",
+				Password: "password",
+				To: 'them@website.com',
+				From: "you@isp.com",
+				Subject: "This is the subject",
+				Body: "And this is the body"
+			}).then(
+				message => alert(message)
+			);
+		}
+
 	</script>
 </body>
 
