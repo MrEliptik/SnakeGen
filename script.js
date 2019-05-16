@@ -280,20 +280,20 @@ document.addEventListener(
     const key = event.keyCode;
 
     if (key == "38") {
-      games.forEach(game => {
-        game.update(0, "up");
+      env.generation.population.forEach(pop => {
+        pop.game.update(0, "up");
       });
     } else if (key == "40") {
-      games.forEach(game => {
-        game.update(0, "down");
+      env.generation.population.forEach(pop => {
+        pop.game.update(0, "down");
       });
     } else if (key == "37") {
-      games.forEach(game => {
-        game.update(0, "left");
+      env.generation.population.forEach(pop => {
+        pop.game.update(0, "left");
       });
     } else if (key == "39") {
-      games.forEach(game => {
-        game.update(0, "right");
+      env.generation.population.forEach(pop => {
+        pop.game.update(0, "right");
       });
     }
 
