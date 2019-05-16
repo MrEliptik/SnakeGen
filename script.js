@@ -159,15 +159,20 @@ function getSpeedValue() {
 }
 
 function testyTest() {
-  var grid = games[0].getGrid();
-  var snakeState = games[0].getSnakeState();
+  var grid = env.generation.population[0].game.getGrid();
+  var snakeState = env.generation.population[0].game.getSnakeState();
 
+  /*
   console.log(
     calculateLinesOfSight(
       grid,
       snakeState["position"],
       snakeState["orientation"]
     )
+  );*/
+
+  console.log(
+    env.generation.population[0].game.calculateLinesOfSight()
   );
 }
 

@@ -10,6 +10,10 @@ class Snake extends Component{
       return this.orientation;
     }
 
+    getTail(){
+      return this.tail;
+    }
+
     // Return true if the movement is possible
     // a movement is possible if the new pos is not the pos of the first
     // element of the tail
