@@ -97,7 +97,9 @@ label{
   grid-column: 1 / 2;
   grid-row: 1;
   justify-self: stretch;
-  border: 2px solid #363636;
+  /*border: 2px solid #363636;*/
+  box-shadow: 0 10px 20px rgb(216, 216, 216),0 6px 6px #bebebe;
+  margin-right: 10px;
 }
 
 .right-navbar {
@@ -107,8 +109,10 @@ label{
 }
 
 .navbar-section{
-  border: 2px solid #363636;
+  /*border: 2px solid #363636;*/
+  box-shadow: 0 6px 6px rgb(216, 216, 216),0 6px 6px #bebebe;
   padding-bottom: 10px;
+  margin: 0px 0px 10px 0px;
 }
 
 .danger{
