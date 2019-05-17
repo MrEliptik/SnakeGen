@@ -16,10 +16,9 @@ class Game {
     canvas = null,
     nb_snakes,
     nb_fruits,
-    mode = 'DF',
+    mode = "DF",
     display
   ) {
-
     this.display = display;
     this.canvas = canvas;
 
@@ -43,7 +42,7 @@ class Game {
       this.canvasHeight = canvasHeight;
       this.canvasWidth = canvasWidth;
       // Object containing the canvas
-      this.canvasCtx = this.canvas.getContext('2d');
+      this.canvasCtx = this.canvas.getContext("2d");
 
       if (mode == "SP") {
         // mode using sprites
@@ -132,7 +131,7 @@ class Game {
     var snakeOrientation = this.snakes[0].getOrientation();
     var gridRows = this.gridRows;
     var gridColumns = this.gridColumns;
-    var snake = this.snakes[0]
+    var snake = this.snakes[0];
 
     var linesOfSight = [];
 
@@ -152,9 +151,13 @@ class Game {
         } else if (snakeOrientation == "right") {
           i += 1;
         }
-      } while (j >= 0 && j < gridRows
-      && i >= 0 && i < gridColumns
-        && !snake.isOnTail([i, j]));
+      } while (
+        j >= 0 &&
+        j < gridRows &&
+        i >= 0 &&
+        i < gridColumns &&
+        !snake.isOnTail([i, j])
+      );
       return distance - 1;
     }
 
@@ -174,9 +177,13 @@ class Game {
         } else if (snakeOrientation == "right") {
           j -= 1;
         }
-      } while (j >= 0 && j < gridRows
-      && i >= 0 && i < gridColumns
-        && !snake.isOnTail([i, j]));
+      } while (
+        j >= 0 &&
+        j < gridRows &&
+        i >= 0 &&
+        i < gridColumns &&
+        !snake.isOnTail([i, j])
+      );
       return distance - 1;
     }
 
@@ -196,9 +203,13 @@ class Game {
         } else if (snakeOrientation == "right") {
           j += 1;
         }
-      } while (j >= 0 && j < gridRows
-      && i >= 0 && i < gridColumns
-        && !snake.isOnTail([i, j]));
+      } while (
+        j >= 0 &&
+        j < gridRows &&
+        i >= 0 &&
+        i < gridColumns &&
+        !snake.isOnTail([i, j])
+      );
       return distance - 1;
     }
 
@@ -219,23 +230,20 @@ class Game {
     var snakeOrientation = this.snakes[0].getOrientation();
     var grid = this.grid;
 
-
     var conesOfSight = [];
 
     for (var i = 0; i < this.grid.length; i++) {
       var row = this.grid[i];
 
-      for (var j = 0; j < row.length; j++) { }
-
+      for (var j = 0; j < row.length; j++) {}
     }
     return conesOfSight;
   }
 
   getSnakeState() {
-
     return {
-      "position": this.snakes[0].getPosition(),
-      "orientation": this.snakes[0].getOrientation()
+      position: this.snakes[0].getPosition(),
+      orientation: this.snakes[0].getOrientation()
     };
   }
 
@@ -498,9 +506,38 @@ class Game {
   }
 
   // Update the entire game by moving one snake
-  update(index, direction) {
-    console.log("Direction : " + direction);
+  update(direction, toTranslate) {
+    if (toTranslate) {
+      var state = this.getSnakeState();
+      console.log("state:" + String(state["orientation"]));
+      if (state["orientation"] == "down") {
+        if (direction == "left") {
+          direction = "right";
+        } else if (direction == "up") {
+          direction = "down";
+        } else if (direction == "right") {
+          direction = "left";
+        }
+      } else if (state["orientation"] == "left") {
+        if (direction == "left") {
+          direction = "down";
+        } else if (direction == "up") {
+          direction = "left";
+        } else if (direction == "right") {
+          direction = "up";
+        }
+      } else if (state["orientation"] == "right") {
+        if (direction == "left") {
+          direction = "up";
+        } else if (direction == "up") {
+          direction = "right";
+        } else if (direction == "right") {
+          direction = "down";
+        }
+      }
+    }
 
+    console.log("Direction : " + direction);
     // move the snake
     if (this.snakes[0].move(direction)) {
       console.log("New position : " + this.snakes[0].getPosition());
