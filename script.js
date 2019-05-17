@@ -104,12 +104,12 @@ function createGames() {
   for(var i = 0; i < input_games_visible.value; i++) {
     var canvas = document.createElement("canvas");
     canvas.id = "canvas_" + String(i);
-    if (canvas_container.offsetWidth / input_games_visible.value < 90) {
-      canvas.width = 90;
+    if ((window.innerHeight - canvas_container.offsetTop - 20) / input_games_visible.value < 90) {
+      canvas.height = 90;
     } else {
-      canvas.width = canvas_container.offsetWidth / input_games_visible.value;
+      canvas.height = (window.innerHeight - canvas_container.offsetTop - 20) / input_games_visible.value;
     }
-    canvas.height = canvas.width;
+    canvas.width = canvas.height;
     canvas_container.appendChild(canvas);
     canvases.push(canvas);
   }
@@ -136,7 +136,7 @@ function deleteGames() {
   if (env != null) {
     if (
       askUserConfirmation(
-        "This is going to delete currently created games, are you sure?"
+        "This is going to delete all the created games, are you sure?"
       )
     ) {
       // Remove canvas from container
