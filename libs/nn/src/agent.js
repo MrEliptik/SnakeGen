@@ -55,9 +55,9 @@ class Agent {
   }
 
   /**
-   * Play X games until timeout
-   * @param {iterations} Number of games to be played before averaging
-   * @param {timeOut} Time units before the end of the game
+   * Use the Neural Network to decide the next moove of the snake
    */
-  play(iterations, timeOut) {}
+  step() {
+    //this.nn.
+  }
 }
