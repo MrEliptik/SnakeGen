@@ -17,7 +17,8 @@ class Environment {
     input_nodes,
     hidden_nodes,
     output_nodes,
-    timeout
+    timeout,
+    state
   ) {
     this.canvases = canvases;
     this.gridRows = gridRows;
@@ -32,9 +33,11 @@ class Environment {
     this.hidden_nodes = hidden_nodes;
     this.output_nodes = output_nodes;
     this.timeout = timeout;
+    this.state = state;
 
     var visible = 0;
     this.agents = [];
+
     // Create the required number of Agent
     for (var i = 0; i < this.number; i++) {
       if (visible < this.canvases.length) {
@@ -78,11 +81,21 @@ class Environment {
     }
 
     // Create the generation
-    this.generation = new Generation(
-      this.agents,
-      this.perCent
-    );
+    this.generation = new Generation(this.agents, this.perCent);
+
+    this.lastRender = 0;
+    window.requestAnimationFrame(this.tick);
+    //this.tick();
   }
 
-  step() {}
+  tick() {
+    var progress = timestamp - this.lastRender;
+
+    this.agents.forEach(agent => {
+      agent.step();
+    });
+
+    this.lastRender = timestamp;
+    window.requestAnimationFrame(loop);
+  }
 }
