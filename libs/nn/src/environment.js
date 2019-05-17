@@ -84,18 +84,12 @@ class Environment {
     this.generation = new Generation(this.agents, this.perCent);
 
     this.lastRender = 0;
-    window.requestAnimationFrame(this.tick);
-    //this.tick();
+    this.tick();
   }
 
   tick() {
-    var progress = timestamp - this.lastRender;
-
     this.agents.forEach(agent => {
       agent.step();
     });
-
-    this.lastRender = timestamp;
-    window.requestAnimationFrame(loop);
   }
 }
