@@ -35,6 +35,7 @@ var nb_output_neurons = 3;
 // Call nn every seconds
 
 window.setInterval(function() {
+  //testyTest();
   /*
   games.forEach(game => {
     var grid = games[0].getGrid();
@@ -60,6 +61,11 @@ window.setInterval(function() {
   });
   */
 }, 1000);
+
+function testyTest(){
+  var a = new Agent(10, 10, null, null, null, 1, 1, 'df', false, 1, 11, 100, 3);
+  a.step();
+}
 
 function allDefaultUI() {
   if (
@@ -173,23 +179,21 @@ document.addEventListener(
 
     if (key == "38") {
       env.generation.population.forEach(pop => {
-        pop.game.update(0, "up");
+        pop.game.update("up", false);
       });
     } else if (key == "40") {
       env.generation.population.forEach(pop => {
-        pop.game.update(0, "down");
+        pop.game.update("down", false);
       });
     } else if (key == "37") {
       env.generation.population.forEach(pop => {
-        pop.game.update(0, "left");
+        pop.game.update("left", false);
       });
     } else if (key == "39") {
       env.generation.population.forEach(pop => {
-        pop.game.update(0, "right");
+        pop.game.update("right", false);
       });
     }
-
-    testyTest();
   },
   false
 );
