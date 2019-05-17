@@ -172,13 +172,10 @@ function getSpeedValue() {
   }
 }
 
-function testyTest() {	
-  var grid = env.generation.population[0].game.getGrid();	
-  var snakeState = env.generation.population[0].game.getSnakeState();	
-  
+function testyTestLog() {	
    console.log(	
-    env.generation.population[0].game.calculateLinesOfSight(),	
-    env.generation.population[0].game.calculateConesOfSight()	
+    env.agents[0].game.calculateLinesOfSight(),	
+    env.agents[0].game.calculateConesOfSight()	
   );	
 }
 
@@ -189,22 +186,23 @@ document.addEventListener(
     const key = event.keyCode;
 
     if (key == "38") {
-      env.generation.population.forEach(pop => {
+      env.agents.forEach(pop => {
         pop.game.update("up", false);
       });
     } else if (key == "40") {
-      env.generation.population.forEach(pop => {
+      env.agents.forEach(pop => {
         pop.game.update("down", false);
       });
     } else if (key == "37") {
-      env.generation.population.forEach(pop => {
+      env.agents.forEach(pop => {
         pop.game.update("left", false);
       });
     } else if (key == "39") {
-      env.generation.population.forEach(pop => {
+      env.agents.forEach(pop => {
         pop.game.update("right", false);
       });
     }
+    testyTestLog();
   },
   false
 );
