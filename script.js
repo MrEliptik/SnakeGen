@@ -3,10 +3,14 @@ var canvas_container = document.querySelector(".canvas-container");
 var slider_population = document.getElementById("slider_population");
 var slider_games_visible = document.getElementById("slider_games_visible");
 var slider_grid_size = document.getElementById("slider_grid_size");
+var slider_hidden_layers = document.getElementById("slider_hidden_layers");
+var slider_neurons = document.getElementById("slider_neurons");
 
 var input_population = document.getElementById("input_slider_population");
 var input_games_visible = document.getElementById("input_slider_games_visble");
 var input_grid_size = document.getElementById("input_slider_grid_size");
+var input_hidden_layers = document.getElementById("input_slider_hidden_layers");
+var input_slider_neurons = document.getElementById("input_slider_neurons");
 
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
@@ -16,6 +20,9 @@ var radios_speed = document.getElementsByName("speed");
 
 var env = null;
 var speed = 1;
+var nb_input_neurons = 3;
+var nb_hidden_neurons = 100;
+var nb_output_neurons = 3;
 /* 
     11 inputs : right, front, left
     100 neurons : hidden layer
@@ -97,12 +104,12 @@ function createGames() {
   for(var i = 0; i < input_games_visible.value; i++) {
     var canvas = document.createElement("canvas");
     canvas.id = "canvas_" + String(i);
-    if (canvas_container.offsetWidth / input_games_visible.value < 90) {
-      canvas.width = 90;
+    if ((window.innerHeight - canvas_container.offsetTop - 20) / input_games_visible.value < 90) {
+      canvas.height = 90;
     } else {
-      canvas.width = canvas_container.offsetWidth / input_games_visible.value;
+      canvas.height = (window.innerHeight - canvas_container.offsetTop - 20) / input_games_visible.value;
     }
-    canvas.height = canvas.width;
+    canvas.width = canvas.height;
     canvas_container.appendChild(canvas);
     canvases.push(canvas);
   }
@@ -116,10 +123,10 @@ function createGames() {
     "DF",
     input_population.value,
     100,
-    1,
-    3,
-    100,
-    3,
+    speed,
+    nb_input_neurons,
+    parseInt(input_slider_neurons.value),
+    nb_output_neurons,
     100,
   );
 }
@@ -129,7 +136,7 @@ function deleteGames() {
   if (env != null) {
     if (
       askUserConfirmation(
-        "This is going to delete currently created games, are you sure?"
+        "This is going to delete all the created games, are you sure?"
       )
     ) {
       // Remove canvas from container
@@ -156,126 +163,6 @@ function getSpeedValue() {
       break;
     }
   }
-}
-
-function testyTest() {
-  var grid = env.generation.population[0].game.getGrid();
-  var snakeState = env.generation.population[0].game.getSnakeState();
-
-  /*
-  console.log(
-    calculateLinesOfSight(
-      grid,
-      snakeState["position"],
-      snakeState["orientation"]
-    )
-  );*/
-
-  console.log(
-    env.generation.population[0].game.calculateLinesOfSight()
-  );
-}
-
-/**
- * Returns an array of LOS from the snake's perspective
- * @param {grid} - The game's grid
- * @param {position} - Tuple for the snake's positon
- * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
- * @returns {linesOfSight} - Array of LOS [up, left, right]
- */
-function calculateLinesOfSight(grid, position, orientation) {
-  this.position = position;
-  this.orientation = orientation;
-  this.grid = grid;
-
-  var linesOfSight = [];
-
-  function frontLineOfSight() {
-    var i = this.position[0];
-    var j = this.position[1];
-    var distance = 0;
-    do {
-      distance += 1;
-
-      if (this.orientation == "down") {
-        j += 1;
-      } else if (this.orientation == "up") {
-        j -= 1;
-      } else if (this.orientation == "left") {
-        i -= 1;
-      } else if (this.orientation == "right") {
-        i += 1;
-      }
-    } while (i in this.grid && j in this.grid[i]);
-    return distance - 1;
-  }
-
-  function leftLineOfSight() {
-    var i = this.position[0];
-    var j = this.position[1];
-    var distance = 0;
-    do {
-      distance += 1;
-
-      if (this.orientation == "down") {
-        i += 1;
-      } else if (this.orientation == "up") {
-        i -= 1;
-      } else if (this.orientation == "left") {
-        j += 1;
-      } else if (this.orientation == "right") {
-        j -= 1;
-      }
-    } while (i in this.grid && j in this.grid[i]);
-    return distance - 1;
-  }
-
-  function rightLineOfSight() {
-    var i = this.position[0];
-    var j = this.position[1];
-    var distance = 0;
-    do {
-      distance += 1;
-
-      if (this.orientation == "down") {
-        i -= 1;
-      } else if (this.orientation == "up") {
-        i += 1;
-      } else if (this.orientation == "left") {
-        j -= 1;
-      } else if (this.orientation == "right") {
-        j += 1;
-      }
-    } while (i in this.grid && j in this.grid[i]);
-    return distance - 1;
-  }
-
-  linesOfSight[0] = frontLineOfSight();
-  linesOfSight[1] = leftLineOfSight();
-  linesOfSight[2] = rightLineOfSight();
-
-  return linesOfSight;
-}
-
-/**
- * Returns an array of COS from the snake's perspective
- * @param {grid} - The game's grid
- * @param {position} - Tuple for the snake's positon
- * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
- * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
- */
-function calculateConesOfSight(grid, position, orientation) {
-  this.position = position;
-  this.orientation = orientation;
-  this.grid = grid;
-
-  var conesOfSight = [];
-
-  for (var i = 0; i < this.grid.length; i++) {
-    var row = this.grid[i];
-    for (var j = 0; j < row.length; j++) {}
-  }
-  return conesOfSight;
 }
 
 // Add an event listener from the keyboard
@@ -318,11 +205,13 @@ window.addEventListener(
     //canvas.width = (document.documentElement.clientWidth * 2) / 3;
     //canvas.height = (document.documentElement.clientHeight * 2) / 3;
 
+    /*
     games.forEach(game => {
       if (game.display) {
         game.draw();
       }
     });
+    */
   },
   false
 );
@@ -337,6 +226,14 @@ slider_games_visible.addEventListener("change", () => {
 
 slider_grid_size.addEventListener("change", () => {
   input_grid_size.value = slider_grid_size.value;
+});
+
+slider_hidden_layers.addEventListener("change", () => {
+  input_hidden_layers.value = slider_hidden_layers.value;
+});
+
+slider_neurons.addEventListener("change", () => {
+  input_slider_neurons.value = slider_neurons.value;
 });
 
 btn_create.addEventListener("click", () => {
