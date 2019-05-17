@@ -37,7 +37,7 @@ class Game {
       Array(this.gridColumns).fill(objects.empty)
     );
 
-    if(this.display){
+    if (this.display) {
       // in pixel
       this.size = canvasWidth / gridRows;
       this.canvasHeight = canvasHeight;
@@ -88,7 +88,7 @@ class Game {
         var spriteFruit = null;
       }
     }
-    
+
     // Creation of the components
     this.nb_snakes = nb_snakes;
     this.nb_fruits = nb_fruits;
@@ -110,16 +110,16 @@ class Game {
     this.snakes = [new Snake([snake_x, snake_y], colorSnake, spriteSnake)];
 
     // Initial drawing
-    if(this.display){
+    if (this.display) {
       this.draw();
     }
   }
 
-  getDisplay(){
+  getDisplay() {
     return this.display;
   }
 
-  getGrid(){
+  getGrid() {
     return this.grid;
   }
 
@@ -152,9 +152,9 @@ class Game {
         } else if (snakeOrientation == "right") {
           i += 1;
         }
-      } while (j >= 0 && j < gridRows 
-        && i >= 0 && i < gridColumns
-        && !snake.isOnTail([i,j]));
+      } while (j >= 0 && j < gridRows
+      && i >= 0 && i < gridColumns
+        && !snake.isOnTail([i, j]));
       return distance - 1;
     }
 
@@ -174,9 +174,9 @@ class Game {
         } else if (snakeOrientation == "right") {
           j -= 1;
         }
-      } while (j >= 0 && j < gridRows 
-        && i >= 0 && i < gridColumns
-        && !snake.isOnTail([i,j]));
+      } while (j >= 0 && j < gridRows
+      && i >= 0 && i < gridColumns
+        && !snake.isOnTail([i, j]));
       return distance - 1;
     }
 
@@ -196,9 +196,9 @@ class Game {
         } else if (snakeOrientation == "right") {
           j += 1;
         }
-      } while (j >= 0 && j < gridRows 
-        && i >= 0 && i < gridColumns
-        && !snake.isOnTail([i,j]));
+      } while (j >= 0 && j < gridRows
+      && i >= 0 && i < gridColumns
+        && !snake.isOnTail([i, j]));
       return distance - 1;
     }
 
@@ -209,10 +209,31 @@ class Game {
     return linesOfSight;
   }
 
-  getSnakeState(){
+  /**
+ * Returns an array of COS from the snake's perspective
+ * @param {grid} - The game's grid
+ * @param {position} - Tuple for the snake's positon
+ * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
+ * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
+ */
+  calculateConesOfSight(grid, position, orientation) {
+    this.position = position;
+    this.orientation = orientation;
+    this.grid = grid;
+
+    var conesOfSight = [];
+
+    for (var i = 0; i < this.grid.length; i++) {
+      var row = this.grid[i];
+      for (var j = 0; j < row.length; j++) { }
+    }
+    return conesOfSight;
+  }
+
+  getSnakeState() {
     return {
-      "position":this.snakes[0].getPosition(),
-      "orientation":this.snakes[0].getOrientation()
+      "position": this.snakes[0].getPosition(),
+      "orientation": this.snakes[0].getOrientation()
     };
   }
 
@@ -506,11 +527,11 @@ class Game {
         }
       }
 
-      if(this.display){
+      if (this.display) {
         // Draw the game
         this.draw();
       }
-      
+
       // Update and return the grid
       this.upgradeGrid();
       return this.grid;
