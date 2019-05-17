@@ -112,8 +112,14 @@
     window.addEventListener(
         "resize",
         e => {
-            canvas.height = window.innerHeight - canvas_container.offsetTop - 20;
-            canvas.width = window.innerWidth - canvas_container.offsetLeft - 20;
+            if ((window.innerHeight - canvas_container.offsetTop) < (window.innerWidth - canvas_container.offsetLeft)) {
+                var size = window.innerHeight - canvas_container.offsetTop - 20;
+            }
+            else {
+                var size = window.innerWidth - canvas_container.offsetLeft - 20;
+            }
+            canvas.height = size;
+            canvas.width = size;
 
             game.draw();
         },
