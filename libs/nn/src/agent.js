@@ -64,8 +64,8 @@ class Agent {
     var cos = this.game.calculateConesOfSight();
 
     // TEST: TO REMOVE
-    //los = [0.678, 0.786, 0.254];
-    //cos = [[0.678, 0.4],[0.452, 0.874], [0.465, 0.123], [0.498, 0.294]];
+    los = [0.678, 0.786, 0.254];
+    cos = [[0.678, 0.4],[0.452, 0.874], [0.465, 0.123], [0.498, 0.294]];
     
     var action = this.nn.predict(
       [los[0],
