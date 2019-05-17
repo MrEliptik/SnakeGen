@@ -20,7 +20,7 @@ var radios_speed = document.getElementsByName("speed");
 
 var env = null;
 var speed = 1;
-var nb_input_neurons = 3;
+var nb_input_neurons = 11;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
 /* 
@@ -134,6 +134,7 @@ function createGames() {
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
     100,
+    "play",
   );
 }
 
