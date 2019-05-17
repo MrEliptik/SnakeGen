@@ -52,12 +52,40 @@ class Agent {
       this.mode,
       this.display
     );
+
+    this.actions = { 0: "left", 1: "up", 2: "right" };
   }
 
   /**
-   * Use the Neural Network to decide the next moove of the snake
+   * Use the Neural Network to decide the next move of the snake
    */
   step() {
-    //this.nn.
+    var los = this.game.calculateLinesOfSight();
+    var cos = this.game.calculateConesOfSight();
+
+    // TEST: TO REMOVE
+    //los = [0.678, 0.786, 0.254];
+    //cos = [[0.678, 0.4],[0.452, 0.874], [0.465, 0.123], [0.498, 0.294]];
+    
+    var action = this.nn.predict(
+      [los[0],
+      los[1],
+      los[2],
+      cos[0][0],
+      cos[1][0],
+      cos[2][0],
+      cos[3][0],
+      cos[0][1],
+      cos[1][1],
+      cos[2][1],
+      cos[3][1]]
+    );
+
+    // Get the index of the array's max value
+    let i = action.indexOf(Math.max(...action));
+
+    //console.log(this.actions[i]);
+
+    this.game.update(this.actions[i], true);
   }
 }
