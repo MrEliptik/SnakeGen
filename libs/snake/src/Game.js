@@ -209,6 +209,24 @@ class Game {
     return linesOfSight;
   }
 
+  /**
+ * Returns an array of COS from the snake's perspective
+ * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
+ */
+  calculateConesOfSight() {
+    var snakePosition = this.snakes[0].getPosition();
+    var snakeOrientation = this.snakes[0].getOrientation();
+    var grid = this.grid;
+
+    var conesOfSight = [];
+
+    for (var i = 0; i < this.grid.length; i++) {
+      var row = this.grid[i];
+      for (var j = 0; j < row.length; j++) {}
+    }
+    return conesOfSight;
+  }
+
   getSnakeState(){
     return {
       "position":this.snakes[0].getPosition(),
