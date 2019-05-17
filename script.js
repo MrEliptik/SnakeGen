@@ -165,6 +165,16 @@ function getSpeedValue() {
   }
 }
 
+function testyTest() {	
+  var grid = env.generation.population[0].game.getGrid();	
+  var snakeState = env.generation.population[0].game.getSnakeState();	
+  
+   console.log(	
+    env.generation.population[0].game.calculateLinesOfSight(),	
+    env.generation.population[0].game.calculateConesOfSight()	
+  );	
+}
+
 // Add an event listener from the keyboard
 document.addEventListener(
   "keyup",

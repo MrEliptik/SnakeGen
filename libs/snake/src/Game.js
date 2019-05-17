@@ -202,33 +202,149 @@ class Game {
       return distance - 1;
     }
 
-    linesOfSight[0] = frontLineOfSight();
-    linesOfSight[1] = leftLineOfSight();
+    linesOfSight[0] = leftLineOfSight();
+    linesOfSight[1] = frontLineOfSight();
     linesOfSight[2] = rightLineOfSight();
 
     return linesOfSight;
   }
 
   /**
- * Returns an array of COS from the snake's perspective
-<<<<<<< HEAD
- * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
- */
+   * Returns an array of COS from the snake's perspective
+   * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
+   */
   calculateConesOfSight() {
     var snakePosition = this.snakes[0].getPosition();
     var snakeOrientation = this.snakes[0].getOrientation();
     var grid = this.grid;
 
-
-    var conesOfSight = [];
-
-    for (var i = 0; i < this.grid.length; i++) {
-      var row = this.grid[i];
-
-      for (var j = 0; j < row.length; j++) { }
-
+    if (snakeOrientation == "down") {
+      var beginX  = 0;
+      var beginY  = snakePosition[1];
+      var maxX    = this.gridRows;
+      var maxY    = this.gridColumns;
+    } else if (snakeOrientation == "up") {
+      var beginX  = 0;
+      var beginY  = 0;
+      var maxX    = this.gridRows;
+      var maxY    = snakePosition[1] + 1;
+    } else if (snakeOrientation == "left") {
+      var beginX  = 0;
+      var beginY  = 0;
+      var maxX    = snakePosition[0] + 1;
+      var maxY    = this.gridColumns;
+    } else if (snakeOrientation == "right") {
+      var beginX  = snakePosition[0];
+      var beginY  = 0;
+      var maxX    = this.gridRows;
+      var maxY    = this.gridColumns;
     }
-    return conesOfSight;
+
+    function updateCone(cone, i, j, snake, fruit) {
+      if(snake.isOnTail([i, j])) {
+        cone[1] += 1;
+      } else if (fruit.getPosition()[0] == i
+      && fruit.getPosition()[1] == j){
+        cone[2] += 1;
+      }
+      cone[0] += 1;
+      return cone;
+    }
+    var upRightCone  = [0, 0, 0];
+    var upLeftCone   = [0, 0, 0];
+    var leftCone     = [0, 0, 0];
+    var rightCone    = [0, 0, 0];
+
+    for (var i = beginX; i < maxX; i++) {
+      for (var j = beginY; j < maxY; j++) {
+        
+        if (snakePosition[0] == i && snakePosition[1] == j) {
+          continue;
+        }
+
+        if (snakeOrientation == "down") {
+          if (i >= snakePosition[0]) {
+            if (j <= i+snakePosition[1]-snakePosition[0]) {
+              leftCone = updateCone(leftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (j >= i+snakePosition[1]-snakePosition[0]) {
+              upLeftCone = updateCone(upLeftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+          if (i <= snakePosition[0]) {
+            if (j >= -1*i+snakePosition[1]+snakePosition[0]) {
+              upRightCone = updateCone(upRightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (j <= -1*i+snakePosition[1]+snakePosition[0]) {
+              rightCone = updateCone(rightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+
+        } else if (snakeOrientation == "up") {
+          if (i <= snakePosition[0]) {
+            if (j >= i+snakePosition[1]-snakePosition[0]) {
+              leftCone = updateCone(leftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (j <= i+snakePosition[1]-snakePosition[0]) {
+              upLeftCone = updateCone(upLeftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+          if (i >= snakePosition[0]) {
+            if (j <= -1*i+snakePosition[1]+snakePosition[0]) {
+              upRightCone = updateCone(upRightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (j >= -1*i+snakePosition[1]+snakePosition[0]) {
+              rightCone = updateCone(rightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+
+        } else if (snakeOrientation == "left") {
+          if (j >= snakePosition[1]) {
+            if (i >= -1*j+snakePosition[0]+snakePosition[1]) {
+              leftCone = updateCone(leftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (i <= -1*j+snakePosition[0]+snakePosition[1]) {
+              upLeftCone = updateCone(upLeftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+          if (j <= snakePosition[1]) {
+            if (i <= j+snakePosition[0]-snakePosition[1]) {
+              upRightCone = updateCone(upRightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (i >= j+snakePosition[0]-snakePosition[1]) {
+              rightCone = updateCone(rightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+
+        } else if (snakeOrientation == "right") {
+          if (j <= snakePosition[1]) {
+            if (i <= -1*j+snakePosition[0]+snakePosition[1]) {
+              leftCone = updateCone(leftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (i >= -1*j+snakePosition[0]+snakePosition[1]) {
+              upLeftCone = updateCone(upLeftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+          if (j >= snakePosition[1]) {
+            if (i >= j+snakePosition[0]-snakePosition[1]) {
+              upRightCone = updateCone(upRightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (i <= j+snakePosition[0]-snakePosition[1]) {
+              rightCone = updateCone(rightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+        }
+      }
+    }
+
+    var totalCell = leftCone[0] + upLeftCone[0] + upRightCone[0] + rightCone[0];
+
+    return [leftCone, upLeftCone,
+            upRightCone, rightCone,
+            [[(leftCone[0]-leftCone[1])/totalCell, leftCone[2]/this.fruits.length],
+            [(upLeftCone[0]-upLeftCone[1])/totalCell, upLeftCone[2]/this.fruits.length],
+            [(upRightCone[0]-upRightCone[1])/totalCell, upRightCone[2]/this.fruits.length],
+            [(rightCone[0]-rightCone[1])/totalCell, rightCone[2]/this.fruits.length]]];
   }
 
   getSnakeState() {
