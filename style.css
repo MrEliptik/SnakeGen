@@ -104,6 +104,12 @@ label{
   border-radius: 5px;
 }
 
+.canvas-container-solo {
+  box-shadow: 0 10px 20px rgb(216, 216, 216),0 6px 6px #bebebe;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
 .right-navbar {
   grid-column: 2 / 2;
   grid-row: 1;
