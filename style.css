@@ -42,6 +42,16 @@ label{
   margin-left: 5px;
 }
 
+.training-chart-wrapper{
+  max-height: 200px;
+  max-width: 400px;
+  text-align: center;
+}
+
+#training-chart{
+  display: inline-block;
+}
+
 .content-text{
   align-content: center;
 }
