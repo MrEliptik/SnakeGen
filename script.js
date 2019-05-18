@@ -23,43 +23,41 @@ var speed = 1;
 var nb_input_neurons = 3;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
-/* 
-    11 inputs : right, front, left
-    100 neurons : hidden layer
-    3 outputs : right, forward, left
-    */
-//var nn = new NeuralNetwork(11, 100, 3);
 
-//var nn = new NeuralNetwork(3, 100, 3);
+var ctx = document.getElementById('training-chart').getContext('2d');
+var myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [1,2,3,4,5,6,7,8,9,10],
+    datasets: [{ 
+        data: [86,114,106,106,107,111,133,221,344,145],
+        label: "Best score",
+        borderColor: "#3e95cd",
+        fill: false
+      }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    title: {
+      display: true,
+      text: 'Best score per generation'
+    }
+  }
+});
 
 // Call nn every seconds
-
 window.setInterval(function() {
-  /*
-  games.forEach(game => {
-    var grid = games[0].getGrid();
-    var snakeState = games[0].getSnakeState();
-
-    var los = calculateLinesOfSight(grid, snakeState['position'], snakeState['orientation']);
-    out = nn.predict(los);
-
-    // '...' is the spread operator and in ECMA6
-    // corresponds to the apply() method
-
-    max = Math.max(...out);
-
-    if (out[0] == max) {
-      game.update(0, "down");
-    }
-    else if (out[1] == max) {
-      game.update(0, "right");
-    }
-    else if (out[2] == max) {
-      game.update(0, "left");
-    }
-  });
-  */
+  testChartJS();
+  
 }, 1000);
+
+function testChartJS(){
+  myChart.data.datasets.forEach((dataset) => {
+      dataset.data.push([145]);
+  });
+  myChart.update();
+}
 
 function allDefaultUI() {
   if (
@@ -85,7 +83,7 @@ function createGames() {
   // First delete previously created games
   deleteGames();
 
-  if (perseInt(input_games_visible.value) > perseInt(input_population.value)) {
+  if (parseInt(input_games_visible.value) > parseInt(input_population.value)) {
     if (
       askUserConfirmation(
         "Number of visible games can't be > than population size, \
