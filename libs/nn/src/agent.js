@@ -60,9 +60,11 @@ class Agent {
    * Use the Neural Network to decide the next move of the snake
    */
   step() {
+    // Calculates the inputs for the NN
     var los = this.game.calculateLinesOfSight();
     var cos = this.game.calculateConesOfSight();
 
+    // Run a forward pass on the NN
     var action = this.nn.predict(
       [los[0],
       los[1],
@@ -78,10 +80,13 @@ class Agent {
     );
 
     // Get the index of the array's max value
+    // it'll give us the most likely action to take
     let i = action.indexOf(Math.max(...action));
 
     //console.log(this.actions[i]);
 
+    // Call the game update with the action calculated 
+    // by the NN
     this.game.update(this.actions[i], true);
   }
 }
