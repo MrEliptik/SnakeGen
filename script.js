@@ -91,7 +91,7 @@ function createGames() {
   // First delete previously created games
   deleteGames();
 
-  if (input_games_visible.value > input_population.value) {
+  if (parseInt(input_games_visible.value) > parseInt(input_population.value)) {
     if (
       askUserConfirmation(
         "Number of visible games can't be > than population size, \
