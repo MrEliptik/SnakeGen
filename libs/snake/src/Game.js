@@ -627,7 +627,6 @@ class Game {
   update(direction, toTranslate) {
     if (toTranslate) {
       var state = this.getSnakeState();
-      console.log("state:" + String(state["orientation"]));
       if (state["orientation"] == "down") {
         if (direction == "left") {
           direction = "right";
@@ -654,18 +653,16 @@ class Game {
         }
       }
     }
-
-    console.log("Direction : " + direction);
     // move the snake
     if (this.snakes[0].move(direction)) {
-      console.log("New position : " + this.snakes[0].getPosition());
+      //console.log("New position : " + this.snakes[0].getPosition());
 
       // f true -> Reset the Snake
       if (
         this.hitBoundaries(this.snakes[0]) ||
         this.hitBody(0, this.snakes[0])
       ) {
-        console.log("You died!");
+        //console.log("You died!");
 
         // Reset the dead   snake
         this.resetSnake(0);
@@ -680,7 +677,7 @@ class Game {
           // Update the snake
           this.snakes[0].grow();
 
-          console.log("Fruit eaten, length : " + this.snakes[0].length);
+          //console.log("Fruit eaten, length : " + this.snakes[0].length);
         }
       }
 
