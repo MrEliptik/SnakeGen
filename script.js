@@ -85,7 +85,7 @@ function createGames() {
   // First delete previously created games
   deleteGames();
 
-  if (input_games_visible.value > input_population.value) {
+  if (perseInt(input_games_visible.value) > perseInt(input_population.value)) {
     if (
       askUserConfirmation(
         "Number of visible games can't be > than population size, \
@@ -101,7 +101,7 @@ function createGames() {
   var canvases = [];
 
   // Create the required number of canvas to display games
-  for(var i = 0; i < input_games_visible.value; i++) {
+  for(var i = 0; i < parseInt(input_games_visible.value); i++) {
     var canvas = document.createElement("canvas");
     canvas.id = "canvas_" + String(i);
     if ((window.innerHeight - canvas_container.offsetTop - 20) / input_games_visible.value < 90) {
@@ -116,12 +116,12 @@ function createGames() {
 
   env = new Environment(
     canvases,
-    input_grid_size.value,
-    input_grid_size.value,
+    parseint(input_grid_size.value),
+    parseInt(input_grid_size.value),
     1,
     1,
     "DF",
-    input_population.value,
+    parseInt(input_population.value),
     100,
     speed,
     nb_input_neurons,
@@ -365,6 +365,6 @@ btn_default.addEventListener("click", () => {
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
   radios_speed[i].onclick = function() {
-    speed = this.value;
+    speed = parseInt(this.value);
   };
 }
