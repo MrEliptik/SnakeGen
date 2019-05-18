@@ -84,12 +84,15 @@ class Environment {
     this.generation = new Generation(this.agents, this.perCent);
 
     this.lastRender = 0;
-    this.tick();
   }
 
-  tick() {
+  tick(){
+    // Tell each agent to take one step in the
+    // game
     this.agents.forEach(agent => {
       agent.step();
     });
   }
+
+  
 }
