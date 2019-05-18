@@ -19,7 +19,7 @@ var btn_default = document.getElementById("btn_default");
 var radios_speed = document.getElementsByName("speed");
 
 var env = null;
-var speed = 1;
+var speed = 60;
 var nb_input_neurons = 11;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
@@ -134,8 +134,17 @@ function createGames() {
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
     100,
-    "play",
+    "play"
   );
+  update();
+}
+
+function update(){
+  env.tick();
+
+  setTimeout(function(){
+    update();
+  }, 1000/this.speed);
 }
 
 function deleteGames() {
@@ -264,5 +273,8 @@ btn_default.addEventListener("click", () => {
 for (var i = 0, max = radios_speed.length; i < max; i++) {
   radios_speed[i].onclick = function() {
     speed = this.value;
+
+    // Goes from x1, x2, etc.. to 60fps, 120fps...
+    speed *= 60;
   };
 }
