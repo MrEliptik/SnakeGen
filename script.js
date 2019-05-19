@@ -16,11 +16,16 @@ var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
 var btn_default = document.getElementById("btn_default");
 
+var btn_restart = document.getElementById("btn_restart");
+var btn_start = document.getElementById("btn_start");
+var btn_stop = document.getElementById("btn_stop");
+
 var btn_chart = document.getElementById("btn_chart");
 
 var radios_speed = document.getElementsByName("speed");
 
 var env = null;
+var startPauseState = "pause";
 var speed = 1;
 var nb_input_neurons = 3;
 var nb_hidden_neurons = 100;
@@ -52,12 +57,13 @@ var myChart = new Chart(ctx, {
 window.setInterval(function() {
   testChartJS();
   
-}, 1000);
+}, 4000);
 
 function testChartJS(){
   myChart.data.datasets.forEach((dataset) => {
-      dataset.data.push([145]);
+      dataset.data.push(Math.floor(Math.random() * 500) + 1);
   });
+  myChart.data.labels.push(myChart.data.labels[myChart.data.labels.length-1]+1);
   myChart.update();
 }
 
@@ -162,6 +168,20 @@ function toggleChartDisplay(){
     chart.style.display = "none";
     btn_chart.className = 'controls-chart-off';
   }
+}
+
+function toggleStartPause(){
+  var html = '';
+  if(startPauseState == "pause"){
+    html = '<i class="fas fa-pause"></i>';
+    startPauseState = "play";
+  }
+  else{
+    html = '<i class="fas fa-play"></i>';
+    startPauseState = "pause";
+  }
+  btn_start.innerHTML = html;
+  
 }
 
 function getSpeedValue() {
@@ -290,6 +310,18 @@ btn_delete.addEventListener("click", () => {
 
 btn_default.addEventListener("click", () => {
   allDefaultUI();
+});
+
+btn_restart.addEventListener("click", () => {
+
+});
+
+btn_start.addEventListener("click", () => {
+  toggleStartPause();
+});
+
+btn_stop.addEventListener("click", () => {
+
 });
 
 btn_chart.addEventListener("click", () => {
