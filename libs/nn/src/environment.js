@@ -38,6 +38,8 @@ class Environment {
     var visible = 0;
     this.agents = [];
 
+    this.playPauseState = "pause";
+
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
       if (visible < this.canvases.length) {
@@ -84,6 +86,14 @@ class Environment {
     this.generation = new Generation(this.agents, this.perCent);
   }
 
+  setPlayPauseState(state){
+    this.playPauseState = state;
+  }
+
+  getPlayPauseState(){
+    return this.playPauseState;
+  }
+
   tick(){
     // Tell each agent to take one step in the
     // game
@@ -92,13 +102,13 @@ class Environment {
     });
   }
 
-  update(cpt){
-    if(cpt < 10) {
+  update(tickCount){
+    if(tickCount < this.tickout) {
       this.tick();
       var that = this;
   
       setTimeout(function(){
-        that.update(++cpt);
+        that.update(++tickCount);
       }, 1000/60);
     }
   }
