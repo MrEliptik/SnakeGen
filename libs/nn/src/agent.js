@@ -87,7 +87,7 @@ class Agent {
 
     // Call the game update with the action calculated 
     // by the NN
-    this.game.update(this.actions[i], true);
+    return this.game.update(this.actions[i], true);
   }
 
   getScore(){
