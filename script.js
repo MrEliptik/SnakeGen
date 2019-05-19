@@ -136,15 +136,7 @@ function createGames() {
     100,
     "play"
   );
-  update();
-}
-
-function update(){
-  env.tick();
-
-  setTimeout(function(){
-    update();
-  }, 1000/this.speed);
+  env.update(0);
 }
 
 function deleteGames() {

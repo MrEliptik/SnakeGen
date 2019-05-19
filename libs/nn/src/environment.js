@@ -11,13 +11,13 @@ class Environment {
     nb_snakes,
     nb_fruits,
     mode = "DF",
-    number,
+    populationSize,
     perCent,
     timeUnit,
     input_nodes,
     hidden_nodes,
     output_nodes,
-    timeout,
+    tickout,
     state
   ) {
     this.canvases = canvases;
@@ -26,20 +26,20 @@ class Environment {
     this.nb_snakes = nb_snakes;
     this.nb_fruits = nb_fruits;
     this.mode = mode;
-    this.number = number;
+    this.populationSize = populationSize;
     this.perCent = perCent;
     this.timeUnit = timeUnit;
     this.input_nodes = input_nodes;
     this.hidden_nodes = hidden_nodes;
     this.output_nodes = output_nodes;
-    this.timeout = timeout;
+    this.tickout = tickout;
     this.state = state;
 
     var visible = 0;
     this.agents = [];
 
     // Create the required number of Agent
-    for (var i = 0; i < this.number; i++) {
+    for (var i = 0; i < this.populationSize; i++) {
       if (visible < this.canvases.length) {
         this.agents.push(
           new Agent(
@@ -94,5 +94,14 @@ class Environment {
     });
   }
 
+  update(cpt){
+    if(cpt < 10) {
+      this.tick();
+      var that = this;
   
+      setTimeout(function(){
+        that.update(++cpt);
+      }, 1000/60);
+    }
+  }
 }
