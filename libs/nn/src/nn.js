@@ -23,7 +23,6 @@ class NeuralNetwork {
    * Takes in a 1D array and feed forwards through the network
    * @param {array} - Array of inputs
    */
-
   predict(user_input) {
     let output;
     tf.tidy(() => {

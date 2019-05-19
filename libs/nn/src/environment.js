@@ -13,6 +13,8 @@ class Environment extends Generation {
     mode = "DF",
     populationSize,
     selectionPerCentage,
+    stepSizeParameter,
+    mutationProb,
     speed,
     input_nodes,
     hidden_nodes,
@@ -22,20 +24,10 @@ class Environment extends Generation {
   ) {
 
     // Generation Constructor
-    super(selectionPerCentage)
-
-    this.canvases = canvases;
-    this.gridRows = gridRows;
-    this.gridColumns = gridColumns;
-    this.nb_snakes = nb_snakes;
-    this.nb_fruits = nb_fruits;
-    this.mode = mode;
+    super(selectionPerCentage, stepSizeParameter, mutationProb)
+    
     this.populationSize = populationSize;
-    this.selectionPerCentage = selectionPerCentage;
     this.speed = speed;
-    this.input_nodes = input_nodes;
-    this.hidden_nodes = hidden_nodes;
-    this.output_nodes = output_nodes;
     this.tickout = tickout;
     this.state = state;
 
@@ -44,41 +36,41 @@ class Environment extends Generation {
 
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
-      if (visible < this.canvases.length) {
+      if (visible < canvases.length) {
         this.agents.push(
           new Agent(
-            this.gridRows,
-            this.gridColumns,
-            this.canvases[visible].height,
-            this.canvases[visible].width,
-            this.canvases[visible],
-            this.nb_snakes,
-            this.nb_fruits,
-            this.mode,
+            gridRows,
+            gridColumns,
+            canvases[visible].height,
+            canvases[visible].width,
+            canvases[visible],
+            nb_snakes,
+            nb_fruits,
+            mode,
             true,
-            this.speed,
-            this.input_nodes,
-            this.hidden_nodes,
-            this.output_nodes
+            speed,
+            input_nodes,
+            hidden_nodes,
+            output_nodes
           )
         );
         visible++;
       } else {
         this.agents.push(
           new Agent(
-            this.gridRows,
-            this.gridColumns,
-            this.canvasHeight,
-            this.canvasWidth,
-            this.canvas,
-            this.nb_snakes,
-            this.nb_fruits,
-            this.mode,
+            gridRows,
+            gridColumns,
+            canvases[visible].height,
+            canvases[visible].width,
+            canvases[visible],
+            nb_snakes,
+            nb_fruits,
+            mode,
             false,
-            this.speed,
-            this.input_nodes,
-            this.hidden_nodes,
-            this.output_nodes
+            speed,
+            input_nodes,
+            hidden_nodes,
+            output_nodes
           )
         );
       }
