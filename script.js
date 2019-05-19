@@ -25,34 +25,13 @@ var btn_chart = document.getElementById("btn_chart");
 var radios_speed = document.getElementsByName("speed");
 
 var env = null;
+var trainingChart = null;
 var playPauseState = "pause";
 
-var speed = 60;
+var speed = 30;
 var nb_input_neurons = 11;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
-
-var ctx = document.getElementById('training-chart').getContext('2d');
-var myChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: [1,2,3,4,5,6,7,8,9,10],
-    datasets: [{ 
-        data: [86,114,106,106,107,111,133,221,344,145],
-        label: "Best score",
-        borderColor: "#3e95cd",
-        fill: false
-      }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    title: {
-      display: true,
-      text: 'Best score per generation'
-    }
-  }
-});
 
 // Call nn every seconds
 window.setInterval(function() {
@@ -61,11 +40,11 @@ window.setInterval(function() {
 }, 4000);
 
 function testChartJS(){
-  myChart.data.datasets.forEach((dataset) => {
+  trainingChart.data.datasets.forEach((dataset) => {
       dataset.data.push(Math.floor(Math.random() * 500) + 1);
   });
-  myChart.data.labels.push(myChart.data.labels[myChart.data.labels.length-1]+1);
-  myChart.update();
+  trainingChart.data.labels.push(trainingChart.data.labels[trainingChart.data.labels.length-1]+1);
+  trainingChart.update();
 }
 
 function testyTest(){
@@ -142,7 +121,32 @@ function createGames() {
     100,
     "play"
   );
+  createTrainingChart();
   update();
+}
+
+function createTrainingChart(){
+  var ctx = document.getElementById('training-chart').getContext('2d');
+  trainingChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [1,2,3,4,5,6,7,8,9,10],
+      datasets: [{ 
+          data: [86,114,106,106,107,111,133,221,344,145],
+          label: "Best score",
+          borderColor: "#3e95cd",
+          fill: false
+        }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'Best score per generation'
+      }
+    }
+  });
 }
 
 function update(){
