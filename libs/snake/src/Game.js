@@ -665,7 +665,9 @@ class Game {
         //console.log("You died!");
         this.score = 0;
         // Reset the dead snake
-        this.resetSnake(0);
+        //this.resetSnake(0);
+        this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawGrid();
 
         return false;
       } else {
