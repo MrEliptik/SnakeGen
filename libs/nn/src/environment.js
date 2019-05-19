@@ -86,6 +86,12 @@ class Environment {
     this.generation = new Generation(this.agents, this.perCent);
   }
 
+  getCurrGenHighestScore()
+  {
+    return this.generation.getHighestScore();
+  }
+    
+
   setPlayPauseState(state){
     this.state = state;
   }
