@@ -87,21 +87,26 @@ class Generation {
   }
 
   /**
-   * NotImplemented
-   * @returns {}
+   * Return an array of selected agents from the list
+   * @param   agents  Array of agents that we have to divide
+   * @returns Agents selected
    */
   selection(agents) {
     
     // Select the number of agents to select
     var numberOfAgents = Math.round(this.populationSize * this.selectionPerCentage)
+    
+    // Sort the agents by using their score
     var agentsArray = agents.sort(function(a,b) {
       return a.getScore() - b.getScore();
     });
 
+    // Selection
     var agentsToSelect = [];
     for(var i=0; i<numberOfAgents; i++) {
       agentsToSelect.push(agentsArray[i])
     }
+    
     return agentsToSelect;
   }
 
