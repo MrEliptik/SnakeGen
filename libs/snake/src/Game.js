@@ -666,6 +666,8 @@ class Game {
         this.score = 0;
         // Reset the dead snake
         this.resetSnake(0);
+
+        return false;
       } else {
         var hitIndex = this.hitFruit(this.snakes[0]);
 
@@ -691,7 +693,7 @@ class Game {
 
       // Update and return the grid
       this.upgradeGrid();
-      return this.grid;
+      return true;
     }
   }
 }
