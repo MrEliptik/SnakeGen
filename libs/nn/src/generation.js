@@ -3,18 +3,16 @@ class Generation {
    * Takes in the number of input nodes, hidden node and output nodes
    * @constructor
    * @param {number} number
-   * @param {number} perCent
+   * @param {number} selectionPerCentage
    * @param {number} timeUnit
    * @param {number} input_nodes
    * @param {number} hidden_nodes
    * @param {number} output_nodes
    */
   constructor(
-    agents,
-    perCent
+    selectionPerCentage
   ) {
-    this.agents = agents;
-    this.perCent = perCent;
+    this.selectionPerCentage = selectionPerCentage;
     this.bestScore = 0;
   }
 
@@ -38,7 +36,9 @@ class Generation {
    * NotImplemented
    * @returns {}
    */
-  mutate(Agent) {}
+  mutate(Agent) {
+
+  }
 
   /**
    * Return the value of the Gaussian Distribution at x=0
