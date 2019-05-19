@@ -16,10 +16,9 @@ class Game {
     canvas = null,
     nb_snakes,
     nb_fruits,
-    mode = 'DF',
+    mode = "DF",
     display
   ) {
-
     this.display = display;
     this.canvas = canvas;
 
@@ -37,13 +36,13 @@ class Game {
       Array(this.gridColumns).fill(objects.empty)
     );
 
-    if(this.display){
+    if (this.display) {
       // in pixel
       this.size = canvasWidth / gridRows;
       this.canvasHeight = canvasHeight;
       this.canvasWidth = canvasWidth;
       // Object containing the canvas
-      this.canvasCtx = this.canvas.getContext('2d');
+      this.canvasCtx = this.canvas.getContext("2d");
 
       if (mode == "SP") {
         // mode using sprites
@@ -88,7 +87,7 @@ class Game {
         var spriteFruit = null;
       }
     }
-    
+
     // Creation of the components
     this.nb_snakes = nb_snakes;
     this.nb_fruits = nb_fruits;
@@ -110,23 +109,259 @@ class Game {
     this.snakes = [new Snake([snake_x, snake_y], colorSnake, spriteSnake)];
 
     // Initial drawing
-    if(this.display){
+    if (this.display) {
       this.draw();
     }
   }
 
-  getDisplay(){
+  getDisplay() {
     return this.display;
   }
 
-  getGrid(){
+  getGrid() {
     return this.grid;
   }
 
-  getSnakeState(){
+  /**
+   * Returns an array of LOS from the snake's perspective
+   * @returns {linesOfSight} - Array of LOS [up, left, right]
+   */
+  calculateLinesOfSight() {
+    var snakePosition = this.snakes[0].getPosition();
+    var snakeOrientation = this.snakes[0].getOrientation();
+    var gridRows = this.gridRows;
+    var gridColumns = this.gridColumns;
+    var snake = this.snakes[0];
+
+    var linesOfSight = [];
+
+    function frontLineOfSight() {
+      var i = snakePosition[0];
+      var j = snakePosition[1];
+      var distance = 0;
+      do {
+        distance += 1;
+
+        if (snakeOrientation == "down") {
+          j += 1;
+        } else if (snakeOrientation == "up") {
+          j -= 1;
+        } else if (snakeOrientation == "left") {
+          i -= 1;
+        } else if (snakeOrientation == "right") {
+          i += 1;
+        }
+      } while (
+        j >= 0 &&
+        j < gridRows &&
+        i >= 0 &&
+        i < gridColumns &&
+        !snake.isOnTail([i, j])
+      );
+      return distance - 1;
+    }
+
+    function leftLineOfSight() {
+      var i = snakePosition[0];
+      var j = snakePosition[1];
+      var distance = 0;
+      do {
+        distance += 1;
+
+        if (snakeOrientation == "down") {
+          i += 1;
+        } else if (snakeOrientation == "up") {
+          i -= 1;
+        } else if (snakeOrientation == "left") {
+          j += 1;
+        } else if (snakeOrientation == "right") {
+          j -= 1;
+        }
+      } while (
+        j >= 0 &&
+        j < gridRows &&
+        i >= 0 &&
+        i < gridColumns &&
+        !snake.isOnTail([i, j])
+      );
+      return distance - 1;
+    }
+
+    function rightLineOfSight() {
+      var i = snakePosition[0];
+      var j = snakePosition[1];
+      var distance = 0;
+      do {
+        distance += 1;
+
+        if (snakeOrientation == "down") {
+          i -= 1;
+        } else if (snakeOrientation == "up") {
+          i += 1;
+        } else if (snakeOrientation == "left") {
+          j -= 1;
+        } else if (snakeOrientation == "right") {
+          j += 1;
+        }
+      } while (
+        j >= 0 &&
+        j < gridRows &&
+        i >= 0 &&
+        i < gridColumns &&
+        !snake.isOnTail([i, j])
+      );
+      return distance - 1;
+    }
+
+    linesOfSight[0] = leftLineOfSight();
+    linesOfSight[1] = frontLineOfSight();
+    linesOfSight[2] = rightLineOfSight();
+
+    return linesOfSight;
+  }
+
+  /**
+   * Returns an array of COS from the snake's perspective
+   * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
+   */
+  calculateConesOfSight() {
+    var snakePosition = this.snakes[0].getPosition();
+    var snakeOrientation = this.snakes[0].getOrientation();
+    var grid = this.grid;
+
+    if (snakeOrientation == "down") {
+      var beginX  = 0;
+      var beginY  = snakePosition[1];
+      var maxX    = this.gridRows;
+      var maxY    = this.gridColumns;
+    } else if (snakeOrientation == "up") {
+      var beginX  = 0;
+      var beginY  = 0;
+      var maxX    = this.gridRows;
+      var maxY    = snakePosition[1] + 1;
+    } else if (snakeOrientation == "left") {
+      var beginX  = 0;
+      var beginY  = 0;
+      var maxX    = snakePosition[0] + 1;
+      var maxY    = this.gridColumns;
+    } else if (snakeOrientation == "right") {
+      var beginX  = snakePosition[0];
+      var beginY  = 0;
+      var maxX    = this.gridRows;
+      var maxY    = this.gridColumns;
+    }
+
+    function updateCone(cone, i, j, snake, fruit) {
+      if(snake.isOnTail([i, j])) {
+        cone[1] += 1;
+      } else if (fruit.getPosition()[0] == i
+      && fruit.getPosition()[1] == j){
+        cone[2] += 1;
+      }
+      cone[0] += 1;
+      return cone;
+    }
+    var upRightCone  = [0, 0, 0];
+    var upLeftCone   = [0, 0, 0];
+    var leftCone     = [0, 0, 0];
+    var rightCone    = [0, 0, 0];
+
+    for (var i = beginX; i < maxX; i++) {
+      for (var j = beginY; j < maxY; j++) {
+        
+        if (snakePosition[0] == i && snakePosition[1] == j) {
+          continue;
+        }
+
+        if (snakeOrientation == "down") {
+          if (i >= snakePosition[0]) {
+            if (j <= i+snakePosition[1]-snakePosition[0]) {
+              leftCone = updateCone(leftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (j >= i+snakePosition[1]-snakePosition[0]) {
+              upLeftCone = updateCone(upLeftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+          if (i <= snakePosition[0]) {
+            if (j >= -1*i+snakePosition[1]+snakePosition[0]) {
+              upRightCone = updateCone(upRightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (j <= -1*i+snakePosition[1]+snakePosition[0]) {
+              rightCone = updateCone(rightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+
+        } else if (snakeOrientation == "up") {
+          if (i <= snakePosition[0]) {
+            if (j >= i+snakePosition[1]-snakePosition[0]) {
+              leftCone = updateCone(leftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (j <= i+snakePosition[1]-snakePosition[0]) {
+              upLeftCone = updateCone(upLeftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+          if (i >= snakePosition[0]) {
+            if (j <= -1*i+snakePosition[1]+snakePosition[0]) {
+              upRightCone = updateCone(upRightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (j >= -1*i+snakePosition[1]+snakePosition[0]) {
+              rightCone = updateCone(rightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+
+        } else if (snakeOrientation == "left") {
+          if (j >= snakePosition[1]) {
+            if (i >= -1*j+snakePosition[0]+snakePosition[1]) {
+              leftCone = updateCone(leftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (i <= -1*j+snakePosition[0]+snakePosition[1]) {
+              upLeftCone = updateCone(upLeftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+          if (j <= snakePosition[1]) {
+            if (i <= j+snakePosition[0]-snakePosition[1]) {
+              upRightCone = updateCone(upRightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (i >= j+snakePosition[0]-snakePosition[1]) {
+              rightCone = updateCone(rightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+
+        } else if (snakeOrientation == "right") {
+          if (j <= snakePosition[1]) {
+            if (i <= -1*j+snakePosition[0]+snakePosition[1]) {
+              leftCone = updateCone(leftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (i >= -1*j+snakePosition[0]+snakePosition[1]) {
+              upLeftCone = updateCone(upLeftCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+          if (j >= snakePosition[1]) {
+            if (i >= j+snakePosition[0]-snakePosition[1]) {
+              upRightCone = updateCone(upRightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+            if (i <= j+snakePosition[0]-snakePosition[1]) {
+              rightCone = updateCone(rightCone, i, j, this.snakes[0], this.fruits[0]);
+            }
+          }
+        }
+      }
+    }
+
+    var totalCell = leftCone[0] + upLeftCone[0] + upRightCone[0] + rightCone[0];
+
+    return [leftCone, upLeftCone,
+            upRightCone, rightCone,
+            [[(leftCone[0]-leftCone[1])/totalCell, leftCone[2]/this.fruits.length],
+            [(upLeftCone[0]-upLeftCone[1])/totalCell, upLeftCone[2]/this.fruits.length],
+            [(upRightCone[0]-upRightCone[1])/totalCell, upRightCone[2]/this.fruits.length],
+            [(rightCone[0]-rightCone[1])/totalCell, rightCone[2]/this.fruits.length]]];
+  }
+
+  getSnakeState() {
     return {
-      "position":this.snakes[0].getPos(),
-      "orientation":this.snakes[0].getOrientation()
+      position: this.snakes[0].getPosition(),
+      orientation: this.snakes[0].getOrientation()
     };
   }
 
@@ -137,6 +372,7 @@ class Game {
 
     return [x, y];
   }
+
   // Draw the grid layout
   drawGrid() {
     this.canvasCtx.beginPath();
@@ -179,14 +415,14 @@ class Game {
         // get the color
         this.canvasCtx.fillStyle = this.fruits[i].color;
         // get the coordinates
-        var coord = this.getCoordinates(this.fruits[i].getPos());
+        var coord = this.getCoordinates(this.fruits[i].getPosition());
         // draw the color
         this.canvasCtx.fillRect(coord[0], coord[1], this.size, this.size);
       } else {
         // mode with sprites
 
         // get the coordinates
-        var coord = this.getCoordinates(this.fruits[i].getPos());
+        var coord = this.getCoordinates(this.fruits[i].getPosition());
         this.fruits[i].sprite.setPos(coord[0], coord[1]);
         // draw the sprite
         this.fruits[i].sprite.render();
@@ -203,14 +439,14 @@ class Game {
         // get the color
         this.canvasCtx.fillStyle = this.snakes[i].color;
         // get the coordinates
-        var coord = this.getCoordinates(this.snakes[i].getPos());
+        var coord = this.getCoordinates(this.snakes[i].getPosition());
         // draw the color
         this.canvasCtx.fillRect(coord[0], coord[1], this.size, this.size);
       } else {
         // mode with sprites
 
         // get the coordinates
-        var coord = this.getCoordinates(this.snakes[i].getPos());
+        var coord = this.getCoordinates(this.snakes[i].getPosition());
         this.snakes[i].sprite[0].setPos(coord[0], coord[1]);
         // draw the sprite
         this.snakes[i].sprite[0].render();
@@ -249,7 +485,7 @@ class Game {
 
   // Checks if the snake object is going out of boundaries
   hitBoundaries(snakeToTest) {
-    var posToTest = snakeToTest.getPos();
+    var posToTest = snakeToTest.getPosition();
 
     if (
       typeof this.grid[posToTest[0]] === "undefined" ||
@@ -264,10 +500,10 @@ class Game {
   // Checks if a snake hits a fruit
   // Returns the index of the fruit, otherwise return -1
   hitFruit(snakeToTest) {
-    var posToTest = snakeToTest.getPos();
+    var posToTest = snakeToTest.getPosition();
 
     for (var i = 0; i < this.nb_fruits; i++) {
-      var currentPos = this.fruits[i].getPos();
+      var currentPos = this.fruits[i].getPosition();
       if (posToTest[0] == currentPos[0] && posToTest[1] == currentPos[1]) {
         return i;
       }
@@ -279,11 +515,11 @@ class Game {
 
   // Check if the snake hits another boy or his own body
   hitBody(index, snakeToTest) {
-    var posToTest = snakeToTest.getPos();
+    var posToTest = snakeToTest.getPosition();
 
     for (var i = 0; i < this.nb_snakes; i++) {
       if (i != index) {
-        var currentPos = this.snakes[i].getPos();
+        var currentPos = this.snakes[i].getPosition();
         if (posToTest[0] == currentPos[0] && posToTest[1] == currentPos[1]) {
           return true;
         }
@@ -344,7 +580,7 @@ class Game {
       if (findGoodPos) {
         // Check snakes
         for (var j = 0; j < this.nb_snakes; j++) {
-          posToCheck = this.snakes[j].getPos();
+          posToCheck = this.snakes[j].getPosition();
           if (new_x == posToCheck[0] && new_y == posToCheck[1]) {
             findGoodPos = false;
             break;
@@ -376,31 +612,57 @@ class Game {
       }
 
       // Update the grid with the snakes positions
-      var pos = this.snakes[i].getPos();
+      var pos = this.snakes[i].getPosition();
       this.grid[pos[0]][pos[1]] = objects.snake;
     }
 
     // Update the grid with the fruits positions
     for (var i = 0; i < this.nb_fruits; i++) {
-      var pos = this.fruits[i].getPos();
+      var pos = this.fruits[i].getPosition();
       this.grid[pos[0]][pos[1]] = objects.food;
     }
   }
 
   // Update the entire game by moving one snake
-  update(index, direction) {
-    console.log("Direction : " + direction);
-
+  update(direction, toTranslate) {
+    if (toTranslate) {
+      var state = this.getSnakeState();
+      if (state["orientation"] == "down") {
+        if (direction == "left") {
+          direction = "right";
+        } else if (direction == "up") {
+          direction = "down";
+        } else if (direction == "right") {
+          direction = "left";
+        }
+      } else if (state["orientation"] == "left") {
+        if (direction == "left") {
+          direction = "down";
+        } else if (direction == "up") {
+          direction = "left";
+        } else if (direction == "right") {
+          direction = "up";
+        }
+      } else if (state["orientation"] == "right") {
+        if (direction == "left") {
+          direction = "up";
+        } else if (direction == "up") {
+          direction = "right";
+        } else if (direction == "right") {
+          direction = "down";
+        }
+      }
+    }
     // move the snake
     if (this.snakes[0].move(direction)) {
-      console.log("New position : " + this.snakes[0].getPos());
+      //console.log("New position : " + this.snakes[0].getPosition());
 
       // f true -> Reset the Snake
       if (
         this.hitBoundaries(this.snakes[0]) ||
         this.hitBody(0, this.snakes[0])
       ) {
-        console.log("You died!");
+        //console.log("You died!");
 
         // Reset the dead   snake
         this.resetSnake(0);
@@ -415,15 +677,15 @@ class Game {
           // Update the snake
           this.snakes[0].grow();
 
-          console.log("Fruit eaten, length : " + this.snakes[0].length);
+          //console.log("Fruit eaten, length : " + this.snakes[0].length);
         }
       }
 
-      if(this.display){
+      if (this.display) {
         // Draw the game
         this.draw();
       }
-      
+
       // Update and return the grid
       this.upgradeGrid();
       return this.grid;

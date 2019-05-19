@@ -26,8 +26,9 @@ var radios_speed = document.getElementsByName("speed");
 
 var env = null;
 var startPauseState = "pause";
-var speed = 1;
-var nb_input_neurons = 3;
+
+var speed = 60;
+var nb_input_neurons = 11;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
 
@@ -65,6 +66,11 @@ function testChartJS(){
   });
   myChart.data.labels.push(myChart.data.labels[myChart.data.labels.length-1]+1);
   myChart.update();
+}
+
+function testyTest(){
+  var a = new Agent(10, 10, null, null, null, 1, 1, 'df', false, 1, 11, 100, 3);
+  a.step();
 }
 
 function allDefaultUI() {
@@ -134,7 +140,17 @@ function createGames() {
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
     100,
+    "play"
   );
+  update();
+}
+
+function update(){
+  env.tick();
+
+  setTimeout(function(){
+    update();
+  }, 1000/this.speed);
 }
 
 function deleteGames() {
@@ -196,37 +212,11 @@ function getSpeedValue() {
   }
 }
 
-function testyTest() {
-  var grid = games[0].getGrid();
-  var snakeState = games[0].getSnakeState();
-
-  console.log(
-    calculateLinesOfSight(
-      grid,
-      snakeState["position"],
-      snakeState["orientation"]
-    )
-  );
-}
-/**
- * Returns an array of COS from the snake's perspective
- * @param {grid} - The game's grid
- * @param {position} - Tuple for the snake's positon
- * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
- * @returns {conesOfSight} - Array of COS [left, front_left, front_right, right]
- */
-function calculateConesOfSight(grid, position, orientation) {
-  this.position = position;
-  this.orientation = orientation;
-  this.grid = grid;
-
-  var conesOfSight = [];
-
-  for (var i = 0; i < this.grid.length; i++) {
-    var row = this.grid[i];
-    for (var j = 0; j < row.length; j++) {}
-  }
-  return conesOfSight;
+function testyTestLog() {	
+   console.log(	
+    env.agents[0].game.calculateLinesOfSight(),	
+    env.agents[0].game.calculateConesOfSight()	
+  );	
 }
 
 // Add an event listener from the keyboard
@@ -236,24 +226,23 @@ document.addEventListener(
     const key = event.keyCode;
 
     if (key == "38") {
-      games.forEach(game => {
-        game.update(0, "up");
+      env.agents.forEach(pop => {
+        pop.game.update("up", false);
       });
     } else if (key == "40") {
-      games.forEach(game => {
-        game.update(0, "down");
+      env.agents.forEach(pop => {
+        pop.game.update("down", false);
       });
     } else if (key == "37") {
-      games.forEach(game => {
-        game.update(0, "left");
+      env.agents.forEach(pop => {
+        pop.game.update("left", false);
       });
     } else if (key == "39") {
-      games.forEach(game => {
-        game.update(0, "right");
+      env.agents.forEach(pop => {
+        pop.game.update("right", false);
       });
     }
-
-    testyTest();
+    testyTestLog();
   },
   false
 );
@@ -331,5 +320,7 @@ btn_chart.addEventListener("click", () => {
 for (var i = 0, max = radios_speed.length; i < max; i++) {
   radios_speed[i].onclick = function() {
     speed = parseInt(this.value);
+    // Goes from x1, x2, etc.. to 60fps, 120fps...
+    speed *= 60;
   };
 }

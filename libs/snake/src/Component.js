@@ -6,7 +6,7 @@ class Component {
         this.sprite = sprite;
     }
 
-    getPos() {
+    getPosition() {
       return this.pos;
     }
 };
