@@ -16,6 +16,8 @@ var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
 var btn_default = document.getElementById("btn_default");
 
+var btn_chart = document.getElementById("btn_chart");
+
 var radios_speed = document.getElementsByName("speed");
 
 var env = null;
@@ -114,7 +116,7 @@ function createGames() {
 
   env = new Environment(
     canvases,
-    parseint(input_grid_size.value),
+    parseInt(input_grid_size.value),
     parseInt(input_grid_size.value),
     1,
     1,
@@ -151,6 +153,17 @@ function askUserConfirmation(msg) {
   return confirm(msg);
 }
 
+function toggleChartDisplay(){
+  var chart = document.querySelector(".training-chart-wrapper");
+  if (chart.style.display === "none") {
+    chart.style.display = "block";
+    btn_chart.className = 'controls-chart-on';
+  } else {
+    chart.style.display = "none";
+    btn_chart.className = 'controls-chart-off';
+  }
+}
+
 function getSpeedValue() {
   for (var i = 0, length = radios.length; i < length; i++) {
     if (radios[i].checked) {
@@ -175,88 +188,6 @@ function testyTest() {
     )
   );
 }
-
-/**
- * Returns an array of LOS from the snake's perspective
- * @param {grid} - The game's grid
- * @param {position} - Tuple for the snake's positon
- * @param {orientation} - Snake's head's orientation = 'up' or 'left' or 'right' or 'down'
- * @returns {linesOfSight} - Array of LOS [up, left, right]
- */
-function calculateLinesOfSight(grid, position, orientation) {
-  this.position = position;
-  this.orientation = orientation;
-  this.grid = grid;
-
-  var linesOfSight = [];
-
-  function frontLineOfSight() {
-    var i = this.position[0];
-    var j = this.position[1];
-    var distance = 0;
-    do {
-      distance += 1;
-
-      if (this.orientation == "down") {
-        j += 1;
-      } else if (this.orientation == "up") {
-        j -= 1;
-      } else if (this.orientation == "left") {
-        i -= 1;
-      } else if (this.orientation == "right") {
-        i += 1;
-      }
-    } while (i in this.grid && j in this.grid[i]);
-    return distance - 1;
-  }
-
-  function leftLineOfSight() {
-    var i = this.position[0];
-    var j = this.position[1];
-    var distance = 0;
-    do {
-      distance += 1;
-
-      if (this.orientation == "down") {
-        i += 1;
-      } else if (this.orientation == "up") {
-        i -= 1;
-      } else if (this.orientation == "left") {
-        j += 1;
-      } else if (this.orientation == "right") {
-        j -= 1;
-      }
-    } while (i in this.grid && j in this.grid[i]);
-    return distance - 1;
-  }
-
-  function rightLineOfSight() {
-    var i = this.position[0];
-    var j = this.position[1];
-    var distance = 0;
-    do {
-      distance += 1;
-
-      if (this.orientation == "down") {
-        i -= 1;
-      } else if (this.orientation == "up") {
-        i += 1;
-      } else if (this.orientation == "left") {
-        j -= 1;
-      } else if (this.orientation == "right") {
-        j += 1;
-      }
-    } while (i in this.grid && j in this.grid[i]);
-    return distance - 1;
-  }
-
-  linesOfSight[0] = frontLineOfSight();
-  linesOfSight[1] = leftLineOfSight();
-  linesOfSight[2] = rightLineOfSight();
-
-  return linesOfSight;
-}
-
 /**
  * Returns an array of COS from the snake's perspective
  * @param {grid} - The game's grid
@@ -359,6 +290,10 @@ btn_delete.addEventListener("click", () => {
 
 btn_default.addEventListener("click", () => {
   allDefaultUI();
+});
+
+btn_chart.addEventListener("click", () => {
+  toggleChartDisplay();
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
