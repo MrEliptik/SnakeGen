@@ -112,7 +112,7 @@ function createGames() {
     nb_input_neurons,
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
-    1000,
+    300,
     "pause"
   );
   env.update(0);
@@ -121,7 +121,7 @@ function createGames() {
 
   // Call nn every seconds
   window.setInterval(function() {
-    updateChart(env.getCurrGenHighestScore());
+    updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
   }, 5000);
 }
 
@@ -130,7 +130,7 @@ function createTrainingChart(){
   trainingChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: [1],
+      labels: [0],
       datasets: [{ 
           data: [],
           label: "Best score",
@@ -152,11 +152,24 @@ function createTrainingChart(){
   });
 }
 
-function updateChart(value){
-  trainingChart.data.datasets.forEach((dataset) => {
-    dataset.data.push(value);
-  });
-  trainingChart.data.labels.push(trainingChart.data.labels[trainingChart.data.labels.length-1]+1);
+function updateChart(genID, value){
+  console.log(genID, value);
+  if(trainingChart.data.labels[trainingChart.data.labels.length-1] == genID){
+    trainingChart.data.datasets.forEach((dataset) => {
+      if(trainingChart.data.length > 0){
+        dataset.data[trainingChart.data.length-1] = value;
+      }
+      else{
+        dataset.data.push(value);
+      }
+    });
+  }
+  else{
+    trainingChart.data.datasets.forEach((dataset) => {
+      dataset.data.push(value);
+    });
+    trainingChart.data.labels.push(genID);
+  }
   trainingChart.update();
 }
 
