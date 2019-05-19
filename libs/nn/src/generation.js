@@ -36,7 +36,7 @@ class Generation {
   crossOver(AgentA, AgentB) {
     var newAgent;
 
-    return NewAgent;
+    return newAgent;
   }
 
   /**
@@ -45,16 +45,16 @@ class Generation {
    */
   mutate(agent) {
     
-    var mutationSSP = gaussianPertubation(0, this.stepSizeParameter);
-    agent.mutationIntensity += gaussianPertubation(0, mutationSSP);
+    var mutationSSP = this.gaussianPertubation(0, this.stepSizeParameter);
+    agent.mutationIntensity += this.gaussianPertubation(0, mutationSSP);
 
     // Weight matrix W1 mutation
-    matrixMutation(agent.nn.input_weights, 
+    this.matrixMutation(agent.nn.input_weights, 
       agent.mutationIntensity, 
       this.mutationProb)
 
     // Weight matrix W2 mutation
-    matrixMutation(agent.nn.output_weights, 
+    this.matrixMutation(agent.nn.output_weights, 
       agent.mutationIntensity, 
       this.mutationProb)
   }
@@ -71,7 +71,7 @@ class Generation {
     for(var i=0; i<matrix.length; i++) {
       for(var j=0; j<matrix[0].length; j++) {
         if(Math.random() <= mutationProb) {
-          matrix[i][j] += gaussianPertubation(0, mutationIntensity)
+          matrix[i][j] += this.gaussianPertubation(0, mutationIntensity)
         }
       }
     }
@@ -107,13 +107,36 @@ class Generation {
   }
 
   createNextGen(agents){
-    var newAgents = agents;
-
     // increment gen ID
     this.id++;
 
-    //TODO
+    // Deepcopy
+    var newAgents = [...agents];;
 
+    // Selection
+    // !!!! Selected agents may have to be deep copies
+    // as we will modify newAgents array, and thus maybe
+    // a selectedAgent !
+    var selectedAgents = this.selection(newAgents);
+
+    // Breeding == crossover and then mutate
+    for(var i = 0; i < newAgents.length ; i++){
+      // Crossover == create a children from two randoms parents
+      // from the selectedAgents
+
+      // Shuffle array
+      const shuffled = selectedAgents.sort(() => 0.5 - Math.random());
+
+      // Get sub-array of first n elements after shuffled
+      let selected = shuffled.slice(0, 2);
+      
+      // TODO: implement crossOver
+      newAgents[i] = this.crossOver(selected[0], selected[1]);
+
+      // Mutate the newly breed agent
+      this.mutate(newAgents[i]);
+    }
+    
     return newAgents;
   }
 }
