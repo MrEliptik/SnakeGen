@@ -82,8 +82,6 @@ class Environment {
 
     // Create the generation
     this.generation = new Generation(this.agents, this.perCent);
-
-    this.lastRender = 0;
   }
 
   tick(){
@@ -94,5 +92,7 @@ class Environment {
     });
   }
 
-  
+  getCurrentGenHighestScore(){
+    return this.generation.getHighestScore();
+  }
 }
