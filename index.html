@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SnakeGen</title>
+    <title>🐍 SnakeGen</title>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <!-- Load tensorflow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 </head>
 
 <body>
@@ -27,8 +28,11 @@
             </li>
             <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
         </ul>
-        <div class="content">
-            <div class="canvas-container">
+        <div class="training-chart-wrapper">
+            <canvas id="training-chart" width="150" height="300"></canvas>
+        </div>
+        <div class="content">             
+            <div class="canvas-container">        
                 <!-- canvas are added with js -->
             </div>
             <div class="right-navbar">
@@ -39,19 +43,21 @@
                     <div class="navbar-content">
                         <button id="btn_create">Create</button>
                         <button class="danger" id="btn_delete">Delete</button>
+                        <button class="warning" id="btn_default">Reset</button>
                         <div>
                             <button class="controls" id="btn_restart"><i class="fas fa-undo-alt"></i></button>
                             <button class="controls" id="btn_start"><i class="fas fa-play"></i></button>
-                            <button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>
-                            <!--<i class="fas fa-stop"></i>-->
+                            <button class="controls" id="btn_stop"><i class="fas fa-stop"></i></button>
+                            <button class="controls-chart-on" id="btn_chart"><i class="fas fa-chart-line"></i></button>   
+                            <!--<button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>-->  
                         </div>
                     </div>
                     <div>
                         <label for="speed"><i class="fas fa-tachometer-alt"></i></label>
-                        <input checked="checked" name="speed" type="radio" name="age" value="1">1x<br>
-                        <input name="speed" type="radio" name="age" value="2">2x<br>
-                        <input name="speed" type="radio" name="age" value="10">10x<br>
-                        <input name="speed" type="radio" name="age" value="max">max<br>
+                        <input checked="checked" name="speed" type="radio" name="age" value="1">1x
+                        <input name="speed" type="radio" name="age" value="2">2x
+                        <input name="speed" type="radio" name="age" value="10">10x
+                        <input name="speed" type="radio" name="age" value="1000000000000000000000000000000">max
                     </div>
                 </div>
                 <div class="navbar-section">
@@ -99,7 +105,6 @@
                         </div>
                     </div>
                 </div>
-                <button class="warning" id="btn_default">Reset default</button>
             </div>
         </div>
     </div>

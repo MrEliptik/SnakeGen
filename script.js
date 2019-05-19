@@ -16,51 +16,30 @@ var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
 var btn_default = document.getElementById("btn_default");
 
+var btn_restart = document.getElementById("btn_restart");
+var btn_start = document.getElementById("btn_start");
+var btn_stop = document.getElementById("btn_stop");
+
+var btn_chart = document.getElementById("btn_chart");
+
 var radios_speed = document.getElementsByName("speed");
 
 var env = null;
-var speed = 60;
+var trainingChart = null;
+var playPauseState = "pause";
+
+var speed = 30;
 var nb_input_neurons = 11;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
-/* 
-    11 inputs : right, front, left
-    100 neurons : hidden layer
-    3 outputs : right, forward, left
-    */
-//var nn = new NeuralNetwork(11, 100, 3);
 
-//var nn = new NeuralNetwork(3, 100, 3);
-
-// Call nn every seconds
-
-window.setInterval(function() {
-  //testyTest();
-  /*
-  games.forEach(game => {
-    var grid = games[0].getGrid();
-    var snakeState = games[0].getSnakeState();
-
-    var los = calculateLinesOfSight(grid, snakeState['position'], snakeState['orientation']);
-    out = nn.predict(los);
-
-    // '...' is the spread operator and in ECMA6
-    // corresponds to the apply() method
-
-    max = Math.max(...out);
-
-    if (out[0] == max) {
-      game.update(0, "down");
-    }
-    else if (out[1] == max) {
-      game.update(0, "right");
-    }
-    else if (out[2] == max) {
-      game.update(0, "left");
-    }
+function testChartJS(){
+  trainingChart.data.datasets.forEach((dataset) => {
+      dataset.data.push(Math.floor(Math.random() * 500) + 1);
   });
-  */
-}, 1000);
+  trainingChart.data.labels.push(trainingChart.data.labels[trainingChart.data.labels.length-1]+1);
+  trainingChart.update();
+}
 
 function testyTest(){
   var a = new Agent(10, 10, null, null, null, 1, 1, 'df', false, 1, 11, 100, 3);
@@ -107,7 +86,7 @@ function createGames() {
   var canvases = [];
 
   // Create the required number of canvas to display games
-  for(var i = 0; i < input_games_visible.value; i++) {
+  for(var i = 0; i < parseInt(input_games_visible.value); i++) {
     var canvas = document.createElement("canvas");
     canvas.id = "canvas_" + String(i);
     if ((window.innerHeight - canvas_container.offsetTop - 20) / input_games_visible.value < 90) {
@@ -122,12 +101,12 @@ function createGames() {
 
   env = new Environment(
     canvases,
-    input_grid_size.value,
-    input_grid_size.value,
+    parseInt(input_grid_size.value),
+    parseInt(input_grid_size.value),
     1,
     1,
     "DF",
-    input_population.value,
+    parseInt(input_population.value),
     100,
     speed,
     nb_input_neurons,
@@ -137,7 +116,39 @@ function createGames() {
     "play"
   );
   env.update(0);
+  createTrainingChart();
+
+  // Call nn every seconds
+  window.setInterval(function() {
+    testChartJS();
+    
+  }, 4000);
 }
+
+function createTrainingChart(){
+  var ctx = document.getElementById('training-chart').getContext('2d');
+  trainingChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [1,2,3,4,5,6,7,8,9,10],
+      datasets: [{ 
+          data: [86,114,106,106,107,111,133,221,344,145],
+          label: "Best score",
+          borderColor: "#3e95cd",
+          fill: false
+        }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: 'Best score per generation'
+      }
+    }
+  });
+}
+
 
 function deleteGames() {
   // Ask for user's confirmation first
@@ -159,6 +170,32 @@ function deleteGames() {
 
 function askUserConfirmation(msg) {
   return confirm(msg);
+}
+
+function toggleChartDisplay(){
+  var chart = document.querySelector(".training-chart-wrapper");
+  if (chart.style.display === "none") {
+    chart.style.display = "block";
+    btn_chart.className = 'controls-chart-on';
+  } else {
+    chart.style.display = "none";
+    btn_chart.className = 'controls-chart-off';
+  }
+}
+
+function toggleStartPause(){
+  var html = '';
+  if(playPauseState == "pause"){
+    html = '<i class="fas fa-pause"></i>';
+    playPauseState = "play";
+    update();
+  }
+  else{
+    html = '<i class="fas fa-play"></i>';
+    playPauseState = "pause";
+  }
+  btn_start.innerHTML = html;
+  
 }
 
 function getSpeedValue() {
@@ -262,11 +299,26 @@ btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
 
+btn_restart.addEventListener("click", () => {
+
+});
+
+btn_start.addEventListener("click", () => {
+  toggleStartPause();
+});
+
+btn_stop.addEventListener("click", () => {
+
+});
+
+btn_chart.addEventListener("click", () => {
+  toggleChartDisplay();
+});
+
 for (var i = 0, max = radios_speed.length; i < max; i++) {
   radios_speed[i].onclick = function() {
-    speed = this.value;
-
+    speed = parseInt(this.value);
     // Goes from x1, x2, etc.. to 60fps, 120fps...
-    speed *= 60;
+    speed *= 30;
   };
 }
