@@ -21,19 +21,7 @@ class Generation {
    * NotImplemented
    * @param {} -
    */
-  calculationQfit() {}
-
-  /**
-   * NotImplemented
-   * @returns {}
-   */
-  calculationQnmse() {}
-
-  /**
-   * NotImplemented
-   * @returns {}
-   */
-  calculationQcomp() {}
+  calculateQfit() {}
 
   /**
    * NotImplemented
@@ -49,7 +37,7 @@ class Generation {
    * NotImplemented
    * @returns {}
    */
-  mutation(Agent) {}
+  mutate(Agent) {}
 
   /**
    * NotImplemented
