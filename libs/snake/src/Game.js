@@ -352,12 +352,10 @@ class Game {
 
     var totalCell = leftCone[0] + upLeftCone[0] + upRightCone[0] + rightCone[0];
 
-    return [leftCone, upLeftCone,
-            upRightCone, rightCone,
-            [[(leftCone[0]-leftCone[1])/totalCell, leftCone[2]/this.fruits.length],
+    return  [[(leftCone[0]-leftCone[1])/totalCell, leftCone[2]/this.fruits.length],
             [(upLeftCone[0]-upLeftCone[1])/totalCell, upLeftCone[2]/this.fruits.length],
             [(upRightCone[0]-upRightCone[1])/totalCell, upRightCone[2]/this.fruits.length],
-            [(rightCone[0]-rightCone[1])/totalCell, rightCone[2]/this.fruits.length]]];
+            [(rightCone[0]-rightCone[1])/totalCell, rightCone[2]/this.fruits.length]];
   }
 
   getSnakeState() {

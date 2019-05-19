@@ -1,4 +1,4 @@
-class Environment {
+class Environment extends Generation {
   /**
    * Takes in the number of input nodes, hidden node and output nodes
    * @constructor
@@ -12,7 +12,7 @@ class Environment {
     nb_fruits,
     mode = "DF",
     populationSize,
-    perCent,
+    selectionPerCentage,
     speed,
     input_nodes,
     hidden_nodes,
@@ -20,6 +20,10 @@ class Environment {
     tickout,
     state
   ) {
+
+    // Generation Constructor
+    super(selectionPerCentage)
+
     this.canvases = canvases;
     this.gridRows = gridRows;
     this.gridColumns = gridColumns;
@@ -27,7 +31,7 @@ class Environment {
     this.nb_fruits = nb_fruits;
     this.mode = mode;
     this.populationSize = populationSize;
-    this.perCent = perCent;
+    this.selectionPerCentage = selectionPerCentage;
     this.speed = speed;
     this.input_nodes = input_nodes;
     this.hidden_nodes = hidden_nodes;
@@ -81,9 +85,6 @@ class Environment {
     }
 
     this.tickCount = 0;
-
-    // Create the generation
-    this.generation = new Generation(this.agents, this.perCent);
   }
 
   getCurrGenHighestScore()
