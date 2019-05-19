@@ -20,6 +20,7 @@ class Generation {
     this.stepSizeParameter = stepSizeParameter;
     this.mutationProb = mutationProb;
     this.bestScore = 0;
+    this.id = 0;
   }
 
   /**
@@ -110,15 +111,14 @@ class Generation {
     return agentsToSelect;
   }
 
-  getAllScores(){
-    var scores = [];
-    this.agents.forEach(agent => {
-      scores.push(agent.getScore());
-    });
-    return scores;
-  }
+  createNextGen(agents){
+    var newAgents = agents;
 
-  getHighestScore(){
-    return Math.max(...this.getAllScores());
+    // increment gen ID
+    this.id++;
+
+    //TODO
+
+    return newAgents;
   }
 }

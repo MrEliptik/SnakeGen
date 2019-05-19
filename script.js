@@ -114,17 +114,17 @@ function createGames() {
     nb_input_neurons,
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
-    1000,
+    300,
     "pause"
   );
   env.update(0);
+
   createTrainingChart();
 
   // Call nn every seconds
   window.setInterval(function() {
-    testChartJS();
-    
-  }, 4000);
+    updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
+  }, 5000);
 }
 
 function createTrainingChart(){
@@ -132,15 +132,18 @@ function createTrainingChart(){
   trainingChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: [1,2,3,4,5,6,7,8,9,10],
+      labels: [0],
       datasets: [{ 
-          data: [86,114,106,106,107,111,133,221,344,145],
+          data: [],
           label: "Best score",
           borderColor: "#3e95cd",
           fill: false
         }]
     },
     options: {
+      legend: {
+        display: false
+      },
       responsive: true,
       maintainAspectRatio: false,
       title: {
@@ -151,6 +154,26 @@ function createTrainingChart(){
   });
 }
 
+function updateChart(genID, value){
+  console.log(genID, value);
+  if(trainingChart.data.labels[trainingChart.data.labels.length-1] == genID){
+    trainingChart.data.datasets.forEach((dataset) => {
+      if(trainingChart.data.length > 0){
+        dataset.data[trainingChart.data.length-1] = value;
+      }
+      else{
+        dataset.data.push(value);
+      }
+    });
+  }
+  else{
+    trainingChart.data.datasets.forEach((dataset) => {
+      dataset.data.push(value);
+    });
+    trainingChart.data.labels.push(genID);
+  }
+  trainingChart.update();
+}
 
 function deleteGames() {
   // Ask for user's confirmation first
@@ -212,13 +235,6 @@ function getSpeedValue() {
   }
 }
 
-function testyTestLog() {	
-  console.log(	
-    env.agents[0].game.calculateLinesOfSight(),	
-    env.agents[0].game.calculateConesOfSight()
-  );	
-}
-
 // Add an event listener from the keyboard
 document.addEventListener(
   "keyup",
@@ -242,7 +258,6 @@ document.addEventListener(
         pop.game.update("right", false);
       });
     }
-    testyTestLog();
   },
   false
 );
@@ -320,7 +335,7 @@ btn_chart.addEventListener("click", () => {
 for (var i = 0, max = radios_speed.length; i < max; i++) {
   radios_speed[i].onclick = function() {
     speed = parseInt(this.value);
-    // Goes from x1, x2, etc.. to 60fps, 120fps...
+    // Goes from x1, x2, etc.. to 30fps, 60fps...
     speed *= 30;
     env.setSpeed(speed);
   };
