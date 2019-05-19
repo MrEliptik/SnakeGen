@@ -21,39 +21,28 @@ class Agent {
     hidden_nodes,
     output_nodes
   ) {
-    this.gridRows = gridRows;
-    this.gridColumns = gridColumns;
-    this.canvasHeight = canvasHeight;
-    this.canvasWidth = canvasWidth;
-    this.canvas = canvas;
-    this.nb_snakes = nb_snakes;
-    this.nb_fruits = nb_fruits;
-    this.mode = mode;
-    this.display = display;
     this.timeUnit = timeUnit;
-    this.input_nodes = input_nodes;
-    this.hidden_nodes = hidden_nodes;
-    this.output_nodes = output_nodes;
+    this.actions = { 0: "left", 1: "up", 2: "right" };
+
+    this.mutationIntensity = 0;
 
     this.nn = new NeuralNetwork(
-      this.input_nodes,
-      this.hidden_nodes,
-      this.output_nodes
+      input_nodes,
+      hidden_nodes,
+      output_nodes
     );
 
     this.game = new Game(
-      this.gridRows,
-      this.gridColumns,
-      this.canvasHeight,
-      this.canvasWidth,
-      this.canvas,
-      this.nb_snakes,
-      this.nb_fruits,
-      this.mode,
-      this.display
+      gridRows,
+      gridColumns,
+      canvasHeight,
+      canvasWidth,
+      canvas,
+      nb_snakes,
+      nb_fruits,
+      mode,
+      display
     );
-
-    this.actions = { 0: "left", 1: "up", 2: "right" };
   }
 
   /**
@@ -65,8 +54,8 @@ class Agent {
     var cos = this.game.calculateConesOfSight();
 
     // Run a forward pass on the NN
-    var action = this.nn.predict(
-      [los[0],
+    var action = this.nn.predict([
+      los[0],
       los[1],
       los[2],
       cos[0][0],
@@ -76,8 +65,8 @@ class Agent {
       cos[0][1],
       cos[1][1],
       cos[2][1],
-      cos[3][1]]
-    );
+      cos[3][1]
+    ]);
 
     // Get the index of the array's max value
     // it'll give us the most likely action to take
@@ -85,12 +74,12 @@ class Agent {
 
     //console.log(this.actions[i]);
 
-    // Call the game update with the action calculated 
+    // Call the game update with the action calculated
     // by the NN
     return this.game.update(this.actions[i], true);
   }
 
-  getScore(){
+  getScore() {
     return this.game.score;
   }
 }

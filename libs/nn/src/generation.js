@@ -10,9 +10,15 @@ class Generation {
    * @param {number} output_nodes
    */
   constructor(
-    selectionPerCentage
+    populationSize,
+    selectionPerCentage,
+    stepSizeParameter,
+    mutationProb
   ) {
+    this.populationSize = populationSize;
     this.selectionPerCentage = selectionPerCentage;
+    this.stepSizeParameter = stepSizeParameter;
+    this.mutationProb = mutationProb;
     this.bestScore = 0;
     this.id = 0;
   }
@@ -34,11 +40,41 @@ class Generation {
   }
 
   /**
-   * NotImplemented
-   * @returns {}
+   * Apply the Stochastic mutation policy to an Agent object
+   * @param   agent   Agent to mutate
    */
-  mutate(Agent) {
+  mutate(agent) {
+    
+    var mutationSSP = gaussianPertubation(0, this.stepSizeParameter);
+    agent.mutationIntensity += gaussianPertubation(0, mutationSSP);
 
+    // Weight matrix W1 mutation
+    matrixMutation(agent.nn.input_weights, 
+      agent.mutationIntensity, 
+      this.mutationProb)
+
+    // Weight matrix W2 mutation
+    matrixMutation(agent.nn.output_weights, 
+      agent.mutationIntensity, 
+      this.mutationProb)
+  }
+
+  /**
+   * Mutates the weight matrix using the Stochastic
+   * mutation policy
+   * @param   matrix            Weight matrix
+   * @param   mutationIntensity Mutation intensity to apply
+   * @param   mutationProb      Probability to apply the mutation
+   */
+  matrixMutation(matrix, mutationIntensity, mutationProb) {
+    
+    for(var i=0; i<matrix.length; i++) {
+      for(var j=0; j<matrix[0].length; j++) {
+        if(Math.random() <= mutationProb) {
+          matrix[i][j] += gaussianPertubation(0, mutationIntensity)
+        }
+      }
+    }
   }
 
   /**
@@ -55,7 +91,20 @@ class Generation {
    * NotImplemented
    * @returns {}
    */
-  selection() {}
+  selection(agents) {
+    
+    // Select the number of agents to select
+    var numberOfAgents = Math.round(this.populationSize * this.selectionPerCentage)
+    var agentsArray = agents.sort(function(a,b) {
+      return a.getScore() - b.getScore();
+    });
+
+    var agentsToSelect = [];
+    for(var i=0; i<numberOfAgents; i++) {
+      agentsToSelect.push(agentsArray[i])
+    }
+    return agentsToSelect;
+  }
 
   createNextGen(agents){
     var newAgents = agents;
