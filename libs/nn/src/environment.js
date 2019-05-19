@@ -13,7 +13,7 @@ class Environment {
     mode = "DF",
     populationSize,
     perCent,
-    timeUnit,
+    speed,
     input_nodes,
     hidden_nodes,
     output_nodes,
@@ -28,7 +28,7 @@ class Environment {
     this.mode = mode;
     this.populationSize = populationSize;
     this.perCent = perCent;
-    this.timeUnit = timeUnit;
+    this.speed = speed;
     this.input_nodes = input_nodes;
     this.hidden_nodes = hidden_nodes;
     this.output_nodes = output_nodes;
@@ -37,8 +37,6 @@ class Environment {
 
     var visible = 0;
     this.agents = [];
-
-    this.playPauseState = "pause";
 
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
@@ -54,7 +52,7 @@ class Environment {
             this.nb_fruits,
             this.mode,
             true,
-            this.timeUnit,
+            this.speed,
             this.input_nodes,
             this.hidden_nodes,
             this.output_nodes
@@ -73,7 +71,7 @@ class Environment {
             this.nb_fruits,
             this.mode,
             false,
-            this.timeUnit,
+            this.speed,
             this.input_nodes,
             this.hidden_nodes,
             this.output_nodes
@@ -82,16 +80,26 @@ class Environment {
       }
     }
 
+    this.tickCount = 0;
+
     // Create the generation
     this.generation = new Generation(this.agents, this.perCent);
   }
 
   setPlayPauseState(state){
-    this.playPauseState = state;
+    this.state = state;
   }
 
   getPlayPauseState(){
-    return this.playPauseState;
+    return this.state;
+  }
+
+  setSpeed(speed){
+    this.speed = speed;
+  }
+
+  getTickCount(){
+    return this.tickCount;
   }
 
   tick(){
@@ -102,14 +110,15 @@ class Environment {
     });
   }
 
-  update(tickCount){
-    if(tickCount < this.tickout) {
+  update(){
+    if(this.tickCount < this.tickout && this.state == "play") {
       this.tick();
       var that = this;
   
       setTimeout(function(){
-        that.update(++tickCount);
-      }, 1000/60);
+        that.tickCount += 1;
+        that.update();
+      }, 1000/this.speed);
     }
   }
 }
