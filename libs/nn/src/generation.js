@@ -15,6 +15,7 @@ class Generation {
   ) {
     this.agents = agents;
     this.perCent = perCent;
+    this.bestScore = 0;
   }
 
   /**
@@ -44,4 +45,16 @@ class Generation {
    * @returns {}
    */
   selection() {}
+
+  getAllScores(){
+    var scores = [];
+    this.agents.forEach(agent => {
+      scores.push(agent.getScore());
+    });
+    return scores;
+  }
+
+  getHighestScore(){
+    return Math.max(...this.getAllScores());
+  }
 }

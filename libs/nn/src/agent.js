@@ -89,4 +89,8 @@ class Agent {
     // by the NN
     this.game.update(this.actions[i], true);
   }
+
+  getScore(){
+    return this.game.score;
+  }
 }
