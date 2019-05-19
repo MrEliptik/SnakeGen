@@ -33,12 +33,6 @@ var nb_input_neurons = 11;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
 
-// Call nn every seconds
-window.setInterval(function() {
-  testChartJS();
-  
-}, 4000);
-
 function testChartJS(){
   trainingChart.data.datasets.forEach((dataset) => {
       dataset.data.push(Math.floor(Math.random() * 500) + 1);
@@ -123,6 +117,12 @@ function createGames() {
   );
   createTrainingChart();
   update();
+
+  // Call nn every seconds
+  window.setInterval(function() {
+    testChartJS();
+    
+  }, 4000);
 }
 
 function createTrainingChart(){
@@ -329,6 +329,6 @@ for (var i = 0, max = radios_speed.length; i < max; i++) {
   radios_speed[i].onclick = function() {
     speed = parseInt(this.value);
     // Goes from x1, x2, etc.. to 60fps, 120fps...
-    speed *= 60;
+    speed *= 30;
   };
 }
