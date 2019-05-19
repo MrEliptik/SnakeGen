@@ -25,7 +25,7 @@ var btn_chart = document.getElementById("btn_chart");
 var radios_speed = document.getElementsByName("speed");
 
 var env = null;
-var startPauseState = "pause";
+var playPauseState = "pause";
 
 var speed = 60;
 var nb_input_neurons = 11;
@@ -146,11 +146,14 @@ function createGames() {
 }
 
 function update(){
-  env.tick();
+  if(playPauseState == "play"){
+    env.tick();
 
-  setTimeout(function(){
-    update();
-  }, 1000/this.speed);
+    setTimeout(function(){
+      update();
+    }, 1000/this.speed);
+  }
+  
 }
 
 function deleteGames() {
@@ -188,13 +191,14 @@ function toggleChartDisplay(){
 
 function toggleStartPause(){
   var html = '';
-  if(startPauseState == "pause"){
+  if(playPauseState == "pause"){
     html = '<i class="fas fa-pause"></i>';
-    startPauseState = "play";
+    playPauseState = "play";
+    update();
   }
   else{
     html = '<i class="fas fa-play"></i>';
-    startPauseState = "pause";
+    playPauseState = "pause";
   }
   btn_start.innerHTML = html;
   
