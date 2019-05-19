@@ -112,8 +112,8 @@ function createGames() {
     nb_input_neurons,
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
-    100,
-    "play"
+    1000,
+    "pause"
   );
   env.update(0);
   createTrainingChart();
@@ -185,14 +185,14 @@ function toggleChartDisplay(){
 
 function toggleStartPause(){
   var html = '';
-  if(playPauseState == "pause"){
+  if(env.getPlayPauseState() == "pause"){
     html = '<i class="fas fa-pause"></i>';
-    playPauseState = "play";
-    update();
+    env.setPlayPauseState("play");
+    env.update();
   }
   else{
     html = '<i class="fas fa-play"></i>';
-    playPauseState = "pause";
+    env.setPlayPauseState("pause");
   }
   btn_start.innerHTML = html;
   
@@ -320,5 +320,6 @@ for (var i = 0, max = radios_speed.length; i < max; i++) {
     speed = parseInt(this.value);
     // Goes from x1, x2, etc.. to 60fps, 120fps...
     speed *= 30;
+    env.setSpeed(speed);
   };
 }
