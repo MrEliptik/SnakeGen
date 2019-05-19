@@ -92,6 +92,8 @@ class Game {
     this.nb_snakes = nb_snakes;
     this.nb_fruits = nb_fruits;
 
+    this.score = 0;
+
     // Choose the food position
     var fruit_x = Math.floor(Math.random() * (gridColumns - 1 - 0 + 1)) + 0;
     var fruit_y = Math.floor(Math.random() * (gridRows - 1 - 0 + 1)) + 0;
@@ -663,8 +665,8 @@ class Game {
         this.hitBody(0, this.snakes[0])
       ) {
         //console.log("You died!");
-
-        // Reset the dead   snake
+        this.score = 0;
+        // Reset the dead snake
         this.resetSnake(0);
       } else {
         var hitIndex = this.hitFruit(this.snakes[0]);
@@ -676,6 +678,9 @@ class Game {
 
           // Update the snake
           this.snakes[0].grow();
+
+          // Update score
+          this.score++;
 
           //console.log("Fruit eaten, length : " + this.snakes[0].length);
         }
