@@ -41,6 +41,16 @@ class Generation {
   mutate(Agent) {}
 
   /**
+   * Return the value of the Gaussian Distribution at x=0
+   * @param   mu    expected value
+   * @param   sigma standard deviation
+   * @returns gaussian pertubation
+   */
+  gaussianPertubation(mu, sigma) {
+    return 1/(sigma*Math.sqrt(2*Math.PI)) * Math.exp(-1/2*Math.pow(-mu/sigma,2))
+  }
+
+  /**
    * NotImplemented
    * @returns {}
    */

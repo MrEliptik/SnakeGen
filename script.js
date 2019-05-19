@@ -213,7 +213,7 @@ function getSpeedValue() {
 function testyTestLog() {	
    console.log(	
     env.agents[0].game.calculateLinesOfSight(),	
-    env.agents[0].game.calculateConesOfSight()	
+    env.agents[0].game.calculateConesOfSight()
   );	
 }
 
