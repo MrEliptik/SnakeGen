@@ -24,9 +24,11 @@ class Environment extends Generation {
   ) {
 
     // Generation Constructor
-    super(selectionPerCentage, stepSizeParameter, mutationProb)
+    super(populationSize,
+      selectionPerCentage,
+      stepSizeParameter,
+      mutationProb)
     
-    this.populationSize = populationSize;
     this.speed = speed;
     this.tickout = tickout;
     this.state = state;

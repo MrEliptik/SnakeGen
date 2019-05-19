@@ -10,10 +10,12 @@ class Generation {
    * @param {number} output_nodes
    */
   constructor(
+    populationSize,
     selectionPerCentage,
     stepSizeParameter,
     mutationProb
   ) {
+    this.populationSize = populationSize;
     this.selectionPerCentage = selectionPerCentage;
     this.stepSizeParameter = stepSizeParameter;
     this.mutationProb = mutationProb;
@@ -88,8 +90,19 @@ class Generation {
    * NotImplemented
    * @returns {}
    */
-  selection() {
+  selection(agents) {
+    
+    // Select the number of agents to select
+    var numberOfAgents = Math.round(this.populationSize * this.selectionPerCentage)
+    var agentsArray = agents.sort(function(a,b) {
+      return a.getScore() - b.getScore();
+    });
 
+    var agentsToSelect = [];
+    for(var i=0; i<numberOfAgents; i++) {
+      agentsToSelect.push(agentsArray[i])
+    }
+    return agentsToSelect;
   }
 
   getAllScores(){
