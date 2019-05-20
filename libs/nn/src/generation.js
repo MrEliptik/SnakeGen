@@ -116,7 +116,7 @@ class Generation {
     this.id++;
 
     // Deepcopy
-    var newAgents = [...agents];;
+    var newAgents = [...agents];
 
     // Selection
     // !!!! Selected agents may have to be deep copies
