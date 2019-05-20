@@ -108,7 +108,6 @@ class Environment extends Generation {
     return this.id;
   }
     
-
   setPlayPauseState(state){
     this.state = state;
   }
@@ -139,33 +138,28 @@ class Environment extends Generation {
   }
 
   update(){
-    if(this.tickCount < this.tickout){
-      if(this.state == "play") {
+
+    if(this.state == "play") {
+      return
+    }
+
+    if(this.tickCount < this.tickout) {
+     
         // No agents left, next gen
-        if(!this.tick()){
+        if(!this.tick()) {
           this.agents = this.createNextGen(this.agents);
           this.tickCount = 0;
         }
-
-
-        var that = this;
-    
-        setTimeout(function(){
-          that.tickCount += 1;
-          that.update();
-        }, 1000/this.speed);
-      }
-    }
-    else{
+    } else {
       this.agents = this.createNextGen(this.agents);
       this.tickCount = 0;
-
-      var that = this;
-    
-      setTimeout(function(){
-        that.tickCount += 1;
-        that.update();
-      }, 1000/this.speed);
     }
-  }
+
+    var that = this;
+      
+    setTimeout(function(){
+      that.tickCount += 1;
+      that.update();
+    }, 1000/this.speed);
+
 }
