@@ -140,7 +140,7 @@ class Environment extends Generation {
   update(){
 
     if(this.state == "play") {
-      return
+      return;
     }
 
     if(this.tickCount < this.tickout) {
@@ -161,5 +161,5 @@ class Environment extends Generation {
       that.tickCount += 1;
       that.update();
     }, 1000/this.speed);
-
+  }
 }
