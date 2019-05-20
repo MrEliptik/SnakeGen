@@ -126,9 +126,6 @@ class Generation {
     this.id++;
 
     // Selection
-    // !!!! Selected agents may have to be deep copies
-    // as we will modify newAgents array, and thus maybe
-    // a selectedAgent !
     var selectedAgents = this.selection(agents);
     
     // TODELETE
@@ -136,7 +133,7 @@ class Generation {
       "Agents : ", selectedAgents)
 
     // Breeding == crossover and then mutate
-    for(var i = 0; i < newAgents.length ; i++){
+    for(var i = 0; i < agents.length ; i++){
       // Crossover == create a children from two randoms parents
       // from the selectedAgents
 
@@ -147,12 +144,12 @@ class Generation {
       let selected = shuffled.slice(0, 2);
       
       // TODO: implement crossOver
-      newAgents[i] = this.crossOver(selected[0], selected[1]);
+      agents[i] = this.crossOver(selected[0], selected[1]);
 
       // Mutate the newly breed agent
-      this.mutate(newAgents[i]);
+      this.mutate(agents[i]);
     }
     
-    return newAgents;
+    return agents;
   }
 }
