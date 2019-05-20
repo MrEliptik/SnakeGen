@@ -93,36 +93,47 @@ class Generation {
    * @returns Agents selected
    */
   selection(agents) {
-    
+
     // Select the number of agents to select
-    var numberOfAgents = Math.round(this.populationSize * this.selectionPerCentage)
+    var numberOfAgents = Math.round(this.populationSize * this.selectionPerCentage / 100.0)
     
+    // TODELETE
+    console.log(
+      numberOfAgents
+    )
+
     // Sort the agents by using their score
     var agentsArray = agents.sort(function(a,b) {
-      return a.getScore() - b.getScore();
+      return b.getScore() - a.getScore();
     });
 
     // Selection
     var agentsToSelect = [];
     for(var i=0; i<numberOfAgents; i++) {
-      agentsToSelect.push(agentsArray[i])
+      agentsToSelect.push(agentsArray[i]);
     }
     
-    return agentsToSelect;
+    // Deepcopy
+    return Array.from(agentsToSelect);
   }
 
   createNextGen(agents){
+
+    // TODELETE
+    agents[4].game.score = 25;
+    
     // increment gen ID
     this.id++;
-
-    // Deepcopy
-    var newAgents = [...agents];;
 
     // Selection
     // !!!! Selected agents may have to be deep copies
     // as we will modify newAgents array, and thus maybe
     // a selectedAgent !
-    var selectedAgents = this.selection(newAgents);
+    var selectedAgents = this.selection(agents);
+    
+    // TODELETE
+    console.log(
+      "Agents : ", selectedAgents)
 
     // Breeding == crossover and then mutate
     for(var i = 0; i < newAgents.length ; i++){

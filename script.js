@@ -107,7 +107,7 @@ function createGames() {
     1,
     "DF",
     parseInt(input_population.value), // populationSize
-    100,                              // selectionPerCentage
+    50,                              // selectionPerCentage
     5,                                // stepSizeParameter
     0.01,                                 // mutationProb
     speed,
