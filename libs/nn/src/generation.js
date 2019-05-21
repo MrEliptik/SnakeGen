@@ -36,7 +36,8 @@ class Generation {
   crossOver(agentA, agentB, type="patch") {
     console.log(agentA.nn.output_weights.arraySync());
 
-    var newAgent;
+    // TODO: Find a way to create an agent (with a canvas or not...)
+    var newAgent = JSON.parse(JSON.stringify(agentA));
 
     if(type == "row"){
       // Random row index is generated
