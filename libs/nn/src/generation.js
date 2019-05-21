@@ -33,8 +33,65 @@ class Generation {
    * NotImplemented
    * @returns {NewAgent}
    */
-  crossOver(AgentA, AgentB) {
+  crossOver(AgentA, AgentB, type="patch") {
     var newAgent;
+
+    if(type == "row"){
+      // Random row index is generated
+      var i = Math.floor(Math.random() * AgentA.nn.input_weights.length) + 1; 
+
+      // Agent takes all rows of AgentA but not the i-th,
+      // that is taken from AgentB
+      // Deepcopy to ensure no reference and modification of the parents
+      newAgent.nn.input_weights = Array.from(AgentA.nn.input_weights[i]) = Array.from(AgentB.nn.input_weights)[i].splice(0);
+
+      // Same for output weights
+      var i = Math.floor(Math.random() * AgentA.nn.input_weights.length) + 1;
+      newAgent.nn.output_weights = Array.from(AgentA.nn.output_weights[i]) = Array.from(AgentB.nn.output_weights)[i].splice(0);
+    }
+    // TODO: finish this case
+    else if(type == "column"){
+      // Random column index is generated
+      var j = Math.floor(Math.random() * AgentA.nn.input_weights[0].length) + 1
+
+      // return an array [x,y,z] representing the selected column
+      var col = two_d.map(function(value,index) { return value[j]; });
+    }
+    else if(type == "patch"){
+      // starting coordinates
+      var i_start = Math.floor(Math.random() * AgentA.nn.input_weights.length) + 1;
+      var j_start = Math.floor(Math.random() * AgentA.nn.input_weights[0].length) + 1
+      // dimensions of the patch
+      var height = Math.floor(Math.random() * AgentA.nn.input_weights.length) + 1;
+      var width = Math.floor(Math.random() * AgentA.nn.input_weights[0].length) + 1
+
+      var tmp = Array.from(AgentA.nn.input_weights);
+      for(var i = i_start; i < i_start + height; i++){
+        col = AgentA.nn.input_weights.length[i];
+        for(var j = j_start; i < j_start + width; j++){
+          tmp[i][j] = AgentB.nn.input_weights[i][j];
+        }
+      }
+
+      newAgent.nn.input_weights = Array.from(tmp);
+
+      // Same for output weights
+      var i_start = Math.floor(Math.random() * AgentA.nn.output_weights.length) + 1;
+      var j_start = Math.floor(Math.random() * AgentA.nn.output_weights[0].length) + 1
+      // dimensions of the patch
+      var height = Math.floor(Math.random() * AgentA.nn.output_weights.length) + 1;
+      var width = Math.floor(Math.random() * AgentA.nn.output_weights[0].length) + 1
+
+      var tmp = Array.from(AgentA.nn.output_weights);
+      for(var i = i_start; i < i_start + height; i++){
+        col = AgentA.nn.output_weights.length[i];
+        for(var j = j_start; i < j_start + width; j++){
+          tmp[i][j] = AgentB.nn.output_weights[i][j];
+        }
+      }
+      newAgent.nn.output_weights = Array.from(tmp);
+
+    }
 
     return newAgent;
   }
