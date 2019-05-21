@@ -33,64 +33,73 @@ class Generation {
    * NotImplemented
    * @returns {NewAgent}
    */
-  crossOver(AgentA, AgentB, type="patch") {
+  crossOver(agentA, agentB, type="patch") {
+    console.log(agentA.nn.output_weights.arraySync());
+
     var newAgent;
 
     if(type == "row"){
       // Random row index is generated
-      var i = Math.floor(Math.random() * AgentA.nn.input_weights.length) + 1; 
+      var i = Math.floor(Math.random() * agentA.nn.input_weights.shape[0]) + 1; 
 
-      // Agent takes all rows of AgentA but not the i-th,
-      // that is taken from AgentB
+      // Agent takes all rows of agentA but not the i-th,
+      // that is taken from agentB
       // Deepcopy to ensure no reference and modification of the parents
-      newAgent.nn.input_weights = Array.from(AgentA.nn.input_weights[i]) = Array.from(AgentB.nn.input_weights)[i].splice(0);
+      var tmp = agentA.nn.input_weights.arraySync(); 
+      tmp[i] = agentB.nn.input_weights.arraySync()[i].splice(0);
+      newAgent.nn.input_weights = tf.tensor(tmp);
 
       // Same for output weights
-      var i = Math.floor(Math.random() * AgentA.nn.input_weights.length) + 1;
-      newAgent.nn.output_weights = Array.from(AgentA.nn.output_weights[i]) = Array.from(AgentB.nn.output_weights)[i].splice(0);
+      var i = Math.floor(Math.random() * agentA.nn.output_weights.shape[0]) + 1;
+      var tmp = agentA.nn.output_weights.arraySync();
+      tmp[i] = agentB.nn.output_weights.arraySync()[i].splice(0);
+
+      newAgent.nn.output_weights = tf.tensor(tmp);
     }
     // TODO: finish this case
     else if(type == "column"){
       // Random column index is generated
-      var j = Math.floor(Math.random() * AgentA.nn.input_weights[0].length) + 1
+      var j = Math.floor(Math.random() * agentA.nn.input_weights.shape[1]) + 1
 
       // return an array [x,y,z] representing the selected column
       var col = two_d.map(function(value,index) { return value[j]; });
     }
     else if(type == "patch"){
       // starting coordinates
-      var i_start = Math.floor(Math.random() * AgentA.nn.input_weights.length) + 1;
-      var j_start = Math.floor(Math.random() * AgentA.nn.input_weights[0].length) + 1
+      var i_start = Math.floor(Math.random() * agentA.nn.input_weights.shape[0]) + 1;
+      var j_start = Math.floor(Math.random() * agentA.nn.input_weights.shape[1]) + 1;
       // dimensions of the patch
-      var height = Math.floor(Math.random() * AgentA.nn.input_weights.length) + 1;
-      var width = Math.floor(Math.random() * AgentA.nn.input_weights[0].length) + 1
+      var height = Math.floor(Math.random() * (agentA.nn.input_weights.shape[0]-i_start)) + 1;
+      var width = Math.floor(Math.random() * (agentA.nn.input_weights.shape[1]-j_start)) + 1;
 
-      var tmp = Array.from(AgentA.nn.input_weights);
-      for(var i = i_start; i < i_start + height; i++){
-        col = AgentA.nn.input_weights.length[i];
-        for(var j = j_start; i < j_start + width; j++){
-          tmp[i][j] = AgentB.nn.input_weights[i][j];
+      var tmpA = agentA.nn.input_weights.arraySync();
+      var tmpB = agentB.nn.input_weights.arraySync();
+      // Replace only patch values in agentA copy
+      // !!! This hangs and throw out of error...
+      for(var i = i_start; i < (i_start + height); i++){
+        for(var j = j_start; i < (j_start + width); j++){
+          tmpA[i][j] = tmpB[i][j];
         }
       }
 
-      newAgent.nn.input_weights = Array.from(tmp);
+      newAgent.nn.input_weights = tf.tensor(tmpA);
 
       // Same for output weights
-      var i_start = Math.floor(Math.random() * AgentA.nn.output_weights.length) + 1;
-      var j_start = Math.floor(Math.random() * AgentA.nn.output_weights[0].length) + 1
+      var i_start = Math.floor(Math.random() * agentA.nn.output_weights.shape[0]) + 1;
+      var j_start = Math.floor(Math.random() * agentA.nn.output_weights.shape[1]) + 1;
       // dimensions of the patch
-      var height = Math.floor(Math.random() * AgentA.nn.output_weights.length) + 1;
-      var width = Math.floor(Math.random() * AgentA.nn.output_weights[0].length) + 1
+      var height = Math.floor(Math.random() * (agentA.nn.output_weights.shape[0]-i_start)) + 1;
+      var width = Math.floor(Math.random() * (agentA.nn.output_weights.shape[1]-j_start)) + 1;
 
-      var tmp = Array.from(AgentA.nn.output_weights);
-      for(var i = i_start; i < i_start + height; i++){
-        col = AgentA.nn.output_weights.length[i];
-        for(var j = j_start; i < j_start + width; j++){
-          tmp[i][j] = AgentB.nn.output_weights[i][j];
+      var tmpA = agentA.nn.output_weights.arraySync();
+      var tmpB = agentB.nn.output_weights.arraySync();
+
+      for(var i = i_start; i < (i_start + height); i++){
+        for(var j = j_start; i < (j_start + width); j++){
+          tmpA[i][j] = tmpB[i][j];
         }
       }
-      newAgent.nn.output_weights = Array.from(tmp);
-
+      newAgent.nn.output_weights = tf.sensor(tmpA);
     }
 
     return newAgent;
@@ -201,7 +210,7 @@ class Generation {
       let selected = shuffled.slice(0, 2);
       
       // TODO: implement crossOver
-      agents[i] = this.crossOver(selected[0], selected[1]);
+      agents[i] = this.crossOver(selected[0], selected[1], "row");
 
       // Mutate the newly breed agent
       this.mutate(agents[i]);

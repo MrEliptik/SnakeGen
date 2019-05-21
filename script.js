@@ -30,7 +30,7 @@ var playPauseState = "pause";
 
 var speed = 30;
 var nb_input_neurons = 11;
-var nb_hidden_neurons = 100;
+var nb_hidden_neurons = 20;
 var nb_output_neurons = 3;
 
 function testChartJS(){
@@ -240,6 +240,8 @@ document.addEventListener(
   "keyup",
   event => {
     const key = event.keyCode;
+
+    if(env == null) return;
 
     if (key == "38") {
       env.agents.forEach(pop => {
