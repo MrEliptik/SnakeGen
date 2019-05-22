@@ -136,6 +136,12 @@ class Environment extends Generation {
     return this.agentAlive != 0;
   }
 
+  dispatchNewGenEvent(){
+    var event = new Event('newgeneration');
+
+    window.dispatchEvent(event);
+  }
+
   update() {
     if (this.state == "play") {
       return;
@@ -145,6 +151,7 @@ class Environment extends Generation {
 
       // No agents left, next gen
       if (!this.tick()) {
+        this.dispatchNewGenEvent();
         this.agents = this.createNextGen(this.agents);
         this.tickCount = 0;
         // reset games
@@ -153,6 +160,7 @@ class Environment extends Generation {
         });
       }
     } else {
+      this.dispatchNewGenEvent();
       this.agents = this.createNextGen(this.agents);
       this.tickCount = 0;
       // reset games
