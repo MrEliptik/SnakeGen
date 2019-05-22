@@ -33,6 +33,13 @@ var nb_input_neurons = 11;
 var nb_hidden_neurons = 20;
 var nb_output_neurons = 3;
 
+/* set tf backend to cpu as we would lose 
+  time copying values to the GPU. Net is too
+  small to take advantage of GPU compute
+*/
+tf.setBackend('cpu');
+
+
 function testChartJS(){
   trainingChart.data.datasets.forEach((dataset) => {
       dataset.data.push(Math.floor(Math.random() * 500) + 1);
@@ -107,7 +114,7 @@ function createGames() {
     1,
     "DF",
     parseInt(input_population.value), // populationSize
-    50,                              // selectionPerCentage
+    10,                              // selectionPerCentage
     5,                                // stepSizeParameter
     0.01,                                 // mutationProb
     speed,
@@ -115,7 +122,7 @@ function createGames() {
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
     300,
-    "pause"
+    playPauseState
   );
   env.update(0);
 
