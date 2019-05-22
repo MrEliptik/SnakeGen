@@ -82,4 +82,10 @@ class Agent {
   getScore() {
     return this.game.score;
   }
+
+  resetGame(){
+    this.game.resetFruit(0);
+    this.game.resetSnake(0);
+    this.game.score = 0;
+  }
 }
