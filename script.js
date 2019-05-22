@@ -40,19 +40,6 @@ var nb_output_neurons = 3;
 tf.setBackend('cpu');
 
 
-function testChartJS(){
-  trainingChart.data.datasets.forEach((dataset) => {
-      dataset.data.push(Math.floor(Math.random() * 500) + 1);
-  });
-  trainingChart.data.labels.push(trainingChart.data.labels[trainingChart.data.labels.length-1]+1);
-  trainingChart.update();
-}
-
-function testyTest(){
-  var a = new Agent(10, 10, null, null, null, 1, 1, 'df', false, 1, 11, 100, 3);
-  a.step();
-}
-
 function allDefaultUI() {
   if (
     askUserConfirmation("This is going to reset all parameters to default!")
@@ -130,7 +117,7 @@ function createGames() {
 
   // Call nn every seconds
   window.setInterval(function() {
-    updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
+    //updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
   }, 5000);
 }
 
@@ -162,7 +149,6 @@ function createTrainingChart(){
 }
 
 function updateChart(genID, value){
-  console.log(genID, value);
   if(trainingChart.data.labels[trainingChart.data.labels.length-1] == genID){
     trainingChart.data.datasets.forEach((dataset) => {
       if(trainingChart.data.length > 0){
@@ -339,6 +325,11 @@ btn_stop.addEventListener("click", () => {
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
+});
+
+// event sent by Environment when we change generation
+window.addEventListener('newgeneration', () => {
+  updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
