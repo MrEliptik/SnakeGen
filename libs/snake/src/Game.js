@@ -222,7 +222,7 @@ class Game {
       los[1] /= gridRows;
       los[2] /= gridColumns;
 
-      return los
+      return los;
     }
 
     linesOfSight[0] = leftLineOfSight();
