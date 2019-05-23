@@ -215,11 +215,21 @@ class Game {
       return distance - 1;
     }
 
+    function scale(los){
+      // Scale with either nb of rows or nb of columns
+      // as a reference, in the case they are different
+      los[0] /= gridColumns;
+      los[1] /= gridRows;
+      los[2] /= gridColumns;
+
+      return los
+    }
+
     linesOfSight[0] = leftLineOfSight();
     linesOfSight[1] = frontLineOfSight();
     linesOfSight[2] = rightLineOfSight();
 
-    return linesOfSight;
+    return scale(linesOfSight);
   }
 
   /**
