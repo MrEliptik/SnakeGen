@@ -1,4 +1,18 @@
 
+// RUN TESTS WHEN LAUNCHING
+console.log("[INFO] Testing started..");
+
+console.log(">>> Test gaussianPerturbation");
+// TODO
+console.assert(false, {error:"[ERROR] "});
+console.assert(false, {error:"[ERROR] "});
+
+console.log(">>> Test matrixMutation");
+// TODO
+console.assert(false, {error:"[ERROR] Matrices are the same"});
+
+console.log("[INFO] Testing done!");
+
 /* MUTATION TEST */
 function test_mutation(){
 
