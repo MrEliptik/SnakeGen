@@ -6,7 +6,9 @@ console.log(">>> Test calculateLinesOfSight");
 console.assert(JSON.stringify(test_calculateLineOfSight(10, [5,5], "up")) === JSON.stringify([0.5, 0.5, 0.4]), {error:"[ERROR] Calculated LOS don't correspond"});
 console.assert(JSON.stringify(test_calculateLineOfSight(10, [5,5], "left")) === JSON.stringify([0.4, 0.5, 0.5]), {error:"[ERROR] Calculated LOS don't correspond"});
 
-console.assert(JSON.stringify(test_calculateConesOfSight(10, [5,5], "left", [0, 5])) === JSON.stringify([0.4, 0.5, 0.5]), {error:"[ERROR] Calculated COS don't correspond"});
+console.log(">>> Test calculateLinesOfSight");
+// TODO
+console.assert(JSON.stringify(calculateConesOfSight(10, [5,5], "up", [0, 5])) === JSON.stringify([0.4, 0.5, 0.5]), {error:"[ERROR] Calculated COS don't correspond"});
 
 console.log("[INFO] Testing done!");
 
@@ -26,6 +28,8 @@ function test_calculateConesOfSight(gridSize, snakePos, snakeOrientation, fruitP
     game.snakes[0].orientation = snakeOrientation;
 
     game.fruits[0].pos = fruitPos;
+
+    console.log(game.calculateConesOfSight());
 
     return game.calculateConesOfSight();
 }
