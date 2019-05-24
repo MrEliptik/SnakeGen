@@ -13,20 +13,44 @@ console.assert(
   { error: "[ERROR] Calculated LOS don't correspond" }
 );
 
-console.log(">>> Test calculateLinesOfSight");
+console.log(">>> Test calculateConesOfSight");
 // TODO
 console.assert(
   JSON.stringify(test_calculateConesOfSight(10, [5, 5], "up", [5, 0])) ===
-    JSON.stringify([0.4, 0.5, 0.5]),
+    JSON.stringify([
+      [20 / 59, 0],
+      [20 / 59, 1],
+      [19 / 59, 1],
+      [(14 - 2) / 59, 0]
+    ]),
   { error: "[ERROR] Calculated COS don't correspond" }
 );
 console.assert(
-    JSON.stringify(test_calculateConesOfSight(10, [5, 5], "down", [5, 0])) ===
-      JSON.stringify([[(14-5)/61,0], [(14-3)/61,0], [14/61,0], [19/61,0]]),
-    { error: "[ERROR] Calculated COS (x2) don't correspond" }
-  );
+  JSON.stringify(test_calculateConesOfSight(10, [5, 5], "down", [5, 0])) ===
+    JSON.stringify([
+      [(14 - 5) / 49, 0],
+      [(14 - 3) / 49, 0],
+      [14 / 49, 0],
+      [19 / 49, 0]
+    ]),
+  { error: "[ERROR] Calculated COS (x2) don't correspond" }
+);
+console.assert(
+  JSON.stringify(test_calculateConesOfSight(10, [5, 5], "left", [5, 0])) ===
+    JSON.stringify([[14 / 59, 0], [19 / 59, 0], [20 / 59, 0], [20 / 59, 1]]),
+  { error: "[ERROR] Calculated COS (x3) don't correspond" }
+);
+console.assert(
+  JSON.stringify(test_calculateConesOfSight(10, [5, 5], "right", [9, 6])) ===
+    JSON.stringify([
+      [19 / 49, 0],
+      [(14 - 2) / 49, 0],
+      [(14 - 5) / 49, 1],
+      [(14 - 3) / 49, 0]
+    ]),
+  { error: "[ERROR] Calculated COS (x4) don't correspond" }
+);
 
-console.log(JSON.stringify([[(14-5)/61,0], [(14-3)/61,0], [14/61,0], [19/61,0]]))
 console.log("[INFO] Testing done!");
 
 /* CONES OF SIGHT TEST */
@@ -51,17 +75,19 @@ function test_calculateConesOfSight(
 
   game.fruits[0].pos = fruitPos;
 
-  game.snakes[0].tail.push([9,5]);
-  game.snakes[0].tail.push([8,5]);
-  game.snakes[0].tail.push([8,6]);
-  game.snakes[0].tail.push([7,6]);
-  game.snakes[0].tail.push([7,7]);
-  game.snakes[0].tail.push([7,8]);
-  game.snakes[0].tail.push([7,9]);
+  game.snakes[0].tail.push([9, 5]);
+  game.snakes[0].tail.push([8, 5]);
+  game.snakes[0].tail.push([8, 6]);
+  game.snakes[0].tail.push([7, 6]);
+  game.snakes[0].tail.push([7, 7]);
+  game.snakes[0].tail.push([7, 8]);
+  game.snakes[0].tail.push([7, 9]);
 
-  console.log(game.snakes[0].tail)
+  game.snakes[0].length = 8;
 
-  console.log(game.calculateConesOfSight());
+  result = game.calculateConesOfSight();
 
-  return game.calculateConesOfSight();
+  //console.log(result);
+
+  return result;
 }
