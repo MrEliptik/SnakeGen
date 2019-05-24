@@ -72,18 +72,18 @@ class Generation {
     }
     else if(type == "patch"){
       // starting coordinates
-      var i_start = Math.floor(Math.random() * (agentA_clone.input_weights.shape[0])) + 0;
-      var j_start = Math.floor(Math.random() * (agentA_clone.input_weights.shape[1])) + 0;
+      var i_start = Math.floor(Math.random() * (agentA_clone.input_weights.shape[0]-1)) + 0;
+      var j_start = Math.floor(Math.random() * (agentA_clone.input_weights.shape[1]-1)) + 0;
       // dimensions of the patch
-      var height = Math.floor(Math.random() * (agentA_clone.input_weights.shape[0]-i_start)) + 0;
-      var width = Math.floor(Math.random() * (agentA_clone.input_weights.shape[1]-j_start)) + 0;
+      var height = Math.floor(Math.random() * ((agentA_clone.input_weights.shape[0]-1)-i_start)) + 0;
+      var width = Math.floor(Math.random() * ((agentA_clone.input_weights.shape[1]-1)-j_start)) + 0;
 
       var tmpA = agentA_clone.input_weights.arraySync();
       var tmpB = agentB_clone.input_weights.arraySync();
       // Replace only patch values in agentA copy
       // !!! This hangs and throw out of error...
       for(var i = i_start; i < (i_start + height); i++){
-        for(var j = j_start; i < (j_start + width); j++){
+        for(var j = j_start; j < (j_start + width); j++){
           tmpA[i][j] = tmpB[i][j];
         }
       }
@@ -91,21 +91,21 @@ class Generation {
       offspring.nn.input_weights = tf.tensor(tmpA);
 
       // Same for output weights
-      var i_start = Math.floor(Math.random() * (agentA_clone.output_weights.shape[0]))+ 0;
-      var j_start = Math.floor(Math.random() * (agentA_clone.output_weights.shape[1])) + 0;
+      var i_start = Math.floor(Math.random() * (agentA_clone.output_weights.shape[0]-1))+ 0;
+      var j_start = Math.floor(Math.random() * (agentA_clone.output_weights.shape[1]-1)) + 0;
       // dimensions of the patch
-      var height = Math.floor(Math.random() * (agentA_clone.output_weights.shape[0]-i_start)) + 0;
-      var width = Math.floor(Math.random() * (agentA_clone.output_weights.shape[1]-j_start)) + 0;
+      var height = Math.floor(Math.random() * ((agentA_clone.output_weights.shape[0]-1)-i_start)) + 0;
+      var width = Math.floor(Math.random() * ((agentA_clone.output_weights.shape[1]-1)-j_start)) + 0;
 
       var tmpA = agentA_clone.output_weights.arraySync();
       var tmpB = agentB_clone.output_weights.arraySync();
 
       for(var i = i_start; i < (i_start + height); i++){
-        for(var j = j_start; i < (j_start + width); j++){
+        for(var j = j_start; j < (j_start + width); j++){
           tmpA[i][j] = tmpB[i][j];
         }
       }
-      offspring.nn.output_weights = tf.sensor(tmpA);
+      offspring.nn.output_weights = tf.tensor(tmpA);
     }
   }
 
@@ -217,7 +217,7 @@ class Generation {
       let selected = shuffled.slice(0, 2);
       
       // TODO: implement crossOver
-      this.crossOver(selected[0], selected[1], agents[i], "row");
+      this.crossOver(selected[0], selected[1], agents[i], "patch");
 
       // Mutate the newly breed agent
       this.mutate(agents[i]);
