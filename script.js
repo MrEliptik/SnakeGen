@@ -180,6 +180,9 @@ function deleteGames() {
       while (canvas_container.firstChild) {
         canvas_container.removeChild(canvas_container.firstChild);
       }
+
+      setStartPauseState("pause");
+
       // Empty the games array object
       env = null;
     }
@@ -201,19 +204,35 @@ function toggleChartDisplay(){
   }
 }
 
+function setStartPauseState(state){
+  if(state == "play"){
+    html = '<i class="fas fa-pause"></i>';
+    env.setPlayPauseState("play");
+    env.update();
+    playPauseState = "play";
+  }
+  else{
+    html = '<i class="fas fa-play"></i>';
+    env.setPlayPauseState("pause");
+    playPauseState = "pause";
+  }
+  btn_start.innerHTML = html;
+}
+
 function toggleStartPause(){
   var html = '';
   if(env.getPlayPauseState() == "pause"){
     html = '<i class="fas fa-pause"></i>';
     env.setPlayPauseState("play");
     env.update();
+    playPauseState = "play";
   }
   else{
     html = '<i class="fas fa-play"></i>';
     env.setPlayPauseState("pause");
+    playPauseState = "pause";
   }
   btn_start.innerHTML = html;
-  
 }
 
 function getSpeedValue() {
