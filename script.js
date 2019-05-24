@@ -47,13 +47,17 @@ function allDefaultUI() {
     slider_population.value = 50;
     slider_games_visible.value = 10;
     slider_grid_size.value = 10;
+    slider_hidden_layers.value = 1;
+    slider_neurons.value = 100;
 
-    // Create a new 'change' event
-    var event = new Event("change");
+    // Create a new 'input' event
+    var event = new Event("input");
     // Dispatch it.
     slider_population.dispatchEvent(event);
     slider_games_visible.dispatchEvent(event);
     slider_grid_size.dispatchEvent(event);
+    slider_hidden_layers.dispatchEvent(event);
+    slider_neurons.dispatchEvent(event);
 
     // Set speed to '1x'
     radios_speed[0].checked = "checked";
@@ -298,23 +302,43 @@ window.addEventListener(
   false
 );
 
-slider_population.addEventListener("change", () => {
-  input_population.value = slider_population.value;
+input_population.addEventListener("input", () => {
+  slider_population.value = input_population.value;
 });
 
-slider_games_visible.addEventListener("change", () => {
+input_games_visible.addEventListener("input", () => {
+  slider_games_visible.value = input_games_visible.value;
+});
+
+input_grid_size.addEventListener("input", () => {
+  slider_grid_size.value = input_grid_size.value;
+});
+
+input_hidden_layers.addEventListener("input", () => {
+  slider_hidden_layers.value = input_hidden_layers.value;
+});
+
+input_slider_neurons.addEventListener("input", () => {
+  slider_neurons.value = input_slider_neurons.value;
+});
+
+slider_population.addEventListener("input", () => {
+  input_population.value = slider_population.value;
+})
+
+slider_games_visible.addEventListener("input", () => {
   input_games_visible.value = slider_games_visible.value;
 });
 
-slider_grid_size.addEventListener("change", () => {
+slider_grid_size.addEventListener("input", () => {
   input_grid_size.value = slider_grid_size.value;
 });
 
-slider_hidden_layers.addEventListener("change", () => {
+slider_hidden_layers.addEventListener("input", () => {
   input_hidden_layers.value = slider_hidden_layers.value;
 });
 
-slider_neurons.addEventListener("change", () => {
+slider_neurons.addEventListener("input", () => {
   input_slider_neurons.value = slider_neurons.value;
 });
 
