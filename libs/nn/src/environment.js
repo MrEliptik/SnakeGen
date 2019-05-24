@@ -143,7 +143,7 @@ class Environment extends Generation {
   }
 
   update() {
-    if (this.state == "play") {
+    if (this.state == "pause") {
       return;
     }
 
