@@ -25,6 +25,7 @@ class Agent {
     this.actions = { 0: "left", 1: "up", 2: "right" };
 
     this.mutationIntensity = 0;
+    this.tickALive = 0;
 
     this.nn = new NeuralNetwork(
       input_nodes,
@@ -76,11 +77,21 @@ class Agent {
 
     // Call the game update with the action calculated
     // by the NN
-    return this.game.update(this.actions[i], true);
+    ret = this.game.update(this.actions[i], true);
+
+    if(ret) {
+      this.tickALive++;
+    }
+
+    return ret;
   }
 
   getScore() {
     return this.game.score;
+  }
+
+  getTickALive() {
+    return this.tickALive;
   }
 
   resetGame(){
