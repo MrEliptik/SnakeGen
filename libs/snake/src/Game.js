@@ -696,8 +696,6 @@ class Game {
 
           // Update score
           this.score++;
-
-          //console.log("Fruit eaten, length : " + this.snakes[0].length);
         }
       }
 
@@ -705,7 +703,6 @@ class Game {
         // Draw the game
         this.draw();
       }
-
       // Update and return the grid
       this.upgradeGrid();
       return true;

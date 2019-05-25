@@ -5,12 +5,14 @@ var slider_games_visible = document.getElementById("slider_games_visible");
 var slider_grid_size = document.getElementById("slider_grid_size");
 var slider_hidden_layers = document.getElementById("slider_hidden_layers");
 var slider_neurons = document.getElementById("slider_neurons");
+var slider_selection_rate = document.getElementById("slider_selection_rate");
 
 var input_population = document.getElementById("input_slider_population");
 var input_games_visible = document.getElementById("input_slider_games_visble");
 var input_grid_size = document.getElementById("input_slider_grid_size");
 var input_hidden_layers = document.getElementById("input_slider_hidden_layers");
 var input_slider_neurons = document.getElementById("input_slider_neurons");
+var input_selection_rate = document.getElementById("input_slider_selection_rate");
 
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
@@ -21,6 +23,9 @@ var btn_start = document.getElementById("btn_start");
 var btn_stop = document.getElementById("btn_stop");
 
 var btn_chart = document.getElementById("btn_chart");
+
+var btn_upload = document.getElementById("btn_upload");
+var bnt_save = document.getElementById("btn_save");
 
 var radios_speed = document.getElementsByName("speed");
 
@@ -46,13 +51,21 @@ function allDefaultUI() {
     slider_population.value = 50;
     slider_games_visible.value = 10;
     slider_grid_size.value = 10;
+    slider_hidden_layers.value = 1;
+    slider_neurons.value = 100;
+    slider_selection_rate.value = 10;
 
-    // Create a new 'change' event
-    var event = new Event("change");
+    resetChart();
+
+    // Create a new 'input' event
+    var event = new Event("input");
     // Dispatch it.
     slider_population.dispatchEvent(event);
     slider_games_visible.dispatchEvent(event);
     slider_grid_size.dispatchEvent(event);
+    slider_hidden_layers.dispatchEvent(event);
+    slider_neurons.dispatchEvent(event);
+    slider_selection_rate.dispatchEvent(event);
 
     // Set speed to '1x'
     radios_speed[0].checked = "checked";
@@ -70,7 +83,25 @@ function createGames() {
         it's going to be set as equal."
       )
     ) {
-      input_games_visible.value = input_population.value;
+      console.log("ok");
+      slider_games_visible.value = parseInt(slider_population.value);
+      var event = new Event("input");
+      // Dispatch it.
+      slider_population.dispatchEvent(event);
+      slider_games_visible.dispatchEvent(event);
+    } else {
+      return;
+    }
+  }
+
+  if ((parseInt(input_selection_rate.value) / 100) * parseInt(input_population.value) < 2) {
+    if (
+      askUserConfirmation(
+        "The population size and selection rate you chose can't make 2 parents. \
+        Please modify before trying to create a new population."
+      )
+    ) {
+      return;
     } else {
       return;
     }
@@ -84,7 +115,7 @@ function createGames() {
     canvas.id = "canvas_" + String(i);
     if (
       (window.innerHeight - canvas_container.offsetTop - 20) /
-        input_games_visible.value <
+      input_games_visible.value <
       90
     ) {
       canvas.height = 90;
@@ -106,7 +137,7 @@ function createGames() {
     1,
     "DF",
     parseInt(input_population.value), // populationSize
-    10, // selectionPerCentage
+    parseInt(input_selection_rate.value), // selectionPerCentage
     5, // stepSizeParameter
     0.01, // mutationProb
     speed,
@@ -121,7 +152,7 @@ function createGames() {
   createTrainingChart();
 
   // Call nn every seconds
-  window.setInterval(function() {
+  window.setInterval(function () {
     //updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
   }, 5000);
 }
@@ -184,6 +215,14 @@ function updateChart(genID, valueScoreMax, valueScore) {
   trainingChart.update();
 }
 
+function resetChart() {
+  trainingChart.data.labels = [];
+  trainingChart.data.datasets.forEach(dataset => {
+    dataset.data = [];
+  });
+  trainingChart.update();
+}
+
 function deleteGames() {
   // Ask for user's confirmation first
   if (env != null) {
@@ -196,6 +235,11 @@ function deleteGames() {
       while (canvas_container.firstChild) {
         canvas_container.removeChild(canvas_container.firstChild);
       }
+
+      setStartPauseState("pause");
+
+      resetChart();
+
       // Empty the games array object
       env = null;
     }
@@ -217,15 +261,33 @@ function toggleChartDisplay() {
   }
 }
 
+function setStartPauseState(state) {
+  if (state == "play") {
+    html = '<i class="fas fa-pause"></i>';
+    env.setPlayPauseState("play");
+    env.update();
+    playPauseState = "play";
+  }
+  else {
+    html = '<i class="fas fa-play"></i>';
+    env.setPlayPauseState("pause");
+    playPauseState = "pause";
+  }
+  btn_start.innerHTML = html;
+}
+
 function toggleStartPause() {
-  var html = "";
+  var html = '';
   if (env.getPlayPauseState() == "pause") {
     html = '<i class="fas fa-pause"></i>';
     env.setPlayPauseState("play");
     env.update();
-  } else {
+    playPauseState = "play";
+  }
+  else {
     html = '<i class="fas fa-play"></i>';
     env.setPlayPauseState("pause");
+    playPauseState = "pause";
   }
   btn_start.innerHTML = html;
 }
@@ -240,6 +302,14 @@ function getSpeedValue() {
       break;
     }
   }
+}
+
+function saveModel(){
+
+}
+
+function loadModel(){
+
 }
 
 // Add an event listener from the keyboard
@@ -290,24 +360,52 @@ window.addEventListener(
   false
 );
 
-slider_population.addEventListener("change", () => {
-  input_population.value = slider_population.value;
+input_population.addEventListener("input", () => {
+  slider_population.value = input_population.value;
 });
 
-slider_games_visible.addEventListener("change", () => {
+input_games_visible.addEventListener("input", () => {
+  slider_games_visible.value = input_games_visible.value;
+});
+
+input_grid_size.addEventListener("input", () => {
+  slider_grid_size.value = input_grid_size.value;
+});
+
+input_hidden_layers.addEventListener("input", () => {
+  slider_hidden_layers.value = input_hidden_layers.value;
+});
+
+input_slider_neurons.addEventListener("input", () => {
+  slider_neurons.value = input_slider_neurons.value;
+});
+
+input_selection_rate.addEventListener("input", () => {
+  slider_selection_rate.value = input_selection_rate.value;
+});
+
+slider_population.addEventListener("input", () => {
+  input_population.value = slider_population.value;
+})
+
+slider_games_visible.addEventListener("input", () => {
   input_games_visible.value = slider_games_visible.value;
 });
 
-slider_grid_size.addEventListener("change", () => {
+slider_grid_size.addEventListener("input", () => {
   input_grid_size.value = slider_grid_size.value;
 });
 
-slider_hidden_layers.addEventListener("change", () => {
+slider_hidden_layers.addEventListener("input", () => {
   input_hidden_layers.value = slider_hidden_layers.value;
 });
 
-slider_neurons.addEventListener("change", () => {
+slider_neurons.addEventListener("input", () => {
   input_slider_neurons.value = slider_neurons.value;
+});
+
+slider_selection_rate.addEventListener("input", () => {
+  input_selection_rate.value = slider_selection_rate.value;
 });
 
 btn_create.addEventListener("click", () => {
@@ -322,26 +420,34 @@ btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
 
-btn_restart.addEventListener("click", () => {});
+btn_restart.addEventListener("click", () => { });
 
 btn_start.addEventListener("click", () => {
   toggleStartPause();
 });
 
-btn_stop.addEventListener("click", () => {});
+btn_stop.addEventListener("click", () => { });
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
 });
 
+btn_upload.addEventListener("click", () => {
+  loadModel();
+});
+
+bnt_save.addEventListener("click", () => {
+  saveModel();
+});
+
 // event sent by Environment when we change generation
-window.addEventListener("newgeneration", function(e) {
+window.addEventListener("newgeneration", function (e) {
   //console.log(e.detail.id, e.detail.maxScore, e.detail.score);
   updateChart(e.detail.id, e.detail.maxScore, e.detail.score);
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
-  radios_speed[i].onclick = function() {
+  radios_speed[i].onclick = function () {
     speed = parseInt(this.value);
     // Goes from x1, x2, etc.. to 30fps, 60fps...
     speed *= 30;

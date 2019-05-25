@@ -60,9 +60,9 @@ class Environment extends Generation {
           new Agent(
             gridRows,
             gridColumns,
-            canvases[visible].height,
-            canvases[visible].width,
-            canvases[visible],
+            null,
+            null,
+            null,
             nb_snakes,
             nb_fruits,
             mode,
