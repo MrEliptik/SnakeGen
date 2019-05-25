@@ -539,6 +539,7 @@ class Game {
         return true;
       }
     }
+    return false;
   }
 
   // Reset the snake with the index given in parameter
@@ -678,6 +679,7 @@ class Game {
         //this.resetSnake(0);
         this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawGrid();
+        console.log("game: hitbody");
 
         return false;
       } else {
@@ -708,6 +710,7 @@ class Game {
       return true;
     }
     else{
+      console.log("game, move false");
       return false;
     }
   }
