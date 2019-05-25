@@ -336,7 +336,7 @@ btn_chart.addEventListener("click", () => {
 
 // event sent by Environment when we change generation
 window.addEventListener("newgeneration", function(e) {
-  console.log(e.detail.id, e.detail.maxScore, e.detail.score);
+  //console.log(e.detail.id, e.detail.maxScore, e.detail.score);
   updateChart(e.detail.id, e.detail.maxScore, e.detail.score);
 });
 
