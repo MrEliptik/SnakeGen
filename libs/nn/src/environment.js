@@ -128,12 +128,16 @@ class Environment extends Generation {
     // game
     this.agents.forEach(agent => {
       // if return false, agent is dead
-      if (!agent.step()) {
+      var ret = agent.step();
+      //console.log(ret);
+      if (ret === false) {
         this.agentsAlive--;
+        console.log(ret);
+        //console.log(this.agentsAlive);
       }
     });
 
-    return this.agentAlive != 0;
+    return this.agentsAlive != 0;
   }
 
   dispatchNewGenEvent(){
@@ -143,7 +147,7 @@ class Environment extends Generation {
   }
 
   update() {
-    if (this.state == "play") {
+    if (this.state == "pause") {
       return;
     }
 
@@ -154,6 +158,7 @@ class Environment extends Generation {
         this.dispatchNewGenEvent();
         this.agents = this.createNextGen(this.agents);
         this.tickCount = 0;
+        this.agentsAlive = this.populationSize;
         // reset games
         this.agents.forEach(agent => {
           agent.resetGame();
@@ -163,6 +168,7 @@ class Environment extends Generation {
       this.dispatchNewGenEvent();
       this.agents = this.createNextGen(this.agents);
       this.tickCount = 0;
+      this.agentsAlive = this.populationSize;
       // reset games
       this.agents.forEach(agent => {
         agent.resetGame();

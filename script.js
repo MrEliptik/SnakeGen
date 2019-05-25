@@ -30,7 +30,7 @@ var playPauseState = "pause";
 
 var speed = 30;
 var nb_input_neurons = 11;
-var nb_hidden_neurons = 20;
+var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
 
 /* set tf backend to cpu as we would lose 
@@ -100,15 +100,15 @@ function createGames() {
     1,
     1,
     "DF",
-    parseInt(input_population.value), // populationSize
-    10,                              // selectionPerCentage
-    5,                                // stepSizeParameter
-    0.01,                                 // mutationProb
+    parseInt(input_population.value),     // populationSize
+    10,                                   // selectionPerCentage
+    5,                                    // stepSizeParameter
+    0.01,                                  // mutationProb
     speed,
     nb_input_neurons,
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
-    300,
+    500,
     playPauseState
   );
   env.update(0);
