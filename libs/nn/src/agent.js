@@ -25,6 +25,7 @@ class Agent {
     this.actions = { 0: "left", 1: "up", 2: "right" };
 
     this.mutationIntensity = 0;
+    this.isAlive = true;
 
     this.nn = new NeuralNetwork(
       input_nodes,

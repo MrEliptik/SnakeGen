@@ -128,11 +128,14 @@ class Environment extends Generation {
     // game
     this.agents.forEach(agent => {
       // if return false, agent is dead
-      var ret = agent.step();
+      if(agent.isAlive) {
+        var ret = agent.step();
+      }
+      
       //console.log(ret);
       if (ret === false) {
+        agent.isAlive = false;
         this.agentsAlive--;
-        console.log(ret);
         //console.log(this.agentsAlive);
       }
     });
@@ -166,6 +169,7 @@ class Environment extends Generation {
         // reset games
         this.agents.forEach(agent => {
           agent.resetGame();
+          agent.isAlive = true;
         });
       }
     } else {
@@ -176,6 +180,7 @@ class Environment extends Generation {
       // reset games
       this.agents.forEach(agent => {
         agent.resetGame();
+        agent.isAlive = true;
       });
     }
 

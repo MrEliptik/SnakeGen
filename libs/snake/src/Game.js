@@ -664,6 +664,7 @@ class Game {
         }
       }
     }
+
     // move the snake
     if (this.snakes[0].move(direction)) {
       //console.log("New position : " + this.snakes[0].getPosition());
@@ -679,7 +680,7 @@ class Game {
         //this.resetSnake(0);
         this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawGrid();
-        console.log("game: hitbody");
+        //console.log("game: hitbody");
 
         return false;
       } else {
@@ -710,7 +711,7 @@ class Game {
       return true;
     }
     else{
-      console.log("game, move false");
+      //console.log(this.snakes[0].getPosition(), "game, move false");
       return false;
     }
   }
