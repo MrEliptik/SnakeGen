@@ -128,8 +128,12 @@ class Environment extends Generation {
     // game
     this.agents.forEach(agent => {
       // if return false, agent is dead
-      if (agent.step() == false) {
+      var ret = agent.step();
+      //console.log(ret);
+      if (ret === false) {
         this.agentsAlive--;
+        console.log(ret);
+        //console.log(this.agentsAlive);
       }
     });
 
