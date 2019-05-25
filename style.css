@@ -1,0 +1,325 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(70, 70, 70);
+}
+
+h2 {
+  margin: 2px 0px 10px 0px;
+  color: #fdfdfd;
+}
+
+button {
+  background-color: #363636; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: none;
+}
+
+canvas{
+  margin: 5px 5px 5px 5px;
+}
+
+label{
+  margin-left: 5px;
+}
+
+.training-chart-wrapper{
+  max-height: 200px;
+  max-width: 400px;
+  text-align: center;
+}
+
+#training-chart{
+  display: inline-block;
+}
+
+.content-text{
+  align-content: center;
+}
+
+.text-wrapper{
+  max-width: 1000px;
+  display: inline-block;
+  width: 100%;
+  text-align: justify;
+}
+
+.controls{
+  background-color: #e9e9e9;
+  color: #363636;
+}
+
+.controls-chart-off{
+  color: #363636;
+  background-color: #e9e9e9;
+}
+
+.controls-chart-on{
+  color: #ffffff;
+  background-color: #4CAF50;
+}
+
+.wrapper {
+  text-align: center;
+}
+
+.title {
+  display: inline-block;
+}
+
+/* TOP NAVBAR */
+.top-navbar {
+  margin: 5px 0px 20px 0px;
+  list-style-type: none;
+}
+
+.top-navbar li {
+  display: inline;
+  margin: 0px 5px 0px 5px;
+}
+
+.top-navbar a {
+  text-decoration: none;
+  color: rgb(27, 27, 27);
+}
+
+.top-navbar a:hover {
+  text-decoration: none;
+  color: rgb(90, 90, 90);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-gap: 2px;
+  grid-auto-rows: minmax(100px, 100);
+  max-height: 100%;
+}
+
+.canvas-container {
+  grid-column: 1 / 2;
+  grid-row: 1;
+  justify-self: stretch;
+  box-shadow: 0 10px 20px rgb(216, 216, 216),0 6px 6px #bebebe;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.canvas-container-solo {
+  box-shadow: 0 10px 20px rgb(216, 216, 216),0 6px 6px #bebebe;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.right-navbar {
+  grid-column: 2 / 2;
+  grid-row: 1;
+  background-color: #ffffff;
+}
+
+.navbar-section{
+  /*border: 2px solid #363636;*/
+  box-shadow: 0 6px 6px rgb(216, 216, 216),0 6px 6px #bebebe;
+  padding-bottom: 10px;
+  margin: 0px 0px 10px 0px;
+  border-radius: 5px;
+}
+
+.navbar-section .title{
+  width: auto;
+  display: block;
+  border-radius: 5px 5px 0px 0px;
+  background-color: #6aa877;
+}
+
+.navbar-content{
+  margin: 5px 5px 5px 5px;
+}
+
+.danger{
+  background-color: rgb(182, 10, 10); /* Green */
+  color: white;
+}
+
+.warning{
+  background-color: rgb(219, 162, 70); /* Green */
+  color: white;
+}
+
+/* SLIDERS */
+.slider{
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.slider-value{
+  width: 10%;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 80%;
+  margin: 7.95px 0;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 80%;
+  height: 2.1px;
+  cursor: pointer;
+  box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
+  background: rgba(0, 0, 0, 0.17);
+  border-radius: 1.3px;
+  border: 0px solid #000000;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 0px solid #000000;
+  height: 18px;
+  width: 18px;
+  border-radius: 11px;
+  background: #766a60;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7.95px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: rgba(13, 13, 13, 0.17);
+}
+input[type=range]::-moz-range-track {
+  width: 80%;
+  height: 2.1px;
+  cursor: pointer;
+  box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
+  background: rgba(0, 0, 0, 0.17);
+  border-radius: 1.3px;
+  border: 0px solid #000000;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 0px solid #000000;
+  height: 18px;
+  width: 18px;
+  border-radius: 11px;
+  background: #766a60;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 80%;
+  height: 2.1px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: rgba(0, 0, 0, 0.17);
+  border: 0px solid #000000;
+  border-radius: 2.6px;
+  box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: rgba(0, 0, 0, 0.17);
+  border: 0px solid #000000;
+  border-radius: 2.6px;
+  box-shadow: 0px 0px 1px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 0px solid #000000;
+  height: 18px;
+  width: 18px;
+  border-radius: 11px;
+  background: #766a60;
+  cursor: pointer;
+  height: 2.1px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: rgba(0, 0, 0, 0.17);
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: rgba(13, 13, 13, 0.17);
+}
+
+/* CONTACT FORM */
+input[type=text].input-email, select{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit].input-email{
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+textarea {
+  width: 100%;
+  background-color: rgb(155, 155, 155);
+  color: white;
+  padding-top: 14px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  resize: none;
+  height: 150px
+}
+
+.div-form{
+  display: block;
+}
+
+.form-wrapper{
+  position: fixed;
+  /* center the element */
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  /* give it dimensions */
+  min-height: 10em;
+  width: 40%;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 6px 6px rgb(216, 216, 216),0 6px 6px #bebebe;
+}
+
+.email-icon{
+  display: inherit;
+}
+
+.email-form{
+  margin: 0px 20px 0px 20px;
+}
+

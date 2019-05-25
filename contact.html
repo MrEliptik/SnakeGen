@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>🐍 Contact</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="style.css">
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+	<!--===============================================================================================-->
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="title">
+			<h1>🐍 SnakeGen</h1>
+		</div>
+		<ul class="top-navbar">
+			<li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+			<li><a href="solo.html"><i class="fas fa-play"></i> Play snake</a></li>
+			<li><a href="snakegen.html">🐍 SnakeGen?</a></li>
+			<li><a target="_blank" href="https://github.com/MrEliptik/SnakeGen"><i class="fab fa-github"></i> GitHub</a>
+			</li>
+			<li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+		</ul>
+		<div class="content-text">
+			<div class ="form-wrapper">
+				<span class="email-icon">
+					<i class="far fa-envelope fa-4x"></i>
+				</span>
+
+				<form class="email-form">
+					<div class="div-form" data-validate="Name is required">
+						<input class="input-email" type="text" name="name" placeholder="Name">
+						<span class=""></span>
+					</div>
+
+					<div class="div-form" data-validate="Email is required: e@a.z">
+						<input class="input-email" type="text" name="email" placeholder="Email Address">
+						<span class=""></span>
+					</div>
+
+					<div class="div-form" data-validate="Message is required">
+						<textarea class="" name="message" placeholder="Write Us A Message"></textarea>
+						<span class=""></span>
+					</div>
+
+					<button class="">
+						Send
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://smtpjs.com/v3/smtp.js"></script>
+
+	<script>
+		function sendMail() {
+			Email.send({
+				Host: "smtp.yourisp.com",
+				Username: "username",
+				Password: "password",
+				To: 'them@website.com',
+				From: "you@isp.com",
+				Subject: "This is the subject",
+				Body: "And this is the body"
+			}).then(
+				message => alert(message)
+			);
+		}
+
+	</script>
+</body>
+
+</html>

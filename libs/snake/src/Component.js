@@ -6,12 +6,7 @@ class Component {
         this.sprite = sprite;
     }
 
-    getPos() {
+    getPosition() {
       return this.pos;
     }
-};
-
-// Exportation of the class Component
-module.exports = {
-  Component: Component
 };

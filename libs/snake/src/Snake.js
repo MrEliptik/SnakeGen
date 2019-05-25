@@ -1,11 +1,17 @@
-// Include the module from lib/snake
-var lib = require('./Component.js');
-
-class Snake extends lib.Component{
+class Snake extends Component{
     constructor( pos, color, sprite){
         super( pos, color, sprite);
         this.length = 1;
         this.tail = [];
+        this.orientation = "up";
+    }
+
+    getOrientation(){
+      return this.orientation;
+    }
+
+    getTail(){
+      return this.tail;
     }
 
     // Return true if the movement is possible
@@ -16,12 +22,16 @@ class Snake extends lib.Component{
 
       if( direction == "up") {
         newPos = [this.pos[0], this.pos[1]-1];
+        this.orientation = "up";
       }else if( direction == "left"){
         newPos = [this.pos[0]-1, this.pos[1]];
+        this.orientation = "left";
       }else if( direction == "right"){
         newPos = [this.pos[0]+1, this.pos[1]];
+        this.orientation = "right";
       }else if( direction == "down"){
         newPos = [this.pos[0], this.pos[1]+1];
+        this.orientation = "down";
       }else{
         return false;
       }
@@ -62,9 +72,4 @@ class Snake extends lib.Component{
       }
       return false;
     }
-};
-
-// Exportation of the class Fruit
-module.exports = {
-  Snake: Snake
 };

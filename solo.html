@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>🐍 SnakeGen</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+    <script src="libs/snake/src/Game.js"></script>
+    <script src="libs/snake/src/Component.js"></script>
+    <script src="libs/snake/src/Fruit.js"></script>
+    <script src="libs/snake/src/Snake.js"></script>
+    <script src="libs/snake/src/Sprites.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="title">
+            <h1>🐍 SnakeGen</h1>
+        </div>
+        <ul class="top-navbar">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="solo.html"><i class="fas fa-play"></i> Play snake</a></li>
+            <li><a href="snakegen.html">🐍 SnakeGen?</a></li>
+            <li><a target="_blank" href="https://github.com/MrEliptik/SnakeGen"><i class="fab fa-github"></i> GitHub</a>
+            </li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+        <div class="canvas-container-solo">
+            <!-- canvas are added with js -->
+        </div>
+    </div>
+</body>
+
+<script>
+    var canvas_container = document.querySelector(".canvas-container-solo");
+    var canvas = null;
+
+    var game = createGame();
+
+    window.setInterval(function () {
+    }, 1000);
+
+    function createGame() {
+        // First delete previously created games
+        //deleteGames();
+
+        // Create the required number of canvas to display games
+        canvas = document.createElement("canvas");
+        canvas.id = "canvas";
+
+        if ((window.innerHeight - canvas_container.offsetTop) < (window.innerWidth - canvas_container.offsetLeft)) {
+            var size = window.innerHeight - canvas_container.offsetTop - 20;
+        }
+        else {
+            var size = window.innerWidth - canvas_container.offsetLeft - 20;
+        }
+        canvas.height = size;
+        canvas.width = size;
+        canvas_container.appendChild(canvas);
+
+        return new Game(10, 10, canvas.height, canvas.width, canvas, 1, 1, 'DF', true);
+    }
+
+    function deleteGames() {
+        // Ask for user's confirmation first
+        if (env != null) {
+            if (
+                askUserConfirmation(
+                    "This is going to delete all the created games, are you sure?"
+                )
+            ) {
+                // Remove canvas from container
+                while (canvas_container.firstChild) {
+                    canvas_container.removeChild(canvas_container.firstChild);
+                }
+                // Empty the games array object
+                env = null;
+            }
+        }
+    }
+
+    function askUserConfirmation(msg) {
+        return confirm(msg);
+    }
+
+
+    // Add an event listener from the keyboard
+    document.addEventListener(
+        "keyup",
+        event => {
+            const key = event.keyCode;
+
+            if (key == "38") {
+                game.update(0, "up");
+            } else if (key == "40") {
+                game.update(0, "down");
+            } else if (key == "37") {
+                game.update(0, "left");
+            } else if (key == "39") {
+                game.update(0, "right");
+            }
+        },
+        false
+    );
+
+    window.addEventListener(
+        "resize",
+        e => {
+            if ((window.innerHeight - canvas_container.offsetTop) < (window.innerWidth - canvas_container.offsetLeft)) {
+                var size = window.innerHeight - canvas_container.offsetTop - 20;
+            }
+            else {
+                var size = window.innerWidth - canvas_container.offsetLeft - 20;
+            }
+            canvas.height = size;
+            canvas.width = size;
+
+            game.draw();
+        },
+        false
+    );
+</script>
+
+</html>

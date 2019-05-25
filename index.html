@@ -1,13 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SnakeGen</title>
+    <title>🐍 SnakeGen</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <!-- Load tensorflow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 </head>
+
 <body>
-    <canvas id="canvas" width="600" height="600" style="border:1px solid #000000;"></canvas>
+    <div class="wrapper">
+        <div class="title">
+            <h1>🐍 SnakeGen</h1>
+        </div>
+        <ul class="top-navbar">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="solo.html"><i class="fas fa-play"></i> Play snake</a></li>
+            <li><a href="snakegen.html">🐍 SnakeGen?</a></li>
+            <li><a target="_blank" href="https://github.com/MrEliptik/SnakeGen"><i class="fab fa-github"></i> GitHub</a>
+            </li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+        <div class="training-chart-wrapper">
+            <canvas id="training-chart" width="150" height="300"></canvas>
+        </div>
+        <div class="content">             
+            <div class="canvas-container">        
+                <!-- canvas are added with js -->
+            </div>
+            <div class="right-navbar">
+                <div class="navbar-section">
+                    <div class="title">
+                        <h2>Global</h2>
+                    </div>
+                    <div class="navbar-content">
+                        <button id="btn_create">Create</button>
+                        <button class="danger" id="btn_delete">Delete</button>
+                        <button class="warning" id="btn_default">Reset</button>
+                        <div>
+                            <button class="controls" id="btn_restart"><i class="fas fa-undo-alt"></i></button>
+                            <button class="controls" id="btn_start"><i class="fas fa-play"></i></button>
+                            <button class="controls" id="btn_stop"><i class="fas fa-stop"></i></button>
+                            <button class="controls-chart-on" id="btn_chart"><i class="fas fa-chart-line"></i></button>   
+                            <!--<button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>-->  
+                        </div>
+                    </div>
+                    <div>
+                        <label for="speed"><i class="fas fa-tachometer-alt"></i></label>
+                        <input checked="checked" name="speed" type="radio" name="age" value="1">1x
+                        <input name="speed" type="radio" name="age" value="2">2x
+                        <input name="speed" type="radio" name="age" value="10">10x
+                        <input name="speed" type="radio" name="age" value="1000000000000000000000000000000">max
+                    </div>
+                </div>
+                <div class="navbar-section">
+                    <div class="title">
+                        <h2>Population</h2>
+                    </div>
+                    <div class="navbar-content">
+                        <div class="slider">
+                            <label for="slider_population"><i class="fas fa-users"></i> Population size</label>
+                            <input type="range" min="1" max="100" value="50" class="slider" id="slider_population"
+                                name="slider_population">
+                            <input class="slider-value" type="text" id="input_slider_population" value="50">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_games_visible"><i class="fas fa-eye"></i> Number of visible games</label>
+                            <input type="range" min="1" max="100" value="50" class="slider" id="slider_games_visible"
+                                name="slider_games_visible">
+                            <input class="slider-value" type="text" id="input_slider_games_visble" value="50">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_grid_size"><i class="fas fa-th"></i> Grid size</label>
+                            <input type="range" min="1" max="15" value="10" class="slider" id="slider_grid_size"
+                                name="slider_grid_size">
+                            <input class="slider-value" type="text" id="input_slider_grid_size" value="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="navbar-section">
+                    <div class="title">
+                        <h2>Neural network</h2>
+                    </div>
+                    <div class="navbar-content">
+                        <div class="slider">
+                            <label for="slider_hidden_layers"><i class="fas fa-layer-group"></i> Hidden layers</label>
+                            <input type="range" min="1" max="10" value="1" class="slider" id="slider_hidden_layers"
+                                name="slider_hidden_layers">
+                            <input class="slider-value" type="text" id="input_slider_hidden_layers" value="1">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_neurons"><i class="fas fa-genderless"></i> Neurons in hidden
+                                layer</label>
+                            <input type="range" min="1" max="1000" value="100" class="slider" id="slider_neurons"
+                                name="slider_neurons">
+                            <input class="slider-value" type="text" id="input_slider_neurons" value="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-<script src="bundle.js"></script>
+<script src="libs/nn/src/nn.js"></script>
+<script src="libs/nn/src/agent.js"></script>
+<script src="libs/nn/src/generation.js"></script>
+<script src="libs/nn/src/environment.js"></script>
+<script src="libs/snake/src/Game.js"></script>
+<script src="libs/snake/src/Component.js"></script>
+<script src="libs/snake/src/Fruit.js"></script>
+<script src="libs/snake/src/Snake.js"></script>
+<script src="libs/snake/src/Sprites.js"></script>
+<script src="script.js"></script>
+
 </html>
