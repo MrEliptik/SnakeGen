@@ -241,6 +241,8 @@ class Game {
     var snakeOrientation = this.snakes[0].getOrientation();
     var grid = this.grid;
 
+    
+
     if (snakeOrientation == "down") {
       var beginX  = 0;
       var beginY  = snakePosition[1];
@@ -360,7 +362,7 @@ class Game {
       }
     }
 
-    var totalCell = leftCone[0] + upLeftCone[0] + upRightCone[0] + rightCone[0];
+    var totalCell = (maxX-beginX) * (maxY-beginY) - 1;
 
     return  [[(leftCone[0]-leftCone[1])/totalCell, leftCone[2]/this.fruits.length],
             [(upLeftCone[0]-upLeftCone[1])/totalCell, upLeftCone[2]/this.fruits.length],
