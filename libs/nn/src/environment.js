@@ -140,6 +140,7 @@ class Environment extends Generation {
     var event = new CustomEvent("newgeneration", {
       detail: {
         id: this.id,
+        maxScore: this.getCurrGenHighestScore(),
         score: this.getCurrScore()
     }});
 
