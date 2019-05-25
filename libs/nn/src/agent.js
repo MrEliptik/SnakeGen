@@ -84,8 +84,20 @@ class Agent {
   }
 
   resetGame(){
-    this.game.resetFruit(0);
+    /*this.game.resetFruit(0);
     this.game.resetSnake(0);
-    this.game.score = 0;
+    this.game.score = 0;*/
+
+    this.game = new Game(
+      this.game.gridRows,
+      this.game.gridColumns,
+      this.game.canvasHeight,
+      this.game.canvasWidth,
+      this.game.canvas,
+      this.game.nb_snakes,
+      this.game.nb_fruits,
+      this.game.mode,
+      this.game.display
+    );
   }
 }

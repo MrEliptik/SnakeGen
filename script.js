@@ -39,8 +39,7 @@ var nb_output_neurons = 3;
   time copying values to the GPU. Net is too
   small to take advantage of GPU compute
 */
-tf.setBackend('cpu');
-
+tf.setBackend("cpu");
 
 function allDefaultUI() {
   if (
@@ -88,13 +87,19 @@ function createGames() {
   var canvases = [];
 
   // Create the required number of canvas to display games
-  for(var i = 0; i < parseInt(input_games_visible.value); i++) {
+  for (var i = 0; i < parseInt(input_games_visible.value); i++) {
     var canvas = document.createElement("canvas");
     canvas.id = "canvas_" + String(i);
-    if ((window.innerHeight - canvas_container.offsetTop - 20) / input_games_visible.value < 90) {
+    if (
+      (window.innerHeight - canvas_container.offsetTop - 20) /
+        input_games_visible.value <
+      90
+    ) {
       canvas.height = 90;
     } else {
-      canvas.height = (window.innerHeight - canvas_container.offsetTop - 20) / input_games_visible.value;
+      canvas.height =
+        (window.innerHeight - canvas_container.offsetTop - 20) /
+        input_games_visible.value;
     }
     canvas.width = canvas.height;
     canvas_container.appendChild(canvas);
@@ -108,10 +113,10 @@ function createGames() {
     1,
     1,
     "DF",
-    parseInt(input_population.value),     // populationSize
-    10,                                   // selectionPerCentage
-    5,                                    // stepSizeParameter
-    0.01,                                  // mutationProb
+    parseInt(input_population.value), // populationSize
+    10, // selectionPerCentage
+    5, // stepSizeParameter
+    0.01, // mutationProb
     speed,
     nb_input_neurons,
     parseInt(input_slider_neurons.value),
@@ -129,18 +134,26 @@ function createGames() {
   }, 5000);
 }
 
-function createTrainingChart(){
-  var ctx = document.getElementById('training-chart').getContext('2d');
+function createTrainingChart() {
+  var ctx = document.getElementById("training-chart").getContext("2d");
   trainingChart = new Chart(ctx, {
-    type: 'line',
+    type: "line",
     data: {
       labels: [0],
-      datasets: [{ 
+      datasets: [
+        {
           data: [],
           label: "Best score",
           borderColor: "#3e95cd",
           fill: false
-        }]
+        },
+        {
+          data: [],
+          label: "Current score",
+          borderColor: "#FC1616",
+          fill: false
+        }
+      ]
     },
     options: {
       legend: {
@@ -150,27 +163,30 @@ function createTrainingChart(){
       maintainAspectRatio: false,
       title: {
         display: true,
-        text: 'Best score per generation'
+        text: "Best score per generation"
       }
     }
   });
 }
 
-function updateChart(genID, value){
-  if(trainingChart.data.labels[trainingChart.data.labels.length-1] == genID){
-    trainingChart.data.datasets.forEach((dataset) => {
-      if(trainingChart.data.length > 0){
-        dataset.data[trainingChart.data.length-1] = value;
-      }
-      else{
-        dataset.data.push(value);
-      }
-    });
-  }
-  else{
-    trainingChart.data.datasets.forEach((dataset) => {
-      dataset.data.push(value);
-    });
+function updateChart(genID, valueScoreMax, valueScore) {
+  if (
+    trainingChart.data.labels[trainingChart.data.labels.length - 1] == genID
+  ) {
+    if (trainingChart.data.length > 0) {
+      trainingChart.data.datasets[0].data[
+        trainingChart.data.length - 1
+      ] = valueScoreMax;
+      trainingChart.data.datasets[1].data[
+        trainingChart.data.length - 1
+      ] = valueScore;
+    } else {
+      trainingChart.data.datasets[0].data.push(valueScoreMax);
+      trainingChart.data.datasets[1].data.push(valueScore);
+    }
+  } else {
+    trainingChart.data.datasets[0].data.push(valueScoreMax);
+    trainingChart.data.datasets[1].data.push(valueScore);
     trainingChart.data.labels.push(genID);
   }
   trainingChart.update();
@@ -201,14 +217,14 @@ function askUserConfirmation(msg) {
   return confirm(msg);
 }
 
-function toggleChartDisplay(){
+function toggleChartDisplay() {
   var chart = document.querySelector(".training-chart-wrapper");
   if (chart.style.display === "none") {
     chart.style.display = "block";
-    btn_chart.className = 'controls-chart-on';
+    btn_chart.className = "controls-chart-on";
   } else {
     chart.style.display = "none";
-    btn_chart.className = 'controls-chart-off';
+    btn_chart.className = "controls-chart-off";
   }
 }
 
@@ -261,7 +277,7 @@ document.addEventListener(
   event => {
     const key = event.keyCode;
 
-    if(env == null) return;
+    if (env == null) return;
 
     if (key == "38") {
       env.agents.forEach(pop => {
@@ -288,13 +304,10 @@ window.addEventListener(
   "resize",
   e => {
     //console.log(canvas_container.offsetWidth);
-
     //canvas.width = canvas_container.offsetWidth;
     //canvas.height = canvas_container.offsetHeight;
-
     //canvas.width = (document.documentElement.clientWidth * 2) / 3;
     //canvas.height = (document.documentElement.clientHeight * 2) / 3;
-
     /*
     games.forEach(game => {
       if (game.display) {
@@ -366,25 +379,22 @@ btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
 
-btn_restart.addEventListener("click", () => {
-
-});
+btn_restart.addEventListener("click", () => {});
 
 btn_start.addEventListener("click", () => {
   toggleStartPause();
 });
 
-btn_stop.addEventListener("click", () => {
-
-});
+btn_stop.addEventListener("click", () => {});
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
 });
 
 // event sent by Environment when we change generation
-window.addEventListener('newgeneration', () => {
-  updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
+window.addEventListener("newgeneration", function(e) {
+  //console.log(e.detail.id, e.detail.maxScore, e.detail.score);
+  updateChart(e.detail.id, e.detail.maxScore, e.detail.score);
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
