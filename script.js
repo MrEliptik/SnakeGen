@@ -104,10 +104,10 @@ function createGames() {
     1,
     1,
     "DF",
-    parseInt(input_population.value), // populationSize
-    10,                              // selectionPerCentage
-    5,                                // stepSizeParameter
-    0.4,                                 // mutationProb
+    parseInt(input_population.value),     // populationSize
+    10,                                   // selectionPerCentage
+    5,                                    // stepSizeParameter
+    0.01,                                  // mutationProb
     speed,
     nb_input_neurons,
     parseInt(input_slider_neurons.value),

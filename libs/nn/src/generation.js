@@ -29,6 +29,14 @@ class Generation {
    */
   calculateQfit() {}
 
+  randomG(v){ 
+    var r = 0;
+    for(var i = v; i > 0; i --){
+        r += Math.random();
+    }
+    return r / v;
+}
+
   /**
    * NotImplemented
    * @param {agentA}
@@ -143,7 +151,8 @@ class Generation {
     for(var i=0; i<matrix.length; i++) {
       for(var j=0; j<matrix[0].length; j++) {
         if(Math.random() <= mutationProb) {
-          matrix[i][j] += this.gaussianPertubation(0, mutationIntensity);
+          //matrix[i][j] += this.gaussianPertubation(0, mutationIntensity);
+          matrix[i][j] += this.randomG(3);
         }
       }
     }
@@ -171,11 +180,6 @@ class Generation {
     // Select the number of agents to select
     var numberOfAgents = Math.round(this.populationSize * this.selectionPerCentage / 100.0);
     
-    // TODELETE
-    console.log(
-      numberOfAgents
-    );
-
     // Sort the agents by using their score
     var agentsArray = agents.sort(function(a,b) {
       return b.getScore() - a.getScore();
