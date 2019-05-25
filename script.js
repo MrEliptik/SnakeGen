@@ -51,7 +51,7 @@ function allDefaultUI() {
     slider_grid_size.value = 10;
     slider_hidden_layers.value = 1;
     slider_neurons.value = 100;
-    slider_selection_rate = 10;
+    slider_selection_rate.value = 10;
 
     // Create a new 'input' event
     var event = new Event("input");
@@ -327,7 +327,7 @@ input_slider_neurons.addEventListener("input", () => {
 });
 
 input_selection_rate.addEventListener("input", () => {
-  slider_selection_rate = input_selection_rate.value;
+  slider_selection_rate.value = input_selection_rate.value;
 });
 
 slider_population.addEventListener("input", () => {
