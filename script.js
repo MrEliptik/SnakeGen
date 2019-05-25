@@ -86,6 +86,19 @@ function createGames() {
     }
   }
 
+  if ((parseInt(input_selection_rate.value) / 100) * parseInt(input_population.value) < 2) {
+    if (
+      askUserConfirmation(
+        "The population size and selection rate you chose can't make 2 parents. \
+        Please modify before trying to create a new population."
+      )
+    ) {
+      return;
+    } else {
+      return;
+    }
+  }
+
   var canvases = [];
 
   // Create the required number of canvas to display games
@@ -94,7 +107,7 @@ function createGames() {
     canvas.id = "canvas_" + String(i);
     if (
       (window.innerHeight - canvas_container.offsetTop - 20) /
-        input_games_visible.value <
+      input_games_visible.value <
       90
     ) {
       canvas.height = 90;
@@ -116,7 +129,7 @@ function createGames() {
     1,
     "DF",
     parseInt(input_population.value), // populationSize
-    10, // selectionPerCentage
+    parseInt(input_selection_rate.value), // selectionPerCentage
     5, // stepSizeParameter
     0.01, // mutationProb
     speed,
@@ -131,7 +144,7 @@ function createGames() {
   createTrainingChart();
 
   // Call nn every seconds
-  window.setInterval(function() {
+  window.setInterval(function () {
     //updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
   }, 5000);
 }
@@ -194,7 +207,7 @@ function updateChart(genID, valueScoreMax, valueScore) {
   trainingChart.update();
 }
 
-function resetChart(){
+function resetChart() {
   trainingChart.data.labels = [];
   trainingChart.data.datasets.forEach(dataset => {
     dataset.data = [];
@@ -240,14 +253,14 @@ function toggleChartDisplay() {
   }
 }
 
-function setStartPauseState(state){
-  if(state == "play"){
+function setStartPauseState(state) {
+  if (state == "play") {
     html = '<i class="fas fa-pause"></i>';
     env.setPlayPauseState("play");
     env.update();
     playPauseState = "play";
   }
-  else{
+  else {
     html = '<i class="fas fa-play"></i>';
     env.setPlayPauseState("pause");
     playPauseState = "pause";
@@ -255,15 +268,15 @@ function setStartPauseState(state){
   btn_start.innerHTML = html;
 }
 
-function toggleStartPause(){
+function toggleStartPause() {
   var html = '';
-  if(env.getPlayPauseState() == "pause"){
+  if (env.getPlayPauseState() == "pause") {
     html = '<i class="fas fa-pause"></i>';
     env.setPlayPauseState("play");
     env.update();
     playPauseState = "play";
   }
-  else{
+  else {
     html = '<i class="fas fa-play"></i>';
     env.setPlayPauseState("pause");
     playPauseState = "pause";
@@ -391,26 +404,26 @@ btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
 
-btn_restart.addEventListener("click", () => {});
+btn_restart.addEventListener("click", () => { });
 
 btn_start.addEventListener("click", () => {
   toggleStartPause();
 });
 
-btn_stop.addEventListener("click", () => {});
+btn_stop.addEventListener("click", () => { });
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
 });
 
 // event sent by Environment when we change generation
-window.addEventListener("newgeneration", function(e) {
+window.addEventListener("newgeneration", function (e) {
   //console.log(e.detail.id, e.detail.maxScore, e.detail.score);
   updateChart(e.detail.id, e.detail.maxScore, e.detail.score);
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
-  radios_speed[i].onclick = function() {
+  radios_speed[i].onclick = function () {
     speed = parseInt(this.value);
     // Goes from x1, x2, etc.. to 30fps, 60fps...
     speed *= 30;
