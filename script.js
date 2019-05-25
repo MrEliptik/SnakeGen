@@ -5,12 +5,14 @@ var slider_games_visible = document.getElementById("slider_games_visible");
 var slider_grid_size = document.getElementById("slider_grid_size");
 var slider_hidden_layers = document.getElementById("slider_hidden_layers");
 var slider_neurons = document.getElementById("slider_neurons");
+var slider_selection_rate = document.getElementById("slider_selection_rate");
 
 var input_population = document.getElementById("input_slider_population");
 var input_games_visible = document.getElementById("input_slider_games_visble");
 var input_grid_size = document.getElementById("input_slider_grid_size");
 var input_hidden_layers = document.getElementById("input_slider_hidden_layers");
 var input_slider_neurons = document.getElementById("input_slider_neurons");
+var input_selection_rate = document.getElementById("input_slider_selection_rate");
 
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
@@ -49,6 +51,7 @@ function allDefaultUI() {
     slider_grid_size.value = 10;
     slider_hidden_layers.value = 1;
     slider_neurons.value = 100;
+    slider_selection_rate = 10;
 
     // Create a new 'input' event
     var event = new Event("input");
@@ -58,6 +61,7 @@ function allDefaultUI() {
     slider_grid_size.dispatchEvent(event);
     slider_hidden_layers.dispatchEvent(event);
     slider_neurons.dispatchEvent(event);
+    slider_selection_rate.dispatchEvent(event);
 
     // Set speed to '1x'
     radios_speed[0].checked = "checked";
@@ -322,6 +326,10 @@ input_slider_neurons.addEventListener("input", () => {
   slider_neurons.value = input_slider_neurons.value;
 });
 
+input_selection_rate.addEventListener("input", () => {
+  slider_selection_rate = input_selection_rate.value;
+});
+
 slider_population.addEventListener("input", () => {
   input_population.value = slider_population.value;
 })
@@ -340,6 +348,10 @@ slider_hidden_layers.addEventListener("input", () => {
 
 slider_neurons.addEventListener("input", () => {
   input_slider_neurons.value = slider_neurons.value;
+});
+
+slider_selection_rate.addEventListener("input", () => {
+  input_selection_rate.value = slider_selection_rate.value;
 });
 
 btn_create.addEventListener("click", () => {
