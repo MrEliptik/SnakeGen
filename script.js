@@ -83,7 +83,12 @@ function createGames() {
         it's going to be set as equal."
       )
     ) {
-      input_games_visible.value = input_population.value;
+      console.log("ok");
+      slider_games_visible.value = parseInt(slider_population.value);
+      var event = new Event("input");
+      // Dispatch it.
+      slider_population.dispatchEvent(event);
+      slider_games_visible.dispatchEvent(event);
     } else {
       return;
     }
@@ -304,7 +309,7 @@ function saveModel(){
 }
 
 function loadModel(){
-  
+
 }
 
 // Add an event listener from the keyboard
