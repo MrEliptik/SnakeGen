@@ -134,6 +134,16 @@ function createTrainingChart(){
           fill: false
         }]
     },
+    type: 'line',
+    data: {
+      labels: [0],
+      datasets: [{ 
+          data: [],
+          label: "Current score",
+          borderColor: "#3e95cd",
+          fill: false
+        }]
+    },
     options: {
       legend: {
         display: false
@@ -148,20 +158,20 @@ function createTrainingChart(){
   });
 }
 
-function updateChart(genID, value){
+function updateChart(genID, valueScoreMax){
   if(trainingChart.data.labels[trainingChart.data.labels.length-1] == genID){
     trainingChart.data.datasets.forEach((dataset) => {
       if(trainingChart.data.length > 0){
-        dataset.data[trainingChart.data.length-1] = value;
+        dataset.data[trainingChart.data.length-1] = valueScoreMax;
       }
       else{
-        dataset.data.push(value);
+        dataset.data.push(valueScoreMax);
       }
     });
   }
   else{
     trainingChart.data.datasets.forEach((dataset) => {
-      dataset.data.push(value);
+      dataset.data.push(valueScoreMax);
     });
     trainingChart.data.labels.push(genID);
   }
@@ -328,8 +338,9 @@ btn_chart.addEventListener("click", () => {
 });
 
 // event sent by Environment when we change generation
-window.addEventListener('newgeneration', () => {
-  updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
+window.addEventListener('newgeneration', function (e) {
+  updateChart(e.detail.id, e.detail.score);
+  console.log(e.detail.id, e.detail.score);
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {

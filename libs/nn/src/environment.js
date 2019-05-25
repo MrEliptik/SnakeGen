@@ -22,12 +22,8 @@ class Environment extends Generation {
     tickout,
     state
   ) {
-
     // Generation Constructor
-    super(populationSize,
-      selectionPerCentage,
-      stepSizeParameter,
-      mutationProb)
+    super(populationSize, selectionPerCentage, stepSizeParameter, mutationProb);
 
     this.speed = speed;
     this.tickout = tickout;
@@ -103,6 +99,10 @@ class Environment extends Generation {
     return this.currGenHighScore;
   }
 
+  getCurrScore() {
+    return Math.max(...this.getAllScores());;
+  }
+
   getCurrGenID() {
     return this.id;
   }
@@ -136,8 +136,12 @@ class Environment extends Generation {
     return this.agentsAlive != 0;
   }
 
-  dispatchNewGenEvent(){
-    var event = new Event('newgeneration');
+  dispatchNewGenEvent() {
+    var event = new CustomEvent("newgeneration", {
+      detail: {
+        id: this.id,
+        score: this.getCurrScore()
+    }});
 
     window.dispatchEvent(event);
   }
@@ -148,7 +152,6 @@ class Environment extends Generation {
     }
 
     if (this.tickCount < this.tickout) {
-
       // No agents left, next gen
       if (!this.tick()) {
         this.dispatchNewGenEvent();
@@ -173,7 +176,7 @@ class Environment extends Generation {
 
     var that = this;
 
-    setTimeout(function () {
+    setTimeout(function() {
       that.tickCount += 1;
       that.update();
     }, 1000 / this.speed);
