@@ -17,6 +17,10 @@ class NeuralNetwork {
       this.hidden_nodes,
       this.output_nodes
     ]);
+
+    // Initialize the threshold vectors
+    this.input_threshold = new Array(input_nodes).fill(0);
+    this.hidden_threshold = new Array(hidden_nodes).fill(0);
   }
 
   /**
