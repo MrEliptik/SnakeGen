@@ -675,7 +675,7 @@ class Game {
         this.hitBody(0, this.snakes[0])
       ) {
         //console.log("You died!");
-        this.score = -1;
+        //this.score = -1;
         // Reset the dead snake
         //this.resetSnake(0);
         this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
