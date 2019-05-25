@@ -24,6 +24,9 @@ var btn_stop = document.getElementById("btn_stop");
 
 var btn_chart = document.getElementById("btn_chart");
 
+var btn_upload = document.getElementById("btn_upload");
+var bnt_save = document.getElementById("btn_save");
+
 var radios_speed = document.getElementsByName("speed");
 
 var env = null;
@@ -296,6 +299,14 @@ function getSpeedValue() {
   }
 }
 
+function saveModel(){
+
+}
+
+function loadModel(){
+  
+}
+
 // Add an event listener from the keyboard
 document.addEventListener(
   "keyup",
@@ -414,6 +425,14 @@ btn_stop.addEventListener("click", () => { });
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
+});
+
+btn_upload.addEventListener("click", () => {
+  loadModel();
+});
+
+bnt_save.addEventListener("click", () => {
+  saveModel();
 });
 
 // event sent by Environment when we change generation
