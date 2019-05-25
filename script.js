@@ -52,6 +52,8 @@ function allDefaultUI() {
     slider_neurons.value = 100;
     slider_selection_rate.value = 10;
 
+    resetChart();
+
     // Create a new 'input' event
     var event = new Event("input");
     // Dispatch it.
@@ -192,6 +194,14 @@ function updateChart(genID, valueScoreMax, valueScore) {
   trainingChart.update();
 }
 
+function resetChart(){
+  trainingChart.data.labels = [];
+  trainingChart.data.datasets.forEach(dataset => {
+    dataset.data = [];
+  });
+  trainingChart.update();
+}
+
 function deleteGames() {
   // Ask for user's confirmation first
   if (env != null) {
@@ -206,6 +216,8 @@ function deleteGames() {
       }
 
       setStartPauseState("pause");
+
+      resetChart();
 
       // Empty the games array object
       env = null;
