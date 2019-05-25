@@ -677,10 +677,11 @@ class Game {
         this.score = -1;
         // Reset the dead snake
         //this.resetSnake(0);
-        this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawGrid();
+        if(this.display){
+          this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.drawGrid();
+        }
         console.log("game: hitbody");
-
         return false;
       } else {
         var hitIndex = this.hitFruit(this.snakes[0]);
@@ -695,8 +696,6 @@ class Game {
 
           // Update score
           this.score++;
-
-          //console.log("Fruit eaten, length : " + this.snakes[0].length);
         }
       }
 
@@ -704,7 +703,6 @@ class Game {
         // Draw the game
         this.draw();
       }
-
       // Update and return the grid
       this.upgradeGrid();
       return true;
