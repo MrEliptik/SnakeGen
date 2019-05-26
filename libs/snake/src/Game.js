@@ -639,6 +639,7 @@ class Game {
   // Update the entire game by moving one snake
   update(direction, toTranslate) {
     if (toTranslate) {
+      
       var state = this.getSnakeState();
       if (state["orientation"] == "down") {
         if (direction == "left") {
@@ -680,8 +681,10 @@ class Game {
         //this.score = -1;
         // Reset the dead snake
         //this.resetSnake(0);
-        this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawGrid();
+        if(this.display==true) {
+          this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.drawGrid(); 
+        }
         //console.log("game: hitbody");
 
         return false;

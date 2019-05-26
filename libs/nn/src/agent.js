@@ -25,7 +25,7 @@ class Agent {
     this.actions = { 0: "left", 1: "up", 2: "right" };
 
     this.mutationIntensity = 0;
-    this.tickALive = 0;
+    this.tickAlive = 0;
     this.isAlive = true;
 
     this.nn = new NeuralNetwork(
@@ -81,7 +81,7 @@ class Agent {
     var ret = this.game.update(this.actions[i], true);
 
     if(ret) {
-      this.tickALive++;
+      this.tickAlive++;
     }
 
     return ret;
@@ -92,7 +92,7 @@ class Agent {
   }
 
   getTickAlive() {
-    return this.tickALive;
+    return this.tickAlive;
   }
 
   resetGame(){
