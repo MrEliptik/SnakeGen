@@ -1,13 +1,11 @@
 class Generation {
   /**
-   * Takes in the number of input nodes, hidden node and output nodes
+   * Constructor
    * @constructor
-   * @param {number} number
-   * @param {number} selectionPerCentage
-   * @param {number} timeUnit
-   * @param {number} input_nodes
-   * @param {number} hidden_nodes
-   * @param {number} output_nodes
+   * @param {number} populationSize       Number of agents
+   * @param {number} selectionPerCentage  Per centage of agents selected at each mutaiton
+   * @param {number} stepSizeParameter    Step size to apply to the mutation
+   * @param {number} mutationProb         Probability of mutation
    */
   constructor(
     populationSize,
@@ -25,12 +23,15 @@ class Generation {
   }
 
   /**
-   * NotImplemented
-   * @param {} -
+   * Calculate the Qfit value of an agent. The formula can be
+   * changed by the class's attibut nammed cosntants
+   * @param agent     Agent to evaluate
+   * @param maxScore  Maximum score of the generation
+   * @param tickMax   Maximum tick of the generation
    */
   calculateQfit(agent, maxScore, tickMax) {
     return (
-      this.constants[0] * agent.getScore() / maxScore +
+      (this.constants[0] * agent.getScore()) / maxScore +
       (this.constants[1] * agent.getTickAlive()) / tickMax
     );
   }
