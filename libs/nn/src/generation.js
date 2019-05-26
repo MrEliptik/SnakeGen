@@ -6,6 +6,7 @@ class Generation {
    * @param {number} selectionPerCentage  Per centage of agents selected at each mutaiton
    * @param {number} stepSizeParameter    Step size to apply to the mutation
    * @param {number} mutationProb         Probability of mutation
+   * @param {number} constants            Factor of the QFit function
    */
   constructor(
     populationSize,
