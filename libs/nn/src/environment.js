@@ -20,10 +20,11 @@ class Environment extends Generation {
     hidden_nodes,
     output_nodes,
     tickout,
-    state
+    state,
+    constants
   ) {
     // Generation Constructor
-    super(populationSize, selectionPerCentage, stepSizeParameter, mutationProb);
+    super(populationSize, selectionPerCentage, stepSizeParameter, mutationProb, constants);
 
     this.speed = speed;
     this.tickout = tickout;
@@ -100,7 +101,7 @@ class Environment extends Generation {
   }
 
   getCurrScore() {
-    return Math.max(...this.getAllScores());;
+    return Math.max(...this.getAllScores());
   }
 
   getCurrGenID() {
@@ -128,10 +129,10 @@ class Environment extends Generation {
     // game
     this.agents.forEach(agent => {
       // if return false, agent is dead
-      if(agent.isAlive) {
+      if (agent.isAlive) {
         var ret = agent.step();
       }
-      
+
       //console.log(ret);
       if (ret === false) {
         agent.isAlive = false;
@@ -149,7 +150,8 @@ class Environment extends Generation {
         id: this.id,
         maxScore: this.getCurrGenHighestScore(),
         score: this.getCurrScore()
-    }});
+      }
+    });
 
     window.dispatchEvent(event);
   }
@@ -163,24 +165,34 @@ class Environment extends Generation {
       // No agents left, next gen
       if (!this.tick()) {
         this.dispatchNewGenEvent();
-        this.agents = this.createNextGen(this.agents);
+        this.agents = this.createNextGen(
+          this.agents,
+          this.tickout,
+          this.getCurrGenHighestScore()
+        );
         this.tickCount = 0;
         this.agentsAlive = this.populationSize;
         // reset games
         this.agents.forEach(agent => {
           agent.resetGame();
           agent.isAlive = true;
+          agent.tickALive = 0;
         });
       }
     } else {
       this.dispatchNewGenEvent();
-      this.agents = this.createNextGen(this.agents);
+      this.agents = this.createNextGen(
+        this.agents,
+        this.tickout,
+        this.getCurrGenHighestScore()
+      );
       this.tickCount = 0;
       this.agentsAlive = this.populationSize;
       // reset games
       this.agents.forEach(agent => {
         agent.resetGame();
         agent.isAlive = true;
+        agent.tickALive = 0;
       });
     }
 

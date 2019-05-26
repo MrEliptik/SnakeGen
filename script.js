@@ -12,7 +12,9 @@ var input_games_visible = document.getElementById("input_slider_games_visble");
 var input_grid_size = document.getElementById("input_slider_grid_size");
 var input_hidden_layers = document.getElementById("input_slider_hidden_layers");
 var input_slider_neurons = document.getElementById("input_slider_neurons");
-var input_selection_rate = document.getElementById("input_slider_selection_rate");
+var input_selection_rate = document.getElementById(
+  "input_slider_selection_rate"
+);
 
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
@@ -94,7 +96,11 @@ function createGames() {
     }
   }
 
-  if ((parseInt(input_selection_rate.value) / 100) * parseInt(input_population.value) < 2) {
+  if (
+    (parseInt(input_selection_rate.value) / 100) *
+      parseInt(input_population.value) <
+    2
+  ) {
     if (
       askUserConfirmation(
         "The population size and selection rate you chose can't make 2 parents. \
@@ -115,7 +121,7 @@ function createGames() {
     canvas.id = "canvas_" + String(i);
     if (
       (window.innerHeight - canvas_container.offsetTop - 20) /
-      input_games_visible.value <
+        input_games_visible.value <
       90
     ) {
       canvas.height = 90;
@@ -145,14 +151,15 @@ function createGames() {
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
     500,
-    playPauseState
+    playPauseState,
+    [1, 0.5] // Constants
   );
   env.update(0);
 
   createTrainingChart();
 
   // Call nn every seconds
-  window.setInterval(function () {
+  window.setInterval(function() {
     //updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
   }, 5000);
 }
@@ -267,8 +274,7 @@ function setStartPauseState(state) {
     env.setPlayPauseState("play");
     env.update();
     playPauseState = "play";
-  }
-  else {
+  } else {
     html = '<i class="fas fa-play"></i>';
     env.setPlayPauseState("pause");
     playPauseState = "pause";
@@ -277,14 +283,13 @@ function setStartPauseState(state) {
 }
 
 function toggleStartPause() {
-  var html = '';
+  var html = "";
   if (env.getPlayPauseState() == "pause") {
     html = '<i class="fas fa-pause"></i>';
     env.setPlayPauseState("play");
     env.update();
     playPauseState = "play";
-  }
-  else {
+  } else {
     html = '<i class="fas fa-play"></i>';
     env.setPlayPauseState("pause");
     playPauseState = "pause";
@@ -304,13 +309,9 @@ function getSpeedValue() {
   }
 }
 
-function saveModel(){
+function saveModel() {}
 
-}
-
-function loadModel(){
-
-}
+function loadModel() {}
 
 // Add an event listener from the keyboard
 document.addEventListener(
@@ -386,7 +387,7 @@ input_selection_rate.addEventListener("input", () => {
 
 slider_population.addEventListener("input", () => {
   input_population.value = slider_population.value;
-})
+});
 
 slider_games_visible.addEventListener("input", () => {
   input_games_visible.value = slider_games_visible.value;
@@ -420,13 +421,13 @@ btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
 
-btn_restart.addEventListener("click", () => { });
+btn_restart.addEventListener("click", () => {});
 
 btn_start.addEventListener("click", () => {
   toggleStartPause();
 });
 
-btn_stop.addEventListener("click", () => { });
+btn_stop.addEventListener("click", () => {});
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
@@ -441,13 +442,13 @@ bnt_save.addEventListener("click", () => {
 });
 
 // event sent by Environment when we change generation
-window.addEventListener("newgeneration", function (e) {
+window.addEventListener("newgeneration", function(e) {
   //console.log(e.detail.id, e.detail.maxScore, e.detail.score);
   updateChart(e.detail.id, e.detail.maxScore, e.detail.score);
 });
 
 for (var i = 0, max = radios_speed.length; i < max; i++) {
-  radios_speed[i].onclick = function () {
+  radios_speed[i].onclick = function() {
     speed = parseInt(this.value);
     // Goes from x1, x2, etc.. to 30fps, 60fps...
     speed *= 30;

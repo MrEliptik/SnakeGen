@@ -241,6 +241,8 @@ class Game {
     var snakeOrientation = this.snakes[0].getOrientation();
     var grid = this.grid;
 
+    
+
     if (snakeOrientation == "down") {
       var beginX  = 0;
       var beginY  = snakePosition[1];
@@ -360,7 +362,7 @@ class Game {
       }
     }
 
-    var totalCell = leftCone[0] + upLeftCone[0] + upRightCone[0] + rightCone[0];
+    var totalCell = (maxX-beginX) * (maxY-beginY) - 1;
 
     return  [[(leftCone[0]-leftCone[1])/totalCell, leftCone[2]/this.fruits.length],
             [(upLeftCone[0]-upLeftCone[1])/totalCell, upLeftCone[2]/this.fruits.length],
@@ -637,6 +639,7 @@ class Game {
   // Update the entire game by moving one snake
   update(direction, toTranslate) {
     if (toTranslate) {
+      
       var state = this.getSnakeState();
       if (state["orientation"] == "down") {
         if (direction == "left") {
@@ -678,8 +681,10 @@ class Game {
         //this.score = -1;
         // Reset the dead snake
         //this.resetSnake(0);
-        this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawGrid();
+        if(this.display==true) {
+          this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.drawGrid(); 
+        }
         //console.log("game: hitbody");
 
         return false;
