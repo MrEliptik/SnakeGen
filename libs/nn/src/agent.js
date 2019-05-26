@@ -78,7 +78,7 @@ class Agent {
 
     // Call the game update with the action calculated
     // by the NN
-    ret = this.game.update(this.actions[i], true);
+    var ret = this.game.update(this.actions[i], true);
 
     if(ret) {
       this.tickALive++;
@@ -91,7 +91,7 @@ class Agent {
     return this.game.score;
   }
 
-  getTickALive() {
+  getTickAlive() {
     return this.tickALive;
   }
 

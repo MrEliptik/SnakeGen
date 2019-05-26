@@ -28,10 +28,11 @@ class Generation {
    * NotImplemented
    * @param {} -
    */
-  calculateQfit(agent, tickMax) {
-
-    return this.constants[0] * agent.getScore() +
-      this.constants[1] * agent.getTickAlive()/tickMax;
+  calculateQfit(agent, maxScore, tickMax) {
+    return (
+      this.constants[0] * agent.getScore() / maxScore +
+      (this.constants[1] * agent.getTickAlive()) / tickMax
+    );
   }
 
   randomG(v) {
@@ -212,15 +213,20 @@ class Generation {
    * @param   agents  Array of agents that we have to divide
    * @returns Agents selected
    */
-  selection(agents) {
+  selection(agents, maxScore, numberOfTick) {
     // Select the number of agents to select
     var numberOfAgents = Math.round(
       (this.populationSize * this.selectionPerCentage) / 100.0
     );
 
+    var that = this;
+
     // Sort the agents by using their score
     var agentsArray = agents.sort(function(a, b) {
-      return b.getScore() - a.getScore();
+      return (
+        that.calculateQfit(b, maxScore, numberOfTick) -
+        that.calculateQfit(a, maxScore, numberOfTick)
+      );
     });
 
     // Selection
@@ -233,19 +239,19 @@ class Generation {
     return Array.from(agentsToSelect);
   }
 
-  createNextGen(agents){    
+  createNextGen(agents, numberOfTick, maxScore) {
     // increment gen ID
     this.id++;
 
     // Selection
-    var selectedAgents = this.selection(agents);
+    var selectedAgents = this.selection(agents, maxScore, numberOfTick);
 
-    for(var i = 0; i < selectedAgents.length; i++){
+    for (var i = 0; i < selectedAgents.length; i++) {
       agents[i] = selectedAgents[i];
     }
 
     // Breeding == crossover and then mutate
-    for(var i = selectedAgents.length; i < agents.length ; i++){
+    for (var i = selectedAgents.length; i < agents.length; i++) {
       // Crossover == create a children from two randoms parents
       // from the selectedAgents
 
@@ -254,7 +260,7 @@ class Generation {
 
       // Get sub-array of first n elements after shuffled
       let selected = shuffled.slice(0, 2);
-      
+
       this.crossOver(selected[0], selected[1], agents[i], "patch");
 
       // Mutate the newly breed agent
