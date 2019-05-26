@@ -233,21 +233,19 @@ class Generation {
     return Array.from(agentsToSelect);
   }
 
-  createNextGen(agents) {
-    // TODELETE
-    //agents[4].game.score = 25;
-
+  createNextGen(agents){    
     // increment gen ID
     this.id++;
 
     // Selection
     var selectedAgents = this.selection(agents);
 
-    // TODELETE
-    //console.log("Agents : ", selectedAgents);
+    for(var i = 0; i < selectedAgents.length; i++){
+      agents[i] = selectedAgents[i];
+    }
 
     // Breeding == crossover and then mutate
-    for (var i = 0; i < agents.length; i++) {
+    for(var i = selectedAgents.length; i < agents.length ; i++){
       // Crossover == create a children from two randoms parents
       // from the selectedAgents
 
@@ -256,8 +254,7 @@ class Generation {
 
       // Get sub-array of first n elements after shuffled
       let selected = shuffled.slice(0, 2);
-
-      // TODO: implement crossOver
+      
       this.crossOver(selected[0], selected[1], agents[i], "patch");
 
       // Mutate the newly breed agent
