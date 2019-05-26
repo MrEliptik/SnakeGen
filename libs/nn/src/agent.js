@@ -20,6 +20,7 @@ class Agent {
     input_nodes,
     hidden_nodes,
     output_nodes,
+    weights
   ) {
     this.timeUnit = timeUnit;
     this.actions = { 0: "left", 1: "up", 2: "right" };
@@ -31,7 +32,8 @@ class Agent {
     this.nn = new NeuralNetwork(
       input_nodes,
       hidden_nodes,
-      output_nodes
+      output_nodes,
+      weights
     );
 
     this.game = new Game(
