@@ -197,7 +197,7 @@ class Generation {
 
   /**
    * Return the value of the Gaussian Distribution at x=0
-   * @param   mu    expected value
+   * @param   mu    x offset
    * @param   sigma standard deviation
    * @returns gaussian pertubation
    */
