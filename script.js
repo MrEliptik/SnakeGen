@@ -98,7 +98,7 @@ function createGames() {
 
   if (
     (parseInt(input_selection_rate.value) / 100) *
-      parseInt(input_population.value) <
+    parseInt(input_population.value) <
     2
   ) {
     if (
@@ -113,7 +113,22 @@ function createGames() {
     }
   }
 
+  createEnv();
+
+  createTrainingChart();
+}
+
+function createEnv(weights=null) {
   var canvases = [];
+
+  if(weights != null){
+    if(weights.length < parseInt(input_games_visible.value)){
+      input_games_visible.value = weights.length;
+    }
+    if(weights.length < parseInt(input_population.value)){
+      input_population.value = weights.length;
+    }
+  }
 
   // Create the required number of canvas to display games
   for (var i = 0; i < parseInt(input_games_visible.value); i++) {
@@ -121,7 +136,7 @@ function createGames() {
     canvas.id = "canvas_" + String(i);
     if (
       (window.innerHeight - canvas_container.offsetTop - 20) /
-        input_games_visible.value <
+      input_games_visible.value <
       90
     ) {
       canvas.height = 90;
@@ -152,16 +167,11 @@ function createGames() {
     nb_output_neurons,
     500,
     playPauseState,
-    [1, 0.5] // Constants
+    [1, 0.5], // Constants
+    weights
   );
   env.update(0);
 
-  createTrainingChart();
-
-  // Call nn every seconds
-  window.setInterval(function() {
-    //updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
-  }, 5000);
 }
 
 function createTrainingChart() {
@@ -309,9 +319,65 @@ function getSpeedValue() {
   }
 }
 
-function saveModel() {}
+function download(content, fileName, contentType) {
+  var a = document.createElement("a");
+  var file = new Blob([content], { type: contentType });
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
+}
 
-function loadModel() {}
+function saveModel(which = 'all') {
+  console.log('Saving weights..');
+  var json_weights = [];
+  env.agents.forEach(agent => {
+    json_weights.push({
+      'input_weights': agent.nn.input_weights.arraySync(),
+      'output_weights': agent.nn.output_weights.arraySync()
+    });
+  });
+  download(JSON.stringify(json_weights), 'weights.json', 'application/json');
+}
+
+function loadModel() {
+  if (
+    askUserConfirmation(
+      "This is going to everride all current nn weights, are you sure?"
+    )
+  ) {
+    // generate a click on the hidden input file
+    // this will start the file browsing process
+    document.getElementById('weight_file').click();
+  }
+}
+// Called when the user has selected a json file
+function handleFileSelect(e) {
+  file = e.target.files[0];
+  fr = new FileReader();
+  fr.onload = receivedText;
+  fr.readAsText(file);
+
+  function receivedText(e) {
+    let lines = e.target.result;
+    // Contains the whole generation's weights
+    var agents_weights = JSON.parse(lines);
+    createEnv(agents_weights);
+  }
+}
+
+// This function willl try to load the weights
+// read from the file into the agents
+function loadWeightsToAgents(weights) {
+  if (env == null) {
+    if (
+      askUserConfirmation(
+        "No environment is created. Would you like to create one with the weights you selected?"
+      )
+    ) {
+      createEnv(weights);
+    }
+  }
+}
 
 // Add an event listener from the keyboard
 document.addEventListener(
@@ -421,13 +487,13 @@ btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
 
-btn_restart.addEventListener("click", () => {});
+btn_restart.addEventListener("click", () => { });
 
 btn_start.addEventListener("click", () => {
   toggleStartPause();
 });
 
-btn_stop.addEventListener("click", () => {});
+btn_stop.addEventListener("click", () => { });
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
@@ -442,13 +508,16 @@ bnt_save.addEventListener("click", () => {
 });
 
 // event sent by Environment when we change generation
-window.addEventListener("newgeneration", function(e) {
+window.addEventListener("newgeneration", function (e) {
   //console.log(e.detail.id, e.detail.maxScore, e.detail.score);
   updateChart(e.detail.id, e.detail.maxScore, e.detail.score);
 });
 
+// Listener for invisible input file
+document.getElementById('weight_file').addEventListener('change', handleFileSelect, false);
+
 for (var i = 0, max = radios_speed.length; i < max; i++) {
-  radios_speed[i].onclick = function() {
+  radios_speed[i].onclick = function () {
     speed = parseInt(this.value);
     // Goes from x1, x2, etc.. to 30fps, 60fps...
     speed *= 30;
