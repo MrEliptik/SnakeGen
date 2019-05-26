@@ -19,7 +19,7 @@ class Agent {
     timeUnit,
     input_nodes,
     hidden_nodes,
-    output_nodes
+    output_nodes,
   ) {
     this.timeUnit = timeUnit;
     this.actions = { 0: "left", 1: "up", 2: "right" };

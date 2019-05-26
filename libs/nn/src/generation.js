@@ -11,7 +11,8 @@ class Generation {
     populationSize,
     selectionPerCentage,
     stepSizeParameter,
-    mutationProb
+    mutationProb,
+    constants
   ) {
     this.populationSize = populationSize;
     this.selectionPerCentage = selectionPerCentage;
@@ -19,7 +20,7 @@ class Generation {
     this.mutationProb = mutationProb;
     this.bestScore = 0;
     this.id = 0;
-    this.constants = [1, 0.5];
+    this.constants = constants;
   }
 
   /**

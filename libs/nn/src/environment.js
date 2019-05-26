@@ -20,10 +20,11 @@ class Environment extends Generation {
     hidden_nodes,
     output_nodes,
     tickout,
-    state
+    state,
+    constants
   ) {
     // Generation Constructor
-    super(populationSize, selectionPerCentage, stepSizeParameter, mutationProb);
+    super(populationSize, selectionPerCentage, stepSizeParameter, mutationProb, constants);
 
     this.speed = speed;
     this.tickout = tickout;
