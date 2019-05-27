@@ -10,12 +10,12 @@ console.log(">>> Test matrixMutation");
 
 console.assert(
   JSON.stringify(test_matrixMutation([[1, 2], [3, 4]], 0.5, 1)) !=
-    JSON.stringify([[1, 2], [3, 4]]),
+  JSON.stringify([[1, 2], [3, 4]]),
   { error: "[ERROR] Matrices are the same" }
 );
 console.assert(
   JSON.stringify(test_matrixMutation([[1, 2], [3, 4]], 0.5, 0)) ===
-    JSON.stringify([[1, 2], [3, 4]]),
+  JSON.stringify([[1, 2], [3, 4]]),
   { error: "[ERROR] Matrices are the same" }
 );
 
@@ -23,12 +23,12 @@ console.log(">>> Test calculateQfit");
 
 console.assert(
   JSON.stringify(test_calculateQfit(15, 15, 54, 54, [1, 0, 5])) ===
-    JSON.stringify(1),
+  JSON.stringify(1),
   { error: "[ERROR] Calculated Qfit don't correspond" }
 );
 console.assert(
   JSON.stringify(test_calculateQfit(2, 15, 42, 54, [1, 0.5])) ===
-    JSON.stringify(2 / 15 + 0.5 * (42 / 54)),
+  JSON.stringify(2 / 15 + 0.5 * (42 / 54)),
   { error: "[ERROR] Calculated Qfit don't correspond" }
 );
 
@@ -90,19 +90,25 @@ console.assert(
   { error: "[ERROR] Calculated Qfit (x3) don't correspond" }
 );
 
+console.log(">>> Test roulette selection");
+console.assert(test_rouletteSelection() === true,
+  { error: "[ERROR] Roulette selection not working" }
+);
+
+
 console.log("[INFO] Testing done!");
 
 /* MUTATION TEST */
-function test_mutation() {}
+function test_mutation() { }
 
 /* CROSSOVER TEST */
-function test_crossOver() {}
+function test_crossOver() { }
 
 /* SELECTION TEST */
-function test_selection() {}
+function test_selection() { }
 
 /* GAUSSIAN PERTURBATION TEST */
-function test_gaussianPerturbation() {}
+function test_gaussianPerturbation() { }
 
 /* MATRIX MUTATION TEST */
 function test_matrixMutation(matrix, mutationIntensity, mutationProb) {
@@ -112,6 +118,28 @@ function test_matrixMutation(matrix, mutationIntensity, mutationProb) {
   gen.matrixMutation(copy, mutationIntensity, mutationProb);
 
   return copy;
+}
+
+function test_rouletteSelection() {
+  var agents = [];
+  for (var i = 0; i < 10; i++) {
+    agents.push(new Agent(null, null, null, null, null, null, null, null, null, null, null, null, null));
+    agents[i].score = i;
+  }
+
+  var agentsSorted = agents.sort(function (a, b) {
+    return (
+      a.getScore() -
+      b.getScore()
+    );
+  });
+
+  const shuffled = selectedAgents.sort(() => 0.5 - Math.random());
+
+  // Get sub-array of first n elements after shuffled
+  let selected = shuffled.slice(0, 2);
+
+  console.log(rouletteSelection(agents, selected))
 }
 
 /**
