@@ -250,7 +250,7 @@ class Generation {
   rouletteSelection(agents, selectedAgents) {
     // Calculate the sum of all fitness  
     var fitnessSum = 0;
-    agents.forEach(agent => {
+    selectedAgents.forEach(agent => {
       fitnessSum += agent.getScore();
     });
 
