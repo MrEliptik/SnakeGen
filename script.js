@@ -29,11 +29,15 @@ var btn_chart = document.getElementById("btn_chart");
 var btn_upload = document.getElementById("btn_upload");
 var bnt_save = document.getElementById("btn_save");
 
+var btn_timelapse = document.getElementById("btn_timelapse");
+
 var radios_speed = document.getElementsByName("speed");
 
 var env = null;
 var trainingChart = null;
 var playPauseState = "pause";
+var isTimelapsing = false;
+var timelapse_interval = null;
 
 var speed = 30;
 var nb_input_neurons = 11;
@@ -118,14 +122,14 @@ function createGames() {
   createTrainingChart();
 }
 
-function createEnv(weights=null) {
+function createEnv(weights = null) {
   var canvases = [];
 
-  if(weights != null){
-    if(weights.length < parseInt(input_games_visible.value)){
+  if (weights != null) {
+    if (weights.length < parseInt(input_games_visible.value)) {
       input_games_visible.value = weights.length;
     }
-    if(weights.length < parseInt(input_population.value)){
+    if (weights.length < parseInt(input_population.value)) {
       input_population.value = weights.length;
     }
   }
@@ -379,6 +383,47 @@ function loadWeightsToAgents(weights) {
   }
 }
 
+function report() {
+  let region = document.querySelector("body"); // whole screen
+  html2canvas(region, {
+    onrendered: function (canvas) {
+      let pngUrl = canvas.toDataURL(); // png in dataURL format
+      
+      // DISPLAY
+      /*
+      let img = document.querySelector(".screen");
+      img.src = pngUrl;
+      */
+
+      var data = atob(pngUrl.substring("data:image/png;base64,".length)),
+        asArray = new Uint8Array(data.length);
+
+      for (var i = 0, len = data.length; i < len; ++i) {
+        asArray[i] = data.charCodeAt(i);
+      }
+
+      download(asArray.buffer, 'screen.png', 'image/png');
+    },
+  });
+}
+
+function toggleTimelapse(){
+  if(isTimelapsing){
+    let html = `Timelapse <i class="fas fa-play"></i>`;
+    btn_timelapse.innerHTML = html;
+    btn_timelapse.className = "timelapse-off";
+    isTimelapsing = false;
+    clearInterval(timelapse_interval);
+  }
+  else{
+    let html = `Timelapse <i class="fas fa-stop"></i>`;
+    btn_timelapse.innerHTML = html;
+    btn_timelapse.className = "timelapse-on";
+    isTimelapsing = true;
+    timelapse_interval = setInterval(report, 3000);
+  }
+}
+
 // Add an event listener from the keyboard
 document.addEventListener(
   "keyup",
@@ -505,6 +550,10 @@ btn_upload.addEventListener("click", () => {
 
 bnt_save.addEventListener("click", () => {
   saveModel();
+});
+
+btn_timelapse.addEventListener("click", () => {
+  toggleTimelapse();
 });
 
 // event sent by Environment when we change generation
