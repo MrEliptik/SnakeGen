@@ -32,7 +32,6 @@ class Generation {
    * @param tickMax   Maximum tick of the generation
    */
   calculateQfit(agent, maxScore, tickMax) {
-
     //console.log(agent,maxScore,tickMax)
     return (
       (this.constants[0] * agent.getScoreMean()) / maxScore +

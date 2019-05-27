@@ -19,7 +19,7 @@ class Agent {
     timeUnit,
     input_nodes,
     hidden_nodes,
-    output_nodes,
+    output_nodes
   ) {
     this.timeUnit = timeUnit;
     this.actions = { 0: "left", 1: "up", 2: "right" };
@@ -32,11 +32,7 @@ class Agent {
     this.statsScore = [];
     this.statsTickAlive = [];
 
-    this.nn = new NeuralNetwork(
-      input_nodes,
-      hidden_nodes,
-      output_nodes
-    );
+    this.nn = new NeuralNetwork(input_nodes, hidden_nodes, output_nodes);
 
     this.game = new Game(
       gridRows,
@@ -84,7 +80,7 @@ class Agent {
     // by the NN
     var ret = this.game.update(this.actions[i], true);
 
-    if(ret) {
+    if (ret) {
       this.tickAlive++;
     }
 
@@ -98,11 +94,11 @@ class Agent {
   getScoreMean() {
     var sum = 0;
 
-    for(var i=0; i<this.statsScore.length; i++) {
+    for (var i = 0; i < this.statsScore.length; i++) {
       sum += this.statsScore[i];
     }
 
-    return sum/this.statsScore.length;
+    return sum / this.statsScore.length;
   }
 
   getTickAlive() {
@@ -112,19 +108,19 @@ class Agent {
   getTickAliveMean() {
     var sum = 0;
 
-    for(var i=0; i<this.statsTickAlive.length; i++) {
+    for (var i = 0; i < this.statsTickAlive.length; i++) {
       sum += this.statsTickAlive[i];
     }
 
-    return sum/this.statsTickAlive.length;
+    return sum / this.statsTickAlive.length;
   }
 
   storeStats() {
     this.statsScore.push(this.game.score);
-    this.statsTickAlive.push(this.tickAlive)
+    this.statsTickAlive.push(this.tickAlive);
   }
 
-  resetGame(){
+  resetGame() {
     /*this.game.resetFruit(0);
     this.game.resetSnake(0);
     this.game.score = 0;*/
