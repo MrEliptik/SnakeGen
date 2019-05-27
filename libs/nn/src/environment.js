@@ -24,7 +24,13 @@ class Environment extends Generation {
     constants
   ) {
     // Generation Constructor
-    super(populationSize, selectionPerCentage, stepSizeParameter, mutationProb, constants);
+    super(
+      populationSize,
+      selectionPerCentage,
+      stepSizeParameter,
+      mutationProb,
+      constants
+    );
 
     this.speed = speed;
     this.state = state;
@@ -33,7 +39,7 @@ class Environment extends Generation {
     this.tickCount = 0;
 
     this.attemptNumber = 5; // It is the number of attempts that the snakes will play before a mutation
-    this.attemptCount = 0;  // Current attempt number
+    this.attemptCount = 0; // Current attempt number
 
     var visible = 0;
     this.agentsAlive = this.populationSize;
@@ -87,7 +93,7 @@ class Environment extends Generation {
     var scores = [];
     var that = this;
     for (let i = 0; i < this.agents.length; i++) {
-      scores.push(this.agents[i].getScore());
+      scores.push(this.agents[i].getScoreMean());
     }
     return scores;
   }
@@ -148,19 +154,16 @@ class Environment extends Generation {
   }
 
   update() {
-
     if (this.state == "pause") {
       return;
     }
 
     // Check if the current attempt is ended
-    if(this.tickCount >= this.tickout) {
-      
+    if (this.tickCount >= this.tickout) {
       this.attemptCount++;
 
       // Check if the current set of attempts is ended
-      if(this.attemptCount >= this.attemptNumber) {
-
+      if (this.attemptCount >= this.attemptNumber) {
         // Mutation
         this.dispatchNewGenEvent();
         this.agents = this.createNextGen(
@@ -173,15 +176,20 @@ class Environment extends Generation {
         this.attemptCount = 0;
         this.tickCount = 0;
         this.agentsAlive = this.populationSize;
-        
+
         // reset games
         this.agents.forEach(agent => {
           agent.resetGame();
           agent.isAlive = true;
           agent.tickALive = 0;
+          agent.statsScore = [];
+          agent.statsTickAlive = [];
         });
-
       } else {
+        // Store the stats of the agents
+        this.agents.forEach(agent => {
+          agent.storeStats();
+        });
 
         // Start a new attempt
         this.tickCount = 0;
@@ -196,7 +204,7 @@ class Environment extends Generation {
       }
     }
 
-    if(!this.tick()) {
+    if (!this.tick()) {
       this.tickCount = this.tickout;
     }
 

@@ -35,8 +35,8 @@ class Generation {
 
     //console.log(agent,maxScore,tickMax)
     return (
-      (this.constants[0] * agent.getScore()) / maxScore +
-      (this.constants[1] * agent.getTickAlive()) / tickMax
+      (this.constants[0] * agent.getScoreMean()) / maxScore +
+      (this.constants[1] * agent.getTickAliveMean()) / tickMax
     );
   }
 
