@@ -27,8 +27,13 @@ class Environment extends Generation {
     super(populationSize, selectionPerCentage, stepSizeParameter, mutationProb, constants);
 
     this.speed = speed;
-    this.tickout = tickout;
     this.state = state;
+
+    this.tickout = tickout;
+    this.tickCount = 0;
+
+    this.attemptNumber = 5; // It is the number of attempts that the snakes will play before a mutation
+    this.attemptCount = 0;  // Current attempt number
 
     var visible = 0;
     this.agentsAlive = this.populationSize;
@@ -76,8 +81,6 @@ class Environment extends Generation {
         );
       }
     }
-
-    this.tickCount = 0;
   }
 
   getAllScores() {
@@ -144,6 +147,68 @@ class Environment extends Generation {
     return this.agentsAlive != 0;
   }
 
+  update() {
+
+    if (this.state == "pause") {
+      return;
+    }
+
+    // Check if the current attempt is ended
+    if(this.tickCount >= this.tickout) {
+      
+      this.attemptCount++;
+
+      // Check if the current set of attempts is ended
+      if(this.attemptCount >= this.attemptNumber) {
+
+        // Mutation
+        this.dispatchNewGenEvent();
+        this.agents = this.createNextGen(
+          this.agents,
+          this.tickout,
+          this.getCurrGenHighestScore()
+        );
+
+        // Reset the parameters before restart the set of attempts
+        this.attemptCount = 0;
+        this.tickCount = 0;
+        this.agentsAlive = this.populationSize;
+        
+        // reset games
+        this.agents.forEach(agent => {
+          agent.resetGame();
+          agent.isAlive = true;
+          agent.tickALive = 0;
+        });
+
+      } else {
+
+        // Start a new attempt
+        this.tickCount = 0;
+        this.agentsAlive = this.populationSize;
+
+        // reset games
+        this.agents.forEach(agent => {
+          agent.resetGame();
+          agent.isAlive = true;
+          agent.tickALive = 0;
+        });
+      }
+    }
+
+    if(!this.tick()) {
+      this.tickCount = this.tickout;
+    }
+
+    var that = this;
+
+    // Call the function like a loop
+    setTimeout(function() {
+      that.tickCount += 1;
+      that.update();
+    }, 1000 / this.speed);
+  }
+
   dispatchNewGenEvent() {
     var event = new CustomEvent("newgeneration", {
       detail: {
@@ -154,53 +219,5 @@ class Environment extends Generation {
     });
 
     window.dispatchEvent(event);
-  }
-
-  update() {
-    if (this.state == "pause") {
-      return;
-    }
-
-    if (this.tickCount < this.tickout) {
-      // No agents left, next gen
-      if (!this.tick()) {
-        this.dispatchNewGenEvent();
-        this.agents = this.createNextGen(
-          this.agents,
-          this.tickout,
-          this.getCurrGenHighestScore()
-        );
-        this.tickCount = 0;
-        this.agentsAlive = this.populationSize;
-        // reset games
-        this.agents.forEach(agent => {
-          agent.resetGame();
-          agent.isAlive = true;
-          agent.tickALive = 0;
-        });
-      }
-    } else {
-      this.dispatchNewGenEvent();
-      this.agents = this.createNextGen(
-        this.agents,
-        this.tickout,
-        this.getCurrGenHighestScore()
-      );
-      this.tickCount = 0;
-      this.agentsAlive = this.populationSize;
-      // reset games
-      this.agents.forEach(agent => {
-        agent.resetGame();
-        agent.isAlive = true;
-        agent.tickALive = 0;
-      });
-    }
-
-    var that = this;
-
-    setTimeout(function() {
-      that.tickCount += 1;
-      that.update();
-    }, 1000 / this.speed);
   }
 }
