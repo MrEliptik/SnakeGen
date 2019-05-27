@@ -93,7 +93,7 @@ class Generation {
         0;
 
       // return an array [x,y,z] representing the selected column
-      var col = two_d.map(function(value, index) {
+      var col = two_d.map(function (value, index) {
         return value[j];
       });
     } else if (type == "patch") {
@@ -227,7 +227,7 @@ class Generation {
     var that = this;
 
     // Sort the agents by using their score
-    var agentsArray = agents.sort(function(a, b) {
+    var agentsArray = agents.sort(function (a, b) {
       return (
         that.calculateQfit(b, maxScore, numberOfTick) -
         that.calculateQfit(a, maxScore, numberOfTick)
@@ -242,6 +242,27 @@ class Generation {
 
     // Deepcopy
     return Array.from(agentsToSelect);
+  }
+
+  /* Selects a random number in range of 
+  the fitnesssum and if a snake falls in 
+  that range then select it */
+  rouletteSelection(agents, selectedAgents) {
+    // Calculate the sum of all fitness  
+    var fitnessSum = 0;
+    agents.forEach(agent => {
+      fitnessSum += agent.getScore();
+    });
+
+    var rand = Math.random() * fitnessSum;
+    var sum = 0;
+    for (var i = 0; i < selectedAgents.length; i++) {
+      sum += selectedAgents[i].getScore();
+      if (sum > rand) {
+        return selectedAgents[i];
+      }
+    }
+    return selectedAgents[0];
   }
 
   createNextGen(agents, numberOfTick, maxScore) {
