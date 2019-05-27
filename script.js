@@ -118,14 +118,14 @@ function createGames() {
   createTrainingChart();
 }
 
-function createEnv(weights=null) {
+function createEnv(weights = null) {
   var canvases = [];
 
-  if(weights != null){
-    if(weights.length < parseInt(input_games_visible.value)){
+  if (weights != null) {
+    if (weights.length < parseInt(input_games_visible.value)) {
       input_games_visible.value = weights.length;
     }
-    if(weights.length < parseInt(input_population.value)){
+    if (weights.length < parseInt(input_population.value)) {
       input_population.value = weights.length;
     }
   }
@@ -197,12 +197,12 @@ function createTrainingChart() {
     },
     options: {
       legend: {
-        display: false
+        display: true
       },
       responsive: true,
       maintainAspectRatio: false,
       title: {
-        display: true,
+        display: false,
         text: "Best score per generation"
       }
     }
@@ -353,6 +353,8 @@ function loadModel() {
 // Called when the user has selected a json file
 function handleFileSelect(e) {
   file = e.target.files[0];
+  // clear files to allow next upload
+  e.target.value = '';
   fr = new FileReader();
   fr.onload = receivedText;
   fr.readAsText(file);
@@ -361,7 +363,7 @@ function handleFileSelect(e) {
     let lines = e.target.result;
     // Contains the whole generation's weights
     var agents_weights = JSON.parse(lines);
-    createEnv(agents_weights);
+    loadWeightsToAgents(agents_weights);
   }
 }
 
@@ -375,7 +377,13 @@ function loadWeightsToAgents(weights) {
       )
     ) {
       createEnv(weights);
+      createTrainingChart();
     }
+  }
+  else {
+    deleteGames();
+    resetChart();
+    createEnv(weights);
   }
 }
 
@@ -516,6 +524,7 @@ window.addEventListener("newgeneration", function (e) {
 // Listener for invisible input file
 document.getElementById('weight_file').addEventListener('change', handleFileSelect, false);
 
+// Listener for the radio buttons
 for (var i = 0, max = radios_speed.length; i < max; i++) {
   radios_speed[i].onclick = function () {
     speed = parseInt(this.value);
