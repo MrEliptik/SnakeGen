@@ -122,24 +122,46 @@ function test_matrixMutation(matrix, mutationIntensity, mutationProb) {
 
 function test_rouletteSelection() {
   var agents = [];
+  var generation = new Generation(0, 10, 5, 10, [1, 0, 5]);
   for (var i = 0; i < 10; i++) {
-    agents.push(new Agent(null, null, null, null, null, null, null, null, null, null, null, null, null));
-    agents[i].score = i;
+    agents.push(new Agent(10, 10, null, null, null, 1, 1, "df", false, 1, 11, 100, 3));
+    agents[i].game.score = i;
   }
 
+  score_occurences = {};
+
+  // sort descending order
   var agentsSorted = agents.sort(function (a, b) {
     return (
-      a.getScore() -
-      b.getScore()
+      b.getScore() -
+      a.getScore()
     );
   });
 
-  const shuffled = selectedAgents.sort(() => 0.5 - Math.random());
+  // Select 4 parents
+  var selectedAgents = agentsSorted.slice(0, 4);
 
-  // Get sub-array of first n elements after shuffled
-  let selected = shuffled.slice(0, 2);
+  // Create a dictionnary with their score as keys, 
+  // to count occurence
+  selectedAgents.forEach(selectedAgent => {
+    score_occurences[selectedAgent.getScore()] = 0;
+  });
 
-  console.log(rouletteSelection(agents, selected))
+  // Run a lot of rouletteSelection to see if proportion are right
+  for(var i = 0 ; i < 1000000 ; i++){
+    score_occurences[generation.rouletteSelection(agents, selectedAgents).getScore()] += 1;
+  }
+
+  var fitnessSum = 0;
+  selectedAgents.forEach(agent => {
+    fitnessSum += agent.getScore();
+  });
+
+  selectedAgents.forEach(a => {
+    console.log(a.getScore()/fitnessSum)
+  });
+
+  console.log(score_occurences);
 }
 
 /**
