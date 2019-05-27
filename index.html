@@ -13,6 +13,7 @@
     <!-- Load tensorflow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 </head>
 
 <body>
@@ -36,9 +37,9 @@
                 Score
             </div>
         </div>
-        
-        <div class="content">             
-            <div class="canvas-container">        
+
+        <div class="content">
+            <div class="canvas-container">
                 <!-- canvas are added with js -->
             </div>
             <div class="right-navbar">
@@ -54,8 +55,9 @@
                             <button class="controls" id="btn_restart"><i class="fas fa-undo-alt"></i></button>
                             <button class="controls" id="btn_start"><i class="fas fa-play"></i></button>
                             <button class="controls" id="btn_stop"><i class="fas fa-stop"></i></button>
-                            <button class="controls-chart-on" id="btn_chart"><i class="fas fa-chart-line"></i></button>   
-                            <!--<button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>-->  
+                            <button class="controls-chart-on" id="btn_chart"><i class="fas fa-chart-line"></i></button>
+                            <!--<button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>-->
+                            <button class="timelapse-off" id="btn_timelapse">Timelapse <i class="fas fa-play"></i></button>
                         </div>
                     </div>
                     <div>
@@ -119,10 +121,14 @@
                             <button class="controls" id="btn_upload"><i class="fas fa-upload 2x"></i></button>
                             <button class="controls" id="btn_save"><i class="far fa-save fas-2x"></i></button>
                         </div>
-                        <input type="file" accept=".json, .JSON, application/json" id="weight_file" style="display: none;">
+                        <input type="file" accept=".json, .JSON, application/json" id="weight_file"
+                            style="display: none;">
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="container">
+            <img width="75%" class="screen">
         </div>
     </div>
 </body>
