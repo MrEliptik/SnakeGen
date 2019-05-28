@@ -50,6 +50,17 @@ var chart_first_init = true;
 */
 tf.setBackend("cpu");
 
+window.setInterval(() => {
+  if (env != null) {
+    var highestscore = env.getCurrScore();
+    var agentsAlive = env.getAgentsAlive();
+    var genID = env.getCurrGenID();
+
+    document.getElementById("generation-info").innerText = 'Current generation highest score: ' +
+      String(highestscore) + '  Agents alive: ' + String(agentsAlive) + ' Generation ID: ' + String(genID);
+  }
+}, 500);
+
 function allDefaultUI() {
   if (
     askUserConfirmation("This is going to reset all parameters to default!")
@@ -183,7 +194,7 @@ function createTrainingChart() {
   if (computedStyle(document.querySelector(".training-chart-wrapper"), "display") == "none") {
     return;
   }
-  else{
+  else {
     chart_first_init = false;
   }
   var ctx = document.getElementById("training-chart").getContext("2d");
@@ -283,7 +294,7 @@ function toggleChartDisplay() {
   if (computedStyle(chart, "display") == "none") {
     chart.style.display = "block";
     btn_chart.className = "controls-chart-on";
-    if(chart_first_init){
+    if (chart_first_init) {
       createTrainingChart();
     }
   } else {
@@ -401,11 +412,11 @@ function loadWeightsToAgents(weights) {
   }
 }
 
-function toggleSection(elem){
+function toggleSection(elem) {
   // Select second child of parent (or neighbor)
   if (elem.parentNode.children[1].style.display === "none") {
     elem.parentNode.children[1].style.display = "block";
-    
+
     elem.innerHTML = elem.innerHTML.replace('+', '-');
   } else {
     elem.parentNode.children[1].style.display = "none";
@@ -414,15 +425,15 @@ function toggleSection(elem){
 }
 
 // Get the style that was set by css
-var computedStyle = function (el,style) {
+var computedStyle = function (el, style) {
   var cs;
-  if (typeof el.currentStyle != 'undefined'){
-      cs = el.currentStyle;
+  if (typeof el.currentStyle != 'undefined') {
+    cs = el.currentStyle;
   }
   else {
-      cs = document.defaultView.getComputedStyle(el,null);
+    cs = document.defaultView.getComputedStyle(el, null);
   }
-  return  cs[style];
+  return cs[style];
 }
 
 // Add an event listener from the keyboard
