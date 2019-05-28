@@ -42,6 +42,8 @@ var nb_input_neurons = 11;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
 
+var chart_first_init = true;
+
 /* set tf backend to cpu as we would lose 
   time copying values to the GPU. Net is too
   small to take advantage of GPU compute
@@ -178,6 +180,12 @@ function createEnv(weights = null) {
 }
 
 function createTrainingChart() {
+  if (computedStyle(document.querySelector(".training-chart-wrapper"), "display") == "none") {
+    return;
+  }
+  else{
+    chart_first_init = false;
+  }
   var ctx = document.getElementById("training-chart").getContext("2d");
   trainingChart = new Chart(ctx, {
     type: "line",
@@ -275,15 +283,9 @@ function toggleChartDisplay() {
   if (computedStyle(chart, "display") == "none") {
     chart.style.display = "block";
     btn_chart.className = "controls-chart-on";
-
-    var canvas = document.getElementById("training-chart");
-    /* Resize canvas in case it was created 
-      when it was hidden */
-    canvas.height = 300;
-    canvas.width = 150;
-
-    trainingChart.update();
-
+    if(chart_first_init){
+      createTrainingChart();
+    }
   } else {
     chart.style.display = "none";
     btn_chart.className = "controls-chart-off";
