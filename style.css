@@ -150,6 +150,14 @@ label{
   background-color: #6aa877;
 }
 
+.navbar-section .title:hover{
+  width: auto;
+  display: block;
+  border-radius: 5px 5px 0px 0px;
+  background-color: #579765;
+  cursor: pointer;
+}
+
 .navbar-content{
   margin: 5px 5px 5px 5px;
 }
