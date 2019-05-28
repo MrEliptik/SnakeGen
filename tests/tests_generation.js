@@ -162,7 +162,7 @@ function test_rouletteSelection(nb_agents, nb_selected, nb_run) {
 
   // Run a lot of rouletteSelection to see if proportion are right
   for (var i = 0; i < NB_OF_RUN; i++) {
-    score_occurences[generation.rouletteSelection(agents, selectedAgents).getScore()] += 1;
+    score_occurences[generation.rouletteSelection(selectedAgents).getScore()] += 1;
   }
 
   /* Used to calculate expected probabilities */
