@@ -271,7 +271,7 @@ function askUserConfirmation(msg) {
 
 function toggleChartDisplay() {
   var chart = document.querySelector(".training-chart-wrapper");
-  if (chart.style.display === "none") {
+  if (computedStyle(chart, "display") == "none") {
     chart.style.display = "block";
     btn_chart.className = "controls-chart-on";
   } else {
@@ -399,6 +399,18 @@ function toggleSection(elem){
     elem.parentNode.children[1].style.display = "none";
     elem.innerHTML = elem.innerHTML.replace('-', '+');
   }
+}
+
+// Get the style that was set by css
+var computedStyle = function (el,style) {
+  var cs;
+  if (typeof el.currentStyle != 'undefined'){
+      cs = el.currentStyle;
+  }
+  else {
+      cs = document.defaultView.getComputedStyle(el,null);
+  }
+  return  cs[style];
 }
 
 // Add an event listener from the keyboard
