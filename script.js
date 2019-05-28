@@ -16,6 +16,8 @@ var input_selection_rate = document.getElementById(
   "input_slider_selection_rate"
 );
 
+var r_navbar_sections = document.querySelectorAll('.navbar-section');
+
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
 var btn_default = document.getElementById("btn_default");
@@ -387,6 +389,18 @@ function loadWeightsToAgents(weights) {
   }
 }
 
+function toggleSection(elem){
+  // Select second child
+  if (elem.children[1].style.display === "none") {
+    elem.children[1].style.display = "block";
+    
+    elem.children[0].children[0].innerHTML = elem.children[0].children[0].innerHTML.replace('+', '-');
+  } else {
+    elem.children[1].style.display = "none";
+    elem.children[0].children[0].innerHTML = elem.children[0].children[0].innerHTML.replace('-', '+');
+  }
+}
+
 // Add an event listener from the keyboard
 document.addEventListener(
   "keyup",
@@ -495,7 +509,9 @@ btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
 
-btn_restart.addEventListener("click", () => { });
+btn_restart.addEventListener("click", () => {
+
+});
 
 btn_start.addEventListener("click", () => {
   toggleStartPause();
@@ -523,6 +539,12 @@ window.addEventListener("newgeneration", function (e) {
 
 // Listener for invisible input file
 document.getElementById('weight_file').addEventListener('change', handleFileSelect, false);
+
+r_navbar_sections.forEach(section => {
+  section.addEventListener('click', (e) => {
+    toggleSection(e.currentTarget);
+  });
+});
 
 // Listener for the radio buttons
 for (var i = 0, max = radios_speed.length; i < max; i++) {
