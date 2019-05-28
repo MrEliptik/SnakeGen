@@ -10,12 +10,12 @@ console.log(">>> Test matrixMutation");
 
 console.assert(
   JSON.stringify(test_matrixMutation([[1, 2], [3, 4]], 0.5, 1)) !=
-    JSON.stringify([[1, 2], [3, 4]]),
+  JSON.stringify([[1, 2], [3, 4]]),
   { error: "[ERROR] Matrices are the same" }
 );
 console.assert(
   JSON.stringify(test_matrixMutation([[1, 2], [3, 4]], 0.5, 0)) ===
-    JSON.stringify([[1, 2], [3, 4]]),
+  JSON.stringify([[1, 2], [3, 4]]),
   { error: "[ERROR] Matrices are the same" }
 );
 
@@ -23,12 +23,12 @@ console.log(">>> Test calculateQfit");
 
 console.assert(
   JSON.stringify(test_calculateQfit(15, 15, 54, 54, [1, 0, 5])) ===
-    JSON.stringify(1),
+  JSON.stringify(1),
   { error: "[ERROR] Calculated Qfit don't correspond" }
 );
 console.assert(
   JSON.stringify(test_calculateQfit(2, 15, 42, 54, [1, 0.5])) ===
-    JSON.stringify(2 / 15 + 0.5 * (42 / 54)),
+  JSON.stringify(2 / 15 + 0.5 * (42 / 54)),
   { error: "[ERROR] Calculated Qfit don't correspond" }
 );
 
@@ -90,19 +90,22 @@ console.assert(
   { error: "[ERROR] Calculated Qfit (x3) don't correspond" }
 );
 
+console.assert(test_crossOver("patch") == true, { error: "[ERROR] Sum of the offsprings doesn't equal sum of parents" });
+console.assert(test_crossOver("row") == true, { error: "[ERROR] Sum of the offsprings doesn't equal sum of parents" });
+
 console.log("[INFO] Testing done!");
 
 /* MUTATION TEST */
-function test_mutation() {}
+function test_mutation() { }
 
 /* CROSSOVER TEST */
-function test_crossOver() {}
+function test_crossOver() { }
 
 /* SELECTION TEST */
-function test_selection() {}
+function test_selection() { }
 
 /* GAUSSIAN PERTURBATION TEST */
-function test_gaussianPerturbation() {}
+function test_gaussianPerturbation() { }
 
 /* MATRIX MUTATION TEST */
 function test_matrixMutation(matrix, mutationIntensity, mutationProb) {
@@ -232,4 +235,41 @@ function integrationTest_calculateQfit(
   //console.log(ret);
 
   return ret;
+}
+
+/* The idea behind this test is that when we do the
+  crossover we take part of parent A and parent B. 
+  The two offspring take a different part of A and B,
+  thus if we sum them, we should find the sum of the
+  parents */
+function test_crossOver(type) {
+  var generation = new Generation(0, 10, 5, 10, [1, 0.2]);
+  var agents = [];
+
+  for (var i = 0; i < 4; i++) {
+    agents.push(new Agent(10, 10, null, null, null, 1, 1, "df", false, 1, 11, 100, 3));
+  }
+
+  generation.crossOver(agents[0], agents[1], agents[2], agents[3], type);
+
+  var res1 = add2dArrays(agents[2].nn.input_weights.arraySync(), agents[3].nn.input_weights.arraySync());
+  var res2 = add2dArrays(agents[0].nn.input_weights.arraySync(), agents[1].nn.input_weights.arraySync());
+
+  //console.log(JSON.stringify(res1) === JSON.stringify(res2));
+  
+  // Assumes both arrays are same size
+  function add2dArrays(arr1, arr2) {
+    var res = Array.from(Array(arr1.length), _ =>
+      Array(arr1[0].length).fill(0)
+    );
+    for (var i = 0; i < arr1.length; i++) {
+      var col = arr1[i].length;
+      for (var j = 0; j < col; j++) {
+        res[i][j] = arr1[i][j] + arr2[i][j];
+      }
+    }
+    return res;
+  }
+
+  return JSON.stringify(res1) === JSON.stringify(res2);
 }
