@@ -247,7 +247,7 @@ class Generation {
   /* Selects a random number in range of 
   the fitnesssum and if a snake falls in 
   that range then select it */
-  rouletteSelection(agents, selectedAgents) {
+  rouletteSelection(selectedAgents) {
     // Calculate the sum of all fitness  
     var fitnessSum = 0;
     selectedAgents.forEach(agent => {
@@ -281,11 +281,13 @@ class Generation {
       // Crossover == create a children from two randoms parents
       // from the selectedAgents
 
-      // Shuffle array
-      const shuffled = selectedAgents.sort(() => 0.5 - Math.random());
-
-      // Get sub-array of first n elements after shuffled
-      let selected = shuffled.slice(0, 2);
+      let selected = []
+      // Select the first parent
+      selected[0] = this.rouletteSelection(selectedAgents);
+      // Ensure the seoncd parent is different
+      do{
+        selected[1] = this.rouletteSelection(selectedAgents);
+      }while(JSON.stringify(selected[1]) === JSON.stringify(selected[0]));
 
       this.crossOver(selected[0], selected[1], agents[i], "patch");
 
