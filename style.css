@@ -41,9 +41,14 @@ label{
   margin-left: 5px;
 }
 
+.training-info{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 .training-chart-wrapper{
   max-height: 200px;
-  max-width: 400px;
+  /*max-width: 400px;*/
   text-align: center;
   display: none;
 }
@@ -105,6 +110,10 @@ label{
 .top-navbar a:hover {
   text-decoration: none;
   color: rgb(90, 90, 90);
+}
+
+#generation-info{
+  
 }
 
 .content {
