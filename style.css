@@ -45,6 +45,7 @@ label{
   max-height: 200px;
   max-width: 400px;
   text-align: center;
+  display: none;
 }
 
 #training-chart{
