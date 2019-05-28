@@ -61,7 +61,8 @@ function allDefaultUI() {
 
     resetChart();
 
-    // Create a new 'input' event
+    /* Create a new 'input' event to update
+      the inputs */
     var event = new Event("input");
     // Dispatch it.
     slider_population.dispatchEvent(event);
@@ -274,6 +275,15 @@ function toggleChartDisplay() {
   if (computedStyle(chart, "display") == "none") {
     chart.style.display = "block";
     btn_chart.className = "controls-chart-on";
+
+    var canvas = document.getElementById("training-chart");
+    /* Resize canvas in case it was created 
+      when it was hidden */
+    canvas.height = 300;
+    canvas.width = 150;
+
+    trainingChart.update();
+
   } else {
     chart.style.display = "none";
     btn_chart.className = "controls-chart-off";
