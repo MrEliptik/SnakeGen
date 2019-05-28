@@ -104,6 +104,10 @@ class Environment extends Generation {
     //notImplemented
   }
 
+  getAgentsAlive(){
+    return this.agentsAlive;
+  }
+
   getCurrGenHighestScore() {
     if (this.currGenHighScore < Math.max(...this.getAllScores())) {
       this.currGenHighScore = Math.max(...this.getAllScores());
