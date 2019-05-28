@@ -1,5 +1,5 @@
 // RUN TESTS WHEN LAUNCHING
-console.log("[INFO] Testing started..");
+console.log("[INFO] Testing generation started..");
 
 console.log(">>> Test gaussianPerturbation");
 // TODO
@@ -91,12 +91,12 @@ console.assert(
 );
 
 console.log(">>> Test roulette selection");
-console.assert(test_rouletteSelection() === true,
-  { error: "[ERROR] Roulette selection not working" }
+console.assert(JSON.stringify(test_rouletteSelection()) === JSON.stringify([0.3, 0.27, 0.23, 0.2]),
+  { error: "[ERROR] Observed probabilities don't match expectations" }
 );
 
-
-console.log("[INFO] Testing done!");
+console.log("[INFO] Testing generation done!");
+console.log("");
 
 /* MUTATION TEST */
 function test_mutation() { }
@@ -121,14 +121,23 @@ function test_matrixMutation(matrix, mutationIntensity, mutationProb) {
 }
 
 function test_rouletteSelection() {
-  var agents = [];
+  const NB_OF_RUN = 10000000;
+  const NB_SELECTION = 4;
   var generation = new Generation(0, 10, 5, 10, [1, 0, 5]);
+  var agents = [];
+
+  // Dictionnary to count score occurence in roulette sel
+  var score_occurences = {};
+
+  /* Array of observed probabilites after the 
+    NB_OF_RUN of slection */
+  var observedProbabilities = [];
+
+  // Create 10 agents and assign scores from 0 to 10
   for (var i = 0; i < 10; i++) {
     agents.push(new Agent(10, 10, null, null, null, 1, 1, "df", false, 1, 11, 100, 3));
     agents[i].game.score = i;
   }
-
-  score_occurences = {};
 
   // sort descending order
   var agentsSorted = agents.sort(function (a, b) {
@@ -138,19 +147,22 @@ function test_rouletteSelection() {
     );
   });
 
-  // Select 4 parents
-  var selectedAgents = agentsSorted.slice(0, 4);
+  // Select NB_SELECTION parents
+  var selectedAgents = agentsSorted.slice(0, NB_SELECTION);
 
-  // Create a dictionnary with their score as keys, 
-  // to count occurence
+  /* Create a dictionnary with their score as keys,
+    to count occurence */
   selectedAgents.forEach(selectedAgent => {
     score_occurences[selectedAgent.getScore()] = 0;
   });
 
   // Run a lot of rouletteSelection to see if proportion are right
-  for(var i = 0 ; i < 1000000 ; i++){
+  for(var i = 0 ; i < NB_OF_RUN ; i++){
     score_occurences[generation.rouletteSelection(agents, selectedAgents).getScore()] += 1;
   }
+
+  /* Used to calculate expected probabilities
+  var expectedProbabilites = [];
 
   var fitnessSum = 0;
   selectedAgents.forEach(agent => {
@@ -158,10 +170,20 @@ function test_rouletteSelection() {
   });
 
   selectedAgents.forEach(a => {
-    console.log(a.getScore()/fitnessSum)
+    expectedProbabilites.push(Math.round(a.getScore()/fitnessSum * 100) / 100);
   });
+  */
 
-  console.log(score_occurences);
+  /* Go thourgh the dictionary, calculate probabilites by divinding 
+  by NB_OF_RUN and round the result */
+  for (const [key, value] of Object.entries(score_occurences)) {
+    observedProbabilities.push(Math.round((value/NB_OF_RUN) * 100) / 100);
+  }
+  // Sort descending
+  observedProbabilities.sort(function(a, b){return b-a});
+
+  //console.log(expectedProbabilites, observedProbabilities)
+  return observedProbabilities;
 }
 
 /**
