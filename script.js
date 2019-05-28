@@ -16,7 +16,7 @@ var input_selection_rate = document.getElementById(
   "input_slider_selection_rate"
 );
 
-var r_navbar_sections = document.querySelectorAll('.navbar-section');
+var r_navbar_title_sections = document.querySelectorAll('.navbar-section .title');
 
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
@@ -390,14 +390,14 @@ function loadWeightsToAgents(weights) {
 }
 
 function toggleSection(elem){
-  // Select second child
-  if (elem.children[1].style.display === "none") {
-    elem.children[1].style.display = "block";
+  // Select second child of parent (or neighbor)
+  if (elem.parentNode.children[1].style.display === "none") {
+    elem.parentNode.children[1].style.display = "block";
     
-    elem.children[0].children[0].innerHTML = elem.children[0].children[0].innerHTML.replace('+', '-');
+    elem.innerHTML = elem.innerHTML.replace('+', '-');
   } else {
-    elem.children[1].style.display = "none";
-    elem.children[0].children[0].innerHTML = elem.children[0].children[0].innerHTML.replace('-', '+');
+    elem.parentNode.children[1].style.display = "none";
+    elem.innerHTML = elem.innerHTML.replace('-', '+');
   }
 }
 
@@ -540,7 +540,7 @@ window.addEventListener("newgeneration", function (e) {
 // Listener for invisible input file
 document.getElementById('weight_file').addEventListener('change', handleFileSelect, false);
 
-r_navbar_sections.forEach(section => {
+r_navbar_title_sections.forEach(section => {
   section.addEventListener('click', (e) => {
     toggleSection(e.currentTarget);
   });
