@@ -13,7 +13,7 @@ h2 {
 }
 
 button {
-  background-color: #363636; /* Green */
+  background-color: #363636;
   border: none;
   color: white;
   padding: 10px 15px;
@@ -81,6 +81,14 @@ label{
 .controls-chart-on{
   color: #ffffff;
   background-color: #4CAF50;
+}
+
+.timelapse-on{
+  background-color: #4CAF50;
+}
+
+.timelapse-off{
+  background-color: #363636;
 }
 
 .wrapper {
