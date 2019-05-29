@@ -100,7 +100,7 @@ console.assert(JSON.stringify(test_rouletteSelection(50, 6, 100000000)) === JSON
 );
 
 console.log("[INFO] Testing generation done!");
-console.log("");
+console.log("")
 
 /* MUTATION TEST */
 function test_mutation() { }
@@ -309,4 +309,41 @@ function integrationTest_calculateQfit(
   //console.log(ret);
 
   return ret;
+}
+
+/* The idea behind this test is that when we do the
+  crossover we take part of parent A and parent B. 
+  The two offspring take a different part of A and B,
+  thus if we sum them, we should find the sum of the
+  parents */
+function test_crossOver(type) {
+  var generation = new Generation(0, 10, 5, 10, [1, 0.2]);
+  var agents = [];
+
+  for (var i = 0; i < 4; i++) {
+    agents.push(new Agent(10, 10, null, null, null, 1, 1, "df", false, 1, 11, 100, 3));
+  }
+
+  generation.crossOver(agents[0], agents[1], agents[2], agents[3], type);
+
+  var res1 = add2dArrays(agents[2].nn.input_weights.arraySync(), agents[3].nn.input_weights.arraySync());
+  var res2 = add2dArrays(agents[0].nn.input_weights.arraySync(), agents[1].nn.input_weights.arraySync());
+
+  //console.log(JSON.stringify(res1) === JSON.stringify(res2));
+  
+  // Assumes both arrays are same size
+  function add2dArrays(arr1, arr2) {
+    var res = Array.from(Array(arr1.length), _ =>
+      Array(arr1[0].length).fill(0)
+    );
+    for (var i = 0; i < arr1.length; i++) {
+      var col = arr1[i].length;
+      for (var j = 0; j < col; j++) {
+        res[i][j] = arr1[i][j] + arr2[i][j];
+      }
+    }
+    return res;
+  }
+
+  return JSON.stringify(res1) === JSON.stringify(res2);
 }
