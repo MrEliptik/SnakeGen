@@ -315,7 +315,7 @@ class Generation {
     /* i goes only to length/2 because we breed 2 offspring
     each time */
     // Breeding == crossover and then mutate
-    for (var i = selectedAgents.length; i < agents.length; i++) {
+    for (var i = selectedAgents.length; i < (agents.length / 2); i++) {
       // Crossover == create a children from two randoms parents
       // from the selectedAgents
 
