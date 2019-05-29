@@ -247,17 +247,17 @@ class Generation {
   /* Selects a random number in range of 
   the fitnesssum and if a snake falls in 
   that range then select it */
-  rouletteSelection(selectedAgents) {
+  rouletteSelection(selectedAgents, maxScore, numberOfTick) {
     // Calculate the sum of all fitness  
     var fitnessSum = 0;
     selectedAgents.forEach(agent => {
-      fitnessSum += agent.getScore();
+      fitnessSum += this.calculateQfit(agent, maxScore, numberOfTick);
     });
 
     var rand = Math.random() * fitnessSum;
     var sum = 0;
     for (var i = 0; i < selectedAgents.length; i++) {
-      sum += selectedAgents[i].getScore();
+      sum += this.calculateQfit(selectedAgents[i], maxScore, numberOfTick);
       if (sum > rand) {
         return selectedAgents[i];
       }
@@ -283,7 +283,7 @@ class Generation {
 
       let selected = []
       // Select the first parent
-      selected[0] = this.rouletteSelection(selectedAgents);
+      selected[0] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick);
       // Ensure the seoncd parent is different
       do{
         selected[1] = this.rouletteSelection(selectedAgents);
