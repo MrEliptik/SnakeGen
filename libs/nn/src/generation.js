@@ -279,6 +279,27 @@ class Generation {
     return Array.from(agentsToSelect);
   }
 
+  /* Selects a random number in range of 
+  the fitnesssum and if a snake falls in 
+  that range then select it */
+  rouletteSelection(selectedAgents, maxScore, numberOfTick) {
+    // Calculate the sum of all fitness  
+    var fitnessSum = 0;
+    selectedAgents.forEach(agent => {
+      fitnessSum += this.calculateQfit(agent, maxScore, numberOfTick);
+    });
+
+    var rand = Math.random() * fitnessSum;
+    var sum = 0;
+    for (var i = 0; i < selectedAgents.length; i++) {
+      sum += this.calculateQfit(selectedAgents[i], maxScore, numberOfTick);
+      if (sum > rand) {
+        return selectedAgents[i];
+      }
+    }
+    return selectedAgents[0];
+  }
+
   createNextGen(agents, numberOfTick, maxScore) {
     // increment gen ID
     this.id++;
@@ -294,12 +315,17 @@ class Generation {
     /* i goes only to length/2 because we breed 2 offspring
     each time */
     // Breeding == crossover and then mutate
-    for (var i = selectedAgents.length; i < (agents.length / 2); i++) {
-      // Shuffle array
-      const shuffled = selectedAgents.sort(() => 0.5 - Math.random());
+    for (var i = selectedAgents.length; i < agents.length; i++) {
+      // Crossover == create a children from two randoms parents
+      // from the selectedAgents
 
-      // Get sub-array of first n elements after shuffled
-      let selected = shuffled.slice(0, 2);
+      let selected = []
+      // Select the first parent
+      selected[0] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick);
+      // Ensure the seoncd parent is different
+      do{
+        selected[1] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick);
+      }while(JSON.stringify(selected[1]) === JSON.stringify(selected[0]));
 
       /* Crossover == create a children from two randoms parents 
         from the selectedAgents */
