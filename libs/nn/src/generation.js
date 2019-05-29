@@ -286,7 +286,7 @@ class Generation {
       selected[0] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick);
       // Ensure the seoncd parent is different
       do{
-        selected[1] = this.rouletteSelection(selectedAgents);
+        selected[1] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick);
       }while(JSON.stringify(selected[1]) === JSON.stringify(selected[0]));
 
       this.crossOver(selected[0], selected[1], agents[i], "patch");
