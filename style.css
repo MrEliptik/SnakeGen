@@ -12,6 +12,10 @@ h2 {
   color: #fdfdfd;
 }
 
+ul {
+  list-style: none;
+}
+
 button {
   background-color: #363636;
   border: none;
@@ -41,16 +45,31 @@ label{
   margin-left: 5px;
 }
 
+#generation-info ul {
+  /*margin: 0px 80px 0px 80px;*/
+}
+
+#generation-info li {
+  /*margin: 0px 80px 0px 80px;*/
+  font-size: 14pt;
+  padding: 10px 0px 10px 0px;
+  border-radius: 5px;
+}
+
 .training-info{
   display: grid;
   grid-template-columns: 1fr 1fr;
+  display: none;
+  max-height: 250px;
+  height: 200px;
 }
 
 .training-chart-wrapper{
   max-height: 200px;
   /*max-width: 400px;*/
   text-align: center;
-  display: none;
+  display: block;
+  /*display: none;*/
 }
 
 #training-chart{
@@ -121,7 +140,23 @@ label{
 }
 
 #generation-info{
-  
+  text-align: center;
+  align-content: center;
+  vertical-align: middle;
+}
+
+#gen_high_score {
+  background: #579765;
+  color: #ffffff;
+}
+
+#agents_alive {
+  background: #ffffff;
+}
+
+#gen_id {
+  background: #579765;
+  color: #ffffff;
 }
 
 .content {
