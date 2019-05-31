@@ -35,6 +35,10 @@ var btn_timelapse = document.getElementById("btn_timelapse");
 
 var radios_speed = document.getElementsByName("speed");
 
+var li_gen_high_score = document.getElementById("gen_high_score");
+var li_agents_alive = document.getElementById("agents_alive");
+var li_gen_id = document.getElementById("gen_id");
+
 var env = null;
 var trainingChart = null;
 var playPauseState = "pause";
@@ -60,8 +64,10 @@ window.setInterval(() => {
     var agentsAlive = env.getAgentsAlive();
     var genID = env.getCurrGenID();
 
-    document.getElementById("generation-info").innerText = 'Current generation highest score: ' +
-      String(highestscore) + '  Agents alive: ' + String(agentsAlive) + ' Generation ID: ' + String(genID);
+    li_gen_high_score.innerText = "Generation's highest score: " + String(highestscore);
+    li_agents_alive.innerText = "Agents alive: " + String(agentsAlive)
+    li_gen_id.innerText = "Generation ID: " + String(genID);
+
   }
 }, 500);
 
@@ -294,6 +300,7 @@ function askUserConfirmation(msg) {
 }
 
 function toggleChartDisplay() {
+  /*
   var chart = document.querySelector(".training-chart-wrapper");
   if (computedStyle(chart, "display") == "none") {
     chart.style.display = "block";
@@ -303,6 +310,17 @@ function toggleChartDisplay() {
     }
   } else {
     chart.style.display = "none";
+    btn_chart.className = "controls-chart-off";
+  }*/
+  var infos = document.querySelector(".training-info");
+  if (computedStyle(infos, "display") == "none") {
+    infos.style.display = "grid";
+    btn_chart.className = "controls-chart-on";
+    if (chart_first_init) {
+      createTrainingChart();
+    }
+  } else {
+    infos.style.display = "none";
     btn_chart.className = "controls-chart-off";
   }
 }
