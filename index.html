@@ -34,7 +34,11 @@
                 <canvas id="training-chart" width="150" height="300"></canvas>
             </div>
             <div id="generation-info">
-                Score
+                <ul>
+                    <li id="gen_high_score">Generation's highest score: </li>
+                    <li id="agents_alive">Agents alive: </li>
+                    <li id="gen_id">Generation ID: </li>
+                </ul>
             </div>
         </div>
 
@@ -56,7 +60,7 @@
                             <button class="controls" id="btn_restart"><i class="fas fa-undo-alt"></i></button>
                             <button class="controls" id="btn_start"><i class="fas fa-play"></i></button>
                             <button class="controls" id="btn_stop"><i class="fas fa-stop"></i></button>
-                            <button class="controls-chart-on" id="btn_chart"><i class="fas fa-chart-line"></i></button>
+                            <button class="controls-chart-off" id="btn_chart"><i class="fas fa-chart-line"></i></button>
                             <!--<button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>-->
                             <button class="timelapse-off" id="btn_timelapse">Timelapse <i class="fas fa-play"></i></button>
                         </div>
@@ -75,7 +79,7 @@
                     </div>
                     <div class="navbar-content">
                         <div class="slider">
-                            <label for="slider_population"><i class="fas fa-minus"></i> Population size</label>
+                            <label for="slider_population"><i class="fas fa-users"></i> Population size</label>
                             <input type="range" min="2" max="100" value="50" class="slider" id="slider_population"
                                 name="slider_population">
                             <input class="slider-value" type="text" id="input_slider_population" value="50">
