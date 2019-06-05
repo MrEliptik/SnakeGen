@@ -154,6 +154,11 @@ class Environment extends Generation {
     return this.agentsAlive != 0;
   }
 
+  /**
+   * @brief   Function that manages the learning
+   * @details The generation will play a number of attemptNumber
+   *          games that each have tickout movement max
+   */
   update() {
     if (this.state == "pause") {
       return;
