@@ -20,6 +20,7 @@ class Environment extends Generation {
     hidden_nodes,
     output_nodes,
     tickout,
+    attemptNumber,
     state,
     constants
   ) {
@@ -38,7 +39,7 @@ class Environment extends Generation {
     this.tickout = tickout;
     this.tickCount = 0;
 
-    this.attemptNumber = 5; // It is the number of attempts that the snakes will play before a mutation
+    this.attemptNumber = attemptNumber; // It is the number of attempts that the snakes will play before a mutation
     this.attemptCount = 0; // Current attempt number
 
     var visible = 0;
