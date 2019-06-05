@@ -22,13 +22,26 @@ console.assert(
 console.log(">>> Test calculateQfit");
 
 console.assert(
-  JSON.stringify(test_calculateQfit(15, 15, 54, 54, [1, 0, 5])) ===
+  JSON.stringify(test_calculateQfit([15], 15, [54], 54, [1, 0, 5])) ===
     JSON.stringify(1),
   { error: "[ERROR] Calculated Qfit don't correspond" }
 );
 console.assert(
-  JSON.stringify(test_calculateQfit(2, 15, 42, 54, [1, 0.5])) ===
+  JSON.stringify(test_calculateQfit([2], 15, [42], 54, [1, 0.5])) ===
     JSON.stringify(2 / 15 + 0.5 * (42 / 54)),
+  { error: "[ERROR] Calculated Qfit don't correspond" }
+);
+
+console.log(">>> Test calculateQfit with mean calculation");
+
+console.assert(
+  JSON.stringify(test_calculateQfit([15,15], 15, [54,54], 54, [1, 0, 5])) ===
+    JSON.stringify(1),
+  { error: "[ERROR] Calculated Qfit don't correspond" }
+);
+console.assert(
+  JSON.stringify(test_calculateQfit([2,5,9], 15, [42,7,1], 54, [1, 0.5])) ===
+    JSON.stringify((2+5+9) / (15*3) + 0.5 * ((42+7+1) / (54*3))),
   { error: "[ERROR] Calculated Qfit don't correspond" }
 );
 
@@ -139,8 +152,8 @@ function test_calculateQfit(score, maxScore, tick, tickMax, constants) {
 
   var generation = new Generation(0, 10, 5, 10, constants);
 
-  agent.game.score = score;
-  agent.tickAlive = tick;
+  agent.statsScore = score;
+  agent.statsTickAlive = tick;
 
   ret = generation.calculateQfit(agent, maxScore, tickMax);
 
@@ -226,6 +239,8 @@ function integrationTest_calculateQfit(
       agent.tickAlive++;
     }
   }
+
+  agent.storeStats();
 
   ret = generation.calculateQfit(agent, maxScore, tickMax);
 
