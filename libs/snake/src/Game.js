@@ -27,7 +27,9 @@ class Game {
     this.gridRows = parseInt(gridRows);
     this.gridColumns = parseInt(gridColumns);
 
-    this.maxGridDistance = Math.hypot(this.gridRows, this.gridColumns);
+    // -1 to have proper scaling. When calculating hypot between snake and
+    // fruit we are using index (0 to 9) 
+    this.maxGridDistance = Math.hypot(this.gridRows-1, this.gridColumns-1);
 
     var row = this.gridRows;
     var col = this.gridColumns;
