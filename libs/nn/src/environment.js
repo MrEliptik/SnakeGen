@@ -47,14 +47,15 @@ class Environment extends Generation {
     this.agentsAlive = this.populationSize;
     this.agents = [];
     this.currGenHighScore = 0;
+    this.currGenHighDistanceScore = 0;
 
 
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
-      if(weights != null){
+      if (weights != null) {
         var w = weights[i];
       }
-      else{
+      else {
         w = null;
       }
 
@@ -110,11 +111,20 @@ class Environment extends Generation {
     return scores;
   }
 
+  getAllDistanceScores(){
+    var scores = [];
+    var that = this;
+    for (let i = 0; i < this.agents.length; i++) {
+      scores.push(this.agents[i].getDistanceScoreMean());
+    }
+    return scores;
+  }
+
   getHighestScore() {
     //notImplemented
   }
 
-  getAgentsAlive(){
+  getAgentsAlive() {
     return this.agentsAlive;
   }
 
@@ -123,6 +133,13 @@ class Environment extends Generation {
       this.currGenHighScore = Math.max(...this.getAllScores());
     }
     return this.currGenHighScore;
+  }
+
+  getCurrGenHighestDistanceScore() {
+    if (this.currGenHighDistanceScore < Math.max(...this.getAllDistanceScores())) {
+      this.currGenHighDistanceScore = Math.max(...this.getAllDistanceScores());
+    }
+    return this.currGenHighDistanceScore;
   }
 
   getCurrScore() {
@@ -190,7 +207,8 @@ class Environment extends Generation {
         this.agents = this.createNextGen(
           this.agents,
           this.tickout,
-          this.getCurrGenHighestScore()
+          this.getCurrGenHighestScore(),
+          this.getCurrGenHighestDistanceScore()
         );
 
         // Reset the parameters before restart the set of attempts
@@ -232,7 +250,7 @@ class Environment extends Generation {
     var that = this;
 
     // Call the function like a loop
-    setTimeout(function() {
+    setTimeout(function () {
       that.tickCount += 1;
       that.update();
     }, 1000 / this.speed);
