@@ -31,11 +31,12 @@ class Generation {
    * @param maxScore  Maximum score of the generation
    * @param tickMax   Maximum tick of the generation
    */
-  calculateQfit(agent, maxScore, tickMax) {
+  calculateQfit(agent, maxScore, tickMax, maxDistanceScore) {
     //console.log(agent,maxScore,tickMax)
     return (
       (this.constants[0] * agent.getScoreMean()) / maxScore +
-      (this.constants[1] * agent.getTickAliveMean()) / tickMax
+      (this.constants[1] * agent.getTickAliveMean()) / tickMax + 
+      this.constants[2] * agent.getDistanceScoreMean() / maxDistanceScore
     );
   }
 
@@ -252,7 +253,7 @@ class Generation {
    * @param   agents  Array of agents that we have to divide
    * @returns Agents selected
    */
-  selection(agents, maxScore, numberOfTick) {
+  selection(agents, maxScore, numberOfTick, maxDistanceScore) {
     // Select the number of agents to select
     var numberOfAgents = Math.round(
       (this.populationSize * this.selectionPerCentage) / 100.0
@@ -263,8 +264,8 @@ class Generation {
     // Sort the agents by using their score
     var agentsArray = agents.sort(function (a, b) {
       return (
-        that.calculateQfit(b, maxScore, numberOfTick) -
-        that.calculateQfit(a, maxScore, numberOfTick)
+        that.calculateQfit(b, maxScore, numberOfTick, maxDistanceScore) -
+        that.calculateQfit(a, maxScore, numberOfTick, maxDistanceScore)
       );
     });
 
@@ -281,17 +282,17 @@ class Generation {
   /* Selects a random number in range of 
   the fitnesssum and if a snake falls in 
   that range then select it */
-  rouletteSelection(selectedAgents, maxScore, numberOfTick) {
+  rouletteSelection(selectedAgents, maxScore, numberOfTick, maxDistanceScore) {
     // Calculate the sum of all fitness  
     var fitnessSum = 0;
     selectedAgents.forEach(agent => {
-      fitnessSum += this.calculateQfit(agent, maxScore, numberOfTick);
+      fitnessSum += this.calculateQfit(agent, maxScore, numberOfTick, maxDistanceScore);
     });
 
     var rand = Math.random() * fitnessSum;
     var sum = 0;
     for (var i = 0; i < selectedAgents.length; i++) {
-      sum += this.calculateQfit(selectedAgents[i], maxScore, numberOfTick);
+      sum += this.calculateQfit(selectedAgents[i], maxScore, numberOfTick, maxDistanceScore);
       if (sum > rand) {
         return selectedAgents[i];
       }
@@ -299,12 +300,12 @@ class Generation {
     return selectedAgents[0];
   }
 
-  createNextGen(agents, numberOfTick, maxScore) {
+  createNextGen(agents, numberOfTick, maxScore, maxDistanceScore) {
     // increment gen ID
     this.id++;
 
     // Selection
-    var selectedAgents = this.selection(agents, maxScore, numberOfTick);
+    var selectedAgents = this.selection(agents, maxScore, numberOfTick, maxDistanceScore);
 
     // Selected agents are unchanged
     for (var i = 0; i < (selectedAgents.length); i++) {
@@ -320,10 +321,10 @@ class Generation {
 
       let selected = []
       // Select the first parent
-      selected[0] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick);
+      selected[0] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick, maxDistanceScore);
       // Ensure the seoncd parent is different
       do{
-        selected[1] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick);
+        selected[1] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick, maxDistanceScore);
       }while(JSON.stringify(selected[1]) === JSON.stringify(selected[0]));
 
       /* Crossover == create a children from two randoms parents 
