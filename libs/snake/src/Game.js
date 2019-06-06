@@ -27,6 +27,8 @@ class Game {
     this.gridRows = parseInt(gridRows);
     this.gridColumns = parseInt(gridColumns);
 
+    this.maxGridDistance = Math.hypot(this.gridRows, this.gridColumns);
+
     var row = this.gridRows;
     var col = this.gridColumns;
 
@@ -122,6 +124,16 @@ class Game {
 
   getGrid() {
     return this.grid;
+  }
+
+  /**
+   * Returns the euclidean distance between snake's head and fruit
+   * @returns {distance} - The distance normalized by the max grid distance
+   */
+  getDistanceScore(){
+    var snakePos = this.snakes[0].getPosition();
+    var fruitPos = this.fruits[0].getPosition();
+    return Math.hypot(fruitPos[0]-snakePos[0], fruitPos[1]-snakePos[1])/this.maxGridDistance;
   }
 
   /**
