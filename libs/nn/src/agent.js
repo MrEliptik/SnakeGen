@@ -26,9 +26,13 @@ class Agent {
     this.actions = { 0: "left", 1: "up", 2: "right" };
 
     this.mutationIntensity = 0;
+
     this.tickAlive = 0;
     this.isAlive = true;
 
+    this.statsScore = [];
+    this.statsTickAlive = [];
+      
     this.nn = new NeuralNetwork(
       input_nodes,
       hidden_nodes,
@@ -82,7 +86,7 @@ class Agent {
     // by the NN
     var ret = this.game.update(this.actions[i], true);
 
-    if(ret) {
+    if (ret) {
       this.tickAlive++;
     }
 
@@ -93,11 +97,36 @@ class Agent {
     return this.game.score;
   }
 
+  getScoreMean() {
+    var sum = 0;
+
+    for (var i = 0; i < this.statsScore.length; i++) {
+      sum += this.statsScore[i];
+    }
+
+    return sum / this.statsScore.length;
+  }
+
   getTickAlive() {
     return this.tickAlive;
   }
 
-  resetGame(){
+  getTickAliveMean() {
+    var sum = 0;
+
+    for (var i = 0; i < this.statsTickAlive.length; i++) {
+      sum += this.statsTickAlive[i];
+    }
+
+    return sum / this.statsTickAlive.length;
+  }
+
+  storeStats() {
+    this.statsScore.push(this.game.score);
+    this.statsTickAlive.push(this.tickAlive);
+  }
+
+  resetGame() {
     /*this.game.resetFruit(0);
     this.game.resetSnake(0);
     this.game.score = 0;*/
