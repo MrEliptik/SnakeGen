@@ -405,7 +405,7 @@ class Game {
       );
     }
 
-    this.canvasCtx.strokeStyle = "black";
+    this.canvasCtx.strokeStyle = "#cccccc";
     this.canvasCtx.stroke();
   }
 

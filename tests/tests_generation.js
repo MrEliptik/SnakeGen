@@ -1,5 +1,5 @@
 // RUN TESTS WHEN LAUNCHING
-console.log("[INFO] Testing started..");
+console.log("[INFO] Testing generation started..");
 
 console.log(">>> Test gaussianPerturbation");
 // TODO
@@ -10,12 +10,12 @@ console.log(">>> Test matrixMutation");
 
 console.assert(
   JSON.stringify(test_matrixMutation([[1, 2], [3, 4]], 0.5, 1)) !=
-    JSON.stringify([[1, 2], [3, 4]]),
+  JSON.stringify([[1, 2], [3, 4]]),
   { error: "[ERROR] Matrices are the same" }
 );
 console.assert(
   JSON.stringify(test_matrixMutation([[1, 2], [3, 4]], 0.5, 0)) ===
-    JSON.stringify([[1, 2], [3, 4]]),
+  JSON.stringify([[1, 2], [3, 4]]),
   { error: "[ERROR] Matrices are the same" }
 );
 
@@ -142,19 +142,29 @@ console.assert(
   { error: "[ERROR] Calculated Qfit (x4) don't correspond" }
 );
 
-console.log("[INFO] Testing done!");
+console.log(">>> Test roulette selection");
+console.assert(JSON.stringify(test_rouletteSelection(10, 4, 10000000)) === JSON.stringify([0.3, 0.27, 0.23, 0.2]),
+  { error: "[ERROR] Observed probabilities don't match expectations" }
+);
+// Nb run increased because more agents are selected
+console.assert(JSON.stringify(test_rouletteSelection(50, 6, 100000000)) === JSON.stringify([0.18, 0.17, 0.17, 0.16, 0.16, 0.16]),
+  { error: "[ERROR] Observed probabilities don't match expectations" }
+);
+
+console.log("[INFO] Testing generation done!");
+console.log("")
 
 /* MUTATION TEST */
-function test_mutation() {}
+function test_mutation() { }
 
 /* CROSSOVER TEST */
-function test_crossOver() {}
+function test_crossOver() { }
 
 /* SELECTION TEST */
-function test_selection() {}
+function test_selection() { }
 
 /* GAUSSIAN PERTURBATION TEST */
-function test_gaussianPerturbation() {}
+function test_gaussianPerturbation() { }
 
 /* MATRIX MUTATION TEST */
 function test_matrixMutation(matrix, mutationIntensity, mutationProb) {
@@ -164,6 +174,73 @@ function test_matrixMutation(matrix, mutationIntensity, mutationProb) {
   gen.matrixMutation(copy, mutationIntensity, mutationProb);
 
   return copy;
+}
+
+function test_rouletteSelection(nb_agents, nb_selected, nb_run) {
+  const NB_OF_RUN = nb_run;
+  const NB_SELECTION = nb_selected;
+  var generation = new Generation(0, 10, 5, 10, [1, 0, 5]);
+  var agents = [];
+
+  // Dictionnary to count score occurence in roulette sel
+  var score_occurences = {};
+
+  /* Array of observed probabilites after the 
+    NB_OF_RUN of slection */
+  var observedProbabilities = [];
+
+  // Create 10 agents and assign scores from 0 to 10
+  for (var i = 0; i < nb_agents; i++) {
+    agents.push(new Agent(10, 10, null, null, null, 1, 1, "df", false, 1, 11, 100, 3));
+    agents[i].game.score = i;
+  }
+
+  // sort descending order
+  var agentsSorted = agents.sort(function (a, b) {
+    return (
+      b.getScore() -
+      a.getScore()
+    );
+  });
+
+  // Select NB_SELECTION parents
+  var selectedAgents = agentsSorted.slice(0, NB_SELECTION);
+
+  /* Create a dictionnary with their score as keys,
+    to count occurence */
+  selectedAgents.forEach(selectedAgent => {
+    score_occurences[selectedAgent.getScore()] = 0;
+  });
+
+  // Run a lot of rouletteSelection to see if proportion are right
+  for (var i = 0; i < NB_OF_RUN; i++) {
+    score_occurences[generation.rouletteSelection(selectedAgents).getScore()] += 1;
+  }
+
+  /* Used to calculate expected probabilities */
+  /*
+  var expectedProbabilites = [];
+
+  var fitnessSum = 0;
+  selectedAgents.forEach(agent => {
+    fitnessSum += agent.getScore();
+  });
+
+  selectedAgents.forEach(a => {
+    expectedProbabilites.push(Math.round(a.getScore() / fitnessSum * 100) / 100);
+  });
+  */
+
+  /* Go thourgh the dictionary, calculate probabilites by divinding 
+  by NB_OF_RUN and round the result */
+  for (const [key, value] of Object.entries(score_occurences)) {
+    observedProbabilities.push(Math.round((value / NB_OF_RUN) * 100) / 100);
+  }
+  // Sort descending
+  observedProbabilities.sort(function (a, b) { return b - a });
+
+  //console.log(expectedProbabilites, observedProbabilities)
+  return observedProbabilities;
 }
 
 /**
@@ -296,4 +373,41 @@ function integrationTest_calculateQfit(
   //console.log(ret);
 
   return ret;
+}
+
+/* The idea behind this test is that when we do the
+  crossover we take part of parent A and parent B. 
+  The two offspring take a different part of A and B,
+  thus if we sum them, we should find the sum of the
+  parents */
+function test_crossOver(type) {
+  var generation = new Generation(0, 10, 5, 10, [1, 0.2]);
+  var agents = [];
+
+  for (var i = 0; i < 4; i++) {
+    agents.push(new Agent(10, 10, null, null, null, 1, 1, "df", false, 1, 11, 100, 3));
+  }
+
+  generation.crossOver(agents[0], agents[1], agents[2], agents[3], type);
+
+  var res1 = add2dArrays(agents[2].nn.input_weights.arraySync(), agents[3].nn.input_weights.arraySync());
+  var res2 = add2dArrays(agents[0].nn.input_weights.arraySync(), agents[1].nn.input_weights.arraySync());
+
+  //console.log(JSON.stringify(res1) === JSON.stringify(res2));
+  
+  // Assumes both arrays are same size
+  function add2dArrays(arr1, arr2) {
+    var res = Array.from(Array(arr1.length), _ =>
+      Array(arr1[0].length).fill(0)
+    );
+    for (var i = 0; i < arr1.length; i++) {
+      var col = arr1[i].length;
+      for (var j = 0; j < col; j++) {
+        res[i][j] = arr1[i][j] + arr2[i][j];
+      }
+    }
+    return res;
+  }
+
+  return JSON.stringify(res1) === JSON.stringify(res2);
 }

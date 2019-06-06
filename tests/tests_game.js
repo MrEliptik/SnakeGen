@@ -1,5 +1,5 @@
 // RUN TESTS WHEN LAUNCHING
-console.log("[INFO] Testing started..");
+console.log("[INFO] Testing game started..");
 
 console.log(">>> Test calculateLinesOfSight");
 console.assert(
@@ -51,7 +51,8 @@ console.assert(
   { error: "[ERROR] Calculated COS (x4) don't correspond" }
 );
 
-console.log("[INFO] Testing done!");
+console.log("[INFO] Testing game done!");
+console.log("");
 
 /* CONES OF SIGHT TEST */
 function test_calculateLineOfSight(gridSize, snakePos, snakeOrientation) {

@@ -22,7 +22,8 @@ class Environment extends Generation {
     tickout,
     attemptNumber,
     state,
-    constants
+    constants,
+    weights
   ) {
     // Generation Constructor
     super(
@@ -47,8 +48,16 @@ class Environment extends Generation {
     this.agents = [];
     this.currGenHighScore = 0;
 
+
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
+      if(weights != null){
+        var w = weights[i];
+      }
+      else{
+        w = null;
+      }
+
       if (visible < canvases.length) {
         this.agents.push(
           new Agent(
@@ -64,7 +73,8 @@ class Environment extends Generation {
             speed,
             input_nodes,
             hidden_nodes,
-            output_nodes
+            output_nodes,
+            w
           )
         );
         visible++;
@@ -83,7 +93,8 @@ class Environment extends Generation {
             speed,
             input_nodes,
             hidden_nodes,
-            output_nodes
+            output_nodes,
+            w
           )
         );
       }
@@ -101,6 +112,10 @@ class Environment extends Generation {
 
   getHighestScore() {
     //notImplemented
+  }
+
+  getAgentsAlive(){
+    return this.agentsAlive;
   }
 
   getCurrGenHighestScore() {

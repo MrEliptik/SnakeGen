@@ -16,6 +16,8 @@ var input_selection_rate = document.getElementById(
   "input_slider_selection_rate"
 );
 
+var r_navbar_title_sections = document.querySelectorAll('.navbar-section .title');
+
 var btn_create = document.getElementById("btn_create");
 var btn_delete = document.getElementById("btn_delete");
 var btn_default = document.getElementById("btn_default");
@@ -29,22 +31,45 @@ var btn_chart = document.getElementById("btn_chart");
 var btn_upload = document.getElementById("btn_upload");
 var bnt_save = document.getElementById("btn_save");
 
+var btn_timelapse = document.getElementById("btn_timelapse");
+
 var radios_speed = document.getElementsByName("speed");
+
+var li_gen_high_score = document.getElementById("gen_high_score");
+var li_agents_alive = document.getElementById("agents_alive");
+var li_gen_id = document.getElementById("gen_id");
 
 var env = null;
 var trainingChart = null;
 var playPauseState = "pause";
+var isTimelapsing = false;
+var timelapse_interval = null;
 
 var speed = 30;
 var nb_input_neurons = 11;
 var nb_hidden_neurons = 100;
 var nb_output_neurons = 3;
 
+var chart_first_init = true;
+
 /* set tf backend to cpu as we would lose 
   time copying values to the GPU. Net is too
   small to take advantage of GPU compute
 */
 tf.setBackend("cpu");
+
+window.setInterval(() => {
+  if (env != null) {
+    var highestscore = env.getCurrScore();
+    var agentsAlive = env.getAgentsAlive();
+    var genID = env.getCurrGenID();
+
+    li_gen_high_score.innerText = "Generation's highest score: " + String(highestscore);
+    li_agents_alive.innerText = "Agents alive: " + String(agentsAlive)
+    li_gen_id.innerText = "Generation ID: " + String(genID);
+
+  }
+}, 500);
 
 function allDefaultUI() {
   if (
@@ -59,7 +84,8 @@ function allDefaultUI() {
 
     resetChart();
 
-    // Create a new 'input' event
+    /* Create a new 'input' event to update
+      the inputs */
     var event = new Event("input");
     // Dispatch it.
     slider_population.dispatchEvent(event);
@@ -98,7 +124,7 @@ function createGames() {
 
   if (
     (parseInt(input_selection_rate.value) / 100) *
-      parseInt(input_population.value) <
+    parseInt(input_population.value) <
     2
   ) {
     if (
@@ -113,7 +139,22 @@ function createGames() {
     }
   }
 
+  createEnv();
+
+  createTrainingChart();
+}
+
+function createEnv(weights = null) {
   var canvases = [];
+
+  if (weights != null) {
+    if (weights.length < parseInt(input_games_visible.value)) {
+      input_games_visible.value = weights.length;
+    }
+    if (weights.length < parseInt(input_population.value)) {
+      input_population.value = weights.length;
+    }
+  }
 
   // Create the required number of canvas to display games
   for (var i = 0; i < parseInt(input_games_visible.value); i++) {
@@ -121,7 +162,7 @@ function createGames() {
     canvas.id = "canvas_" + String(i);
     if (
       (window.innerHeight - canvas_container.offsetTop - 20) /
-        input_games_visible.value <
+      input_games_visible.value <
       90
     ) {
       canvas.height = 90;
@@ -153,19 +194,20 @@ function createGames() {
     500,
     2, // attemptNumber
     playPauseState,
-    [1, 0.5] // Constants
+    [1, 0.5], // Constants
+    weights
   );
   env.update(0);
 
-  createTrainingChart();
-
-  // Call nn every seconds
-  window.setInterval(function() {
-    //updateChart(env.getCurrGenID(), env.getCurrGenHighestScore());
-  }, 5000);
 }
 
 function createTrainingChart() {
+  if (computedStyle(document.querySelector(".training-chart-wrapper"), "display") == "none") {
+    return;
+  }
+  else {
+    chart_first_init = false;
+  }
   var ctx = document.getElementById("training-chart").getContext("2d");
   trainingChart = new Chart(ctx, {
     type: "line",
@@ -188,12 +230,12 @@ function createTrainingChart() {
     },
     options: {
       legend: {
-        display: false
+        display: true
       },
       responsive: true,
       maintainAspectRatio: false,
       title: {
-        display: true,
+        display: false,
         text: "Best score per generation"
       }
     }
@@ -259,12 +301,27 @@ function askUserConfirmation(msg) {
 }
 
 function toggleChartDisplay() {
+  /*
   var chart = document.querySelector(".training-chart-wrapper");
-  if (chart.style.display === "none") {
+  if (computedStyle(chart, "display") == "none") {
     chart.style.display = "block";
     btn_chart.className = "controls-chart-on";
+    if (chart_first_init) {
+      createTrainingChart();
+    }
   } else {
     chart.style.display = "none";
+    btn_chart.className = "controls-chart-off";
+  }*/
+  var infos = document.querySelector(".training-info");
+  if (computedStyle(infos, "display") == "none") {
+    infos.style.display = "grid";
+    btn_chart.className = "controls-chart-on";
+    if (chart_first_init) {
+      createTrainingChart();
+    }
+  } else {
+    infos.style.display = "none";
     btn_chart.className = "controls-chart-off";
   }
 }
@@ -310,9 +367,138 @@ function getSpeedValue() {
   }
 }
 
-function saveModel() {}
+function download(content, fileName, contentType) {
+  var a = document.createElement("a");
+  var file = new Blob([content], { type: contentType });
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
+}
 
-function loadModel() {}
+function saveModel(which = 'all') {
+  console.log('Saving weights..');
+  var json_weights = [];
+  env.agents.forEach(agent => {
+    json_weights.push({
+      'input_weights': agent.nn.input_weights.arraySync(),
+      'output_weights': agent.nn.output_weights.arraySync()
+    });
+  });
+  download(JSON.stringify(json_weights), 'weights.json', 'application/json');
+}
+
+function loadModel() {
+  if (
+    askUserConfirmation(
+      "This is going to everride all current nn weights, are you sure?"
+    )
+  ) {
+    // generate a click on the hidden input file
+    // this will start the file browsing process
+    document.getElementById('weight_file').click();
+  }
+}
+// Called when the user has selected a json file
+function handleFileSelect(e) {
+  file = e.target.files[0];
+  // clear files to allow next upload
+  e.target.value = '';
+  fr = new FileReader();
+  fr.onload = receivedText;
+  fr.readAsText(file);
+
+  function receivedText(e) {
+    let lines = e.target.result;
+    // Contains the whole generation's weights
+    var agents_weights = JSON.parse(lines);
+    loadWeightsToAgents(agents_weights);
+  }
+}
+
+// This function willl try to load the weights
+// read from the file into the agents
+function loadWeightsToAgents(weights) {
+  if (env == null) {
+    if (
+      askUserConfirmation(
+        "No environment is created. Would you like to create one with the weights you selected?"
+      )
+    ) {
+      createEnv(weights);
+      createTrainingChart();
+    }
+  }
+  else {
+    deleteGames();
+    resetChart();
+    createEnv(weights);
+  }
+}
+
+function toggleSection(elem) {
+  // Select second child of parent (or neighbor)
+  if (elem.parentNode.children[1].style.display === "none") {
+    elem.parentNode.children[1].style.display = "block";
+
+    elem.innerHTML = elem.innerHTML.replace('+', '-');
+  } else {
+    elem.parentNode.children[1].style.display = "none";
+    elem.innerHTML = elem.innerHTML.replace('-', '+');
+  }
+}
+
+// Get the style that was set by css
+var computedStyle = function (el, style) {
+  var cs;
+  if (typeof el.currentStyle != 'undefined') {
+    cs = el.currentStyle;
+  }
+  else {
+    cs = document.defaultView.getComputedStyle(el, null);
+  }
+  return cs[style];
+}
+
+function report() {
+  let region = document.querySelector("body"); // whole screen
+  html2canvas(region, {
+    onrendered: function (canvas) {
+      let pngUrl = canvas.toDataURL(); // png in dataURL format
+      
+      // DISPLAY
+      /*
+      let img = document.querySelector(".screen");
+      img.src = pngUrl;
+      */
+
+      var data = atob(pngUrl.substring("data:image/png;base64,".length)),
+        asArray = new Uint8Array(data.length);
+
+      for (var i = 0, len = data.length; i < len; ++i) {
+        asArray[i] = data.charCodeAt(i);
+      }
+
+      download(asArray.buffer, 'screen.png', 'image/png');
+    },
+  });
+}
+
+function toggleTimelapse(){
+  if(isTimelapsing){
+    let html = `Timelapse <i class="fas fa-play"></i>`;
+    btn_timelapse.innerHTML = html;
+    btn_timelapse.className = "timelapse-off";
+    isTimelapsing = false;
+    clearInterval(timelapse_interval);
+  }
+  else{
+    let html = `Timelapse <i class="fas fa-stop"></i>`;
+    btn_timelapse.innerHTML = html;
+    btn_timelapse.className = "timelapse-on";
+    isTimelapsing = true;
+    timelapse_interval = setInterval(report, 3000);
+  }
+}
 
 // Add an event listener from the keyboard
 document.addEventListener(
@@ -422,13 +608,15 @@ btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
 
-btn_restart.addEventListener("click", () => {});
+btn_restart.addEventListener("click", () => {
+
+});
 
 btn_start.addEventListener("click", () => {
   toggleStartPause();
 });
 
-btn_stop.addEventListener("click", () => {});
+btn_stop.addEventListener("click", () => { });
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
@@ -442,14 +630,28 @@ bnt_save.addEventListener("click", () => {
   saveModel();
 });
 
+btn_timelapse.addEventListener("click", () => {
+  toggleTimelapse();
+});
+
 // event sent by Environment when we change generation
-window.addEventListener("newgeneration", function(e) {
+window.addEventListener("newgeneration", function (e) {
   //console.log(e.detail.id, e.detail.maxScore, e.detail.score);
   updateChart(e.detail.id, e.detail.maxScore, e.detail.score);
 });
 
+// Listener for invisible input file
+document.getElementById('weight_file').addEventListener('change', handleFileSelect, false);
+
+r_navbar_title_sections.forEach(section => {
+  section.addEventListener('click', (e) => {
+    toggleSection(e.currentTarget);
+  });
+});
+
+// Listener for the radio buttons
 for (var i = 0, max = radios_speed.length; i < max; i++) {
-  radios_speed[i].onclick = function() {
+  radios_speed[i].onclick = function () {
     speed = parseInt(this.value);
     // Goes from x1, x2, etc.. to 30fps, 60fps...
     speed *= 30;
