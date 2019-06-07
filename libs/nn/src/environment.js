@@ -120,6 +120,12 @@ class Environment extends Generation {
     return scores;
   }
 
+  getCurrentGenMeanScore() {
+    var scores = this.getAllScores();
+    var sum = scores.reduce((a, b) => a + b, 0)
+    return sum / this.populationSize;
+  }
+
   getHighestScore() {
     //notImplemented
   }
@@ -191,6 +197,19 @@ class Environment extends Generation {
    * @details The generation will play a number of attemptNumber
    *          games that each have tickout movement max
    */
+  dispatchNewGenEvent() {
+    var event = new CustomEvent("newgeneration", {
+      detail: {
+        id: this.id,
+        maxScore: this.getCurrGenHighestScore(),
+        score: this.getCurrScore(),
+        meanScore: this.getCurrentGenMeanScore()
+      }
+    });
+
+    window.dispatchEvent(event);
+  }
+
   update() {
     if (this.state == "pause") {
       return;
