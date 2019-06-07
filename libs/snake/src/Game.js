@@ -96,6 +96,9 @@ class Game {
 
     this.score = 0;
 
+    this.distance_score = 0;
+    this.old_dist = 0;
+
     // Choose the food position
     var fruit_x = Math.floor(Math.random() * (gridColumns - 1 - 0 + 1)) + 0;
     var fruit_y = Math.floor(Math.random() * (gridRows - 1 - 0 + 1)) + 0;
@@ -127,13 +130,28 @@ class Game {
   }
 
   /**
-   * Returns the euclidean distance between snake's head and fruit
+   * Returns the euclidean distance between point a and b (ax, ay) (bx, by)
    * @returns {distance} - The distance normalized by the max grid distance
    */
+  calculateEuclideanDistance(a, b){
+    return Math.hypot(b[0]-a[0], b[1]-a[1])/this.maxGridDistance;
+  }
+  
   getDistanceScore(){
     var snakePos = this.snakes[0].getPosition();
     var fruitPos = this.fruits[0].getPosition();
-    return Math.hypot(fruitPos[0]-snakePos[0], fruitPos[1]-snakePos[1])/this.maxGridDistance;
+
+    var dist = this.calculateEuclideanDistance(snakePos, fruitPos);
+
+    // Snake goes away
+    if (dist > this.old_dist){
+      this.distance_score++;
+    }
+    // Snake's getting closer
+    else if (dist < this.old_dist){
+      this.distance_score--;
+    }
+    return this.distance_score;
   }
 
   /**
