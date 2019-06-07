@@ -39,10 +39,10 @@ class Environment extends Generation {
 
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
-      if(weights != null){
+      if (weights != null) {
         var w = weights[i];
       }
-      else{
+      else {
         w = null;
       }
 
@@ -100,11 +100,17 @@ class Environment extends Generation {
     return scores;
   }
 
+  getCurrentGenMeanScore() {
+    var scores = this.getAllScores();
+    var sum = scores.reduce((a, b) => a + b, 0)
+    return sum / this.populationSize;
+  }
+
   getHighestScore() {
     //notImplemented
   }
 
-  getAgentsAlive(){
+  getAgentsAlive() {
     return this.agentsAlive;
   }
 
@@ -164,7 +170,8 @@ class Environment extends Generation {
       detail: {
         id: this.id,
         maxScore: this.getCurrGenHighestScore(),
-        score: this.getCurrScore()
+        score: this.getCurrScore(),
+        meanScore: this.getCurrentGenMeanScore()
       }
     });
 
@@ -213,7 +220,7 @@ class Environment extends Generation {
 
     var that = this;
 
-    setTimeout(function() {
+    setTimeout(function () {
       that.tickCount += 1;
       that.update();
     }, 1000 / this.speed);
