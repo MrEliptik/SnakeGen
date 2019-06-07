@@ -194,7 +194,7 @@ function createEnv(weights = null) {
     500,
     2, // attemptNumber
     playPauseState,
-    [1, 0.3, 0.5], // Constants
+    [1, 0.25, 0.75], // Constants
     weights
   );
   env.update(0);
