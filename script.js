@@ -224,6 +224,12 @@ function createTrainingChart() {
           label: "Current score",
           borderColor: "#FC1616",
           fill: false
+        },
+        {
+          data: [],
+          label: "Mean score",
+          borderColor: "#85fc16",
+          fill: false
         }
       ]
     },
@@ -241,7 +247,7 @@ function createTrainingChart() {
   });
 }
 
-function updateChart(genID, valueScoreMax, valueScore) {
+function updateChart(genID, valueScoreMax, valueScore, valueMeanScore) {
   if (
     trainingChart.data.labels[trainingChart.data.labels.length - 1] == genID
   ) {
@@ -252,13 +258,18 @@ function updateChart(genID, valueScoreMax, valueScore) {
       trainingChart.data.datasets[1].data[
         trainingChart.data.length - 1
       ] = valueScore;
+      trainingChart.data.datasets[2].data[
+        trainingChart.data.length - 1
+      ] = valueMeanScore;
     } else {
       trainingChart.data.datasets[0].data.push(valueScoreMax);
       trainingChart.data.datasets[1].data.push(valueScore);
+      trainingChart.data.datasets[2].data.push(valueMeanScore); 
     }
   } else {
     trainingChart.data.datasets[0].data.push(valueScoreMax);
     trainingChart.data.datasets[1].data.push(valueScore);
+    trainingChart.data.datasets[2].data.push(valueMeanScore);
     trainingChart.data.labels.push(genID);
   }
   trainingChart.update();
@@ -636,7 +647,7 @@ btn_timelapse.addEventListener("click", () => {
 // event sent by Environment when we change generation
 window.addEventListener("newgeneration", function (e) {
   //console.log(e.detail.id, e.detail.maxScore, e.detail.score);
-  updateChart(e.detail.id, e.detail.maxScore, e.detail.score);
+  updateChart(e.detail.id, e.detail.maxScore, e.detail.score, e.detail.meanScore);
 });
 
 // Listener for invisible input file
