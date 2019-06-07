@@ -280,7 +280,8 @@ class Environment extends Generation {
       detail: {
         id: this.id,
         maxScore: this.getCurrGenHighestScore(),
-        score: this.getCurrScore()
+        score: this.getCurrScore(),
+        meanScore: this.getCurrentGenMeanScore()
       }
     });
 
