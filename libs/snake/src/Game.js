@@ -145,12 +145,13 @@ class Game {
 
     // Snake goes away
     if (dist > this.old_dist){
-      this.distance_score++;
+      this.distance_score-=1.5;
     }
     // Snake's getting closer
     else if (dist < this.old_dist){
-      this.distance_score--;
+      this.distance_score++;
     }
+    this.old_dist = dist;
     return this.distance_score;
   }
 
