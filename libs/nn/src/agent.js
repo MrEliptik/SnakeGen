@@ -25,7 +25,7 @@ class Agent {
     this.timeUnit = timeUnit;
     this.actions = { 0: "left", 1: "up", 2: "right" };
 
-    this.mutationIntensity = 0;
+    this.mutationIntensity = 0.1;
 
     this.distanceScore = 0;
 
