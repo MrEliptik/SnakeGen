@@ -33,16 +33,11 @@ class Generation {
    */
   calculateQfit(agent, maxScore, tickMax, maxDistanceScore) {
     //console.log(agent,maxScore,tickMax)
-    if(agent.getScoreMean() == 0){
-      return 0;
-    }
-    else{
-      return (
-        (this.constants[0] * agent.getScoreMean()) / maxScore +
-        (this.constants[1] * agent.getTickAliveMean()) / tickMax + 
-        this.constants[2] * agent.getDistanceScoreMean() / maxDistanceScore
-      );
-    }
+    return (
+      (this.constants[0] * agent.getScoreMean()) / maxScore +
+      (this.constants[1] * agent.getTickAliveMean()) / tickMax + 
+      this.constants[2] * agent.getDistanceScoreMean() / maxDistanceScore
+    );
   }
 
   randomG(v) {
