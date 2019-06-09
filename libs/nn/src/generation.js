@@ -232,7 +232,12 @@ class Generation {
       for (var j = 0; j < matrix[0].length; j++) {
         if (Math.random() <= mutationProb) {
           //matrix[i][j] += this.gaussianPertubation(0, mutationIntensity);
-          matrix[i][j] += this.randomG(3);
+          if(Math.round(Math.random()) == 1){
+            matrix[i][j] += this.randomG(3)*mutationIntensity;
+          }
+          else{
+            matrix[i][j] -= this.randomG(3)*mutationIntensity;
+          }
         }
       }
     }
