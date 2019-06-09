@@ -6,6 +6,8 @@ var slider_grid_size = document.getElementById("slider_grid_size");
 var slider_hidden_layers = document.getElementById("slider_hidden_layers");
 var slider_neurons = document.getElementById("slider_neurons");
 var slider_selection_rate = document.getElementById("slider_selection_rate");
+var slider_mutation_prob = document.getElementById("slider_mutation_prob");
+var slider_tickout = document.getElementById("slider_tickout");
 
 var input_population = document.getElementById("input_slider_population");
 var input_games_visible = document.getElementById("input_slider_games_visble");
@@ -15,6 +17,8 @@ var input_slider_neurons = document.getElementById("input_slider_neurons");
 var input_selection_rate = document.getElementById(
   "input_slider_selection_rate"
 );
+var input_mutation_prob = document.getElementById("input_slider_mutation_prob");
+var input_tickout = document.getElementById("input_slider_tickout");
 
 var r_navbar_title_sections = document.querySelectorAll('.navbar-section .title');
 
@@ -83,6 +87,8 @@ function allDefaultUI() {
     slider_hidden_layers.value = 1;
     slider_neurons.value = 100;
     slider_selection_rate.value = 10;
+    slider_mutation_prob.value = 0.01;
+    slider_tickout = 500;
 
     resetChart();
 
@@ -96,6 +102,8 @@ function allDefaultUI() {
     slider_hidden_layers.dispatchEvent(event);
     slider_neurons.dispatchEvent(event);
     slider_selection_rate.dispatchEvent(event);
+    slider_mutation_prob.dispatchEvent(event);
+    slider_tickout.dispatchEvent(event);
 
     // Set speed to '1x'
     radios_speed[0].checked = "checked";
@@ -188,12 +196,12 @@ function createEnv(weights = null) {
     parseInt(input_population.value), // populationSize
     parseInt(input_selection_rate.value), // selectionPerCentage
     5, // stepSizeParameter
-    0.01, // mutationProb
+    parseFloat(input_mutation_prob.value), // mutationProb
     speed,
     nb_input_neurons,
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
-    500,
+    parseInt(input_tickout.value),
     2, // attemptNumber
     playPauseState,
     [1, 0.5], // Constants
@@ -576,6 +584,14 @@ input_selection_rate.addEventListener("input", () => {
   slider_selection_rate.value = input_selection_rate.value;
 });
 
+input_mutation_prob.addEventListener("input", () => {
+  slider_mutation_prob.value = input_mutation_prob.value;
+});
+
+input_tickout.addEventListener("input", () => {
+  slider_tickout.value = input_tickout.value;
+})
+
 slider_population.addEventListener("input", () => {
   input_population.value = slider_population.value;
 });
@@ -598,6 +614,14 @@ slider_neurons.addEventListener("input", () => {
 
 slider_selection_rate.addEventListener("input", () => {
   input_selection_rate.value = slider_selection_rate.value;
+});
+
+slider_mutation_prob.addEventListener("input", () => {
+  input_mutation_prob.value = slider_mutation_prob.value;
+});
+
+slider_tickout.addEventListener("input", () => {
+  input_tickout.value = slider_tickout.value;
 });
 
 btn_create.addEventListener("click", () => {
