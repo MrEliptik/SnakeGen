@@ -519,35 +519,6 @@ function toggleTimelapse(){
   }
 }
 
-// Add an event listener from the keyboard
-document.addEventListener(
-  "keyup",
-  event => {
-    const key = event.keyCode;
-
-    if (env == null) return;
-
-    if (key == "38") {
-      env.agents.forEach(pop => {
-        pop.game.update("up", false);
-      });
-    } else if (key == "40") {
-      env.agents.forEach(pop => {
-        pop.game.update("down", false);
-      });
-    } else if (key == "37") {
-      env.agents.forEach(pop => {
-        pop.game.update("left", false);
-      });
-    } else if (key == "39") {
-      env.agents.forEach(pop => {
-        pop.game.update("right", false);
-      });
-    }
-  },
-  false
-);
-
 window.addEventListener(
   "resize",
   e => {
