@@ -49,13 +49,11 @@ class Environment extends Generation {
     this.currGenHighScore = 0;
     this.currGenHighDistanceScore = 0;
 
-
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
       if (weights != null) {
         var w = weights[i];
-      }
-      else {
+      } else {
         w = null;
       }
 
@@ -102,7 +100,16 @@ class Environment extends Generation {
     }
   }
 
-  getAllScores() {
+  getAllScores(){
+    var scores = [];
+    var that = this;
+    for (let i = 0; i < this.agents.length; i++) {
+      scores.push(this.agents[i].getScore());
+    }
+    return scores;
+  }
+
+  getAllMeanScores() {
     var scores = [];
     var that = this;
     for (let i = 0; i < this.agents.length; i++) {
@@ -121,7 +128,7 @@ class Environment extends Generation {
   }
 
   getCurrentGenMeanScore() {
-    var scores = this.getAllScores();
+    var scores = this.getAllMeanScores();
     var sum = scores.reduce((a, b) => a + b, 0)
     return sum / this.populationSize;
   }
@@ -135,8 +142,8 @@ class Environment extends Generation {
   }
 
   getCurrGenHighestScore() {
-    if (this.currGenHighScore < Math.max(...this.getAllScores())) {
-      this.currGenHighScore = Math.max(...this.getAllScores());
+    if (this.currGenHighScore < Math.max(...this.getAllMeanScores())) {
+      this.currGenHighScore = Math.max(...this.getAllMeanScores());
     }
     return this.currGenHighScore;
   }
@@ -197,19 +204,6 @@ class Environment extends Generation {
    * @details The generation will play a number of attemptNumber
    *          games that each have tickout movement max
    */
-  dispatchNewGenEvent() {
-    var event = new CustomEvent("newgeneration", {
-      detail: {
-        id: this.id,
-        maxScore: this.getCurrGenHighestScore(),
-        score: this.getCurrScore(),
-        meanScore: this.getCurrentGenMeanScore()
-      }
-    });
-
-    window.dispatchEvent(event);
-  }
-
   update() {
     if (this.state == "pause") {
       return;
@@ -218,6 +212,11 @@ class Environment extends Generation {
     // Check if the current attempt is ended
     if (this.tickCount >= this.tickout) {
       this.attemptCount++;
+
+      // Store the stats of the agents
+      this.agents.forEach(agent => {
+        agent.storeStats();
+      });
 
       // Check if the current set of attempts is ended
       if (this.attemptCount >= this.attemptNumber) {
@@ -244,11 +243,6 @@ class Environment extends Generation {
           agent.statsTickAlive = [];
         });
       } else {
-        // Store the stats of the agents
-        this.agents.forEach(agent => {
-          agent.storeStats();
-        });
-
         // Start a new attempt
         this.tickCount = 0;
         this.agentsAlive = this.populationSize;

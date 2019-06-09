@@ -6,6 +6,8 @@ var slider_grid_size = document.getElementById("slider_grid_size");
 var slider_hidden_layers = document.getElementById("slider_hidden_layers");
 var slider_neurons = document.getElementById("slider_neurons");
 var slider_selection_rate = document.getElementById("slider_selection_rate");
+var slider_mutation_prob = document.getElementById("slider_mutation_prob");
+var slider_tickout = document.getElementById("slider_tickout");
 
 var input_population = document.getElementById("input_slider_population");
 var input_games_visible = document.getElementById("input_slider_games_visble");
@@ -15,6 +17,8 @@ var input_slider_neurons = document.getElementById("input_slider_neurons");
 var input_selection_rate = document.getElementById(
   "input_slider_selection_rate"
 );
+var input_mutation_prob = document.getElementById("input_slider_mutation_prob");
+var input_tickout = document.getElementById("input_slider_tickout");
 
 var r_navbar_title_sections = document.querySelectorAll('.navbar-section .title');
 
@@ -52,6 +56,8 @@ var nb_output_neurons = 3;
 
 var chart_first_init = true;
 
+var timelapse_iter = 0;
+
 /* set tf backend to cpu as we would lose 
   time copying values to the GPU. Net is too
   small to take advantage of GPU compute
@@ -81,6 +87,8 @@ function allDefaultUI() {
     slider_hidden_layers.value = 1;
     slider_neurons.value = 100;
     slider_selection_rate.value = 10;
+    slider_mutation_prob.value = 0.01;
+    slider_tickout = 500;
 
     resetChart();
 
@@ -94,6 +102,8 @@ function allDefaultUI() {
     slider_hidden_layers.dispatchEvent(event);
     slider_neurons.dispatchEvent(event);
     slider_selection_rate.dispatchEvent(event);
+    slider_mutation_prob.dispatchEvent(event);
+    slider_tickout.dispatchEvent(event);
 
     // Set speed to '1x'
     radios_speed[0].checked = "checked";
@@ -102,7 +112,9 @@ function allDefaultUI() {
 
 function createGames() {
   // First delete previously created games
-  deleteGames();
+  if(deleteGames() == -1){
+    return;
+  }
 
   if (parseInt(input_games_visible.value) > parseInt(input_population.value)) {
     if (
@@ -186,12 +198,12 @@ function createEnv(weights = null) {
     parseInt(input_population.value), // populationSize
     parseInt(input_selection_rate.value), // selectionPerCentage
     5, // stepSizeParameter
-    0.01, // mutationProb
+    parseFloat(input_mutation_prob.value), // mutationProb
     speed,
     nb_input_neurons,
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
-    500,
+    parseInt(input_tickout.value),
     2, // attemptNumber
     playPauseState,
     [10, 0, 1], // Constants
@@ -304,6 +316,9 @@ function deleteGames() {
       // Empty the games array object
       env = null;
     }
+    else{
+      return -1;
+    }
   }
 }
 
@@ -312,18 +327,6 @@ function askUserConfirmation(msg) {
 }
 
 function toggleChartDisplay() {
-  /*
-  var chart = document.querySelector(".training-chart-wrapper");
-  if (computedStyle(chart, "display") == "none") {
-    chart.style.display = "block";
-    btn_chart.className = "controls-chart-on";
-    if (chart_first_init) {
-      createTrainingChart();
-    }
-  } else {
-    chart.style.display = "none";
-    btn_chart.className = "controls-chart-off";
-  }*/
   var infos = document.querySelector(".training-info");
   if (computedStyle(infos, "display") == "none") {
     infos.style.display = "grid";
@@ -440,7 +443,9 @@ function loadWeightsToAgents(weights) {
     }
   }
   else {
-    deleteGames();
+    if(deleteGames() == -1){
+      return;
+    }
     resetChart();
     createEnv(weights);
   }
@@ -489,7 +494,8 @@ function report() {
         asArray[i] = data.charCodeAt(i);
       }
 
-      download(asArray.buffer, 'screen.png', 'image/png');
+      download(asArray.buffer, 'screen_' + String(timelapse_iter) + '.png', 'image/png');
+      timelapse_iter++;
     },
   });
 }
@@ -500,6 +506,7 @@ function toggleTimelapse(){
     btn_timelapse.innerHTML = html;
     btn_timelapse.className = "timelapse-off";
     isTimelapsing = false;
+    timelapse_iter = 0;
     clearInterval(timelapse_interval);
   }
   else{
@@ -507,6 +514,7 @@ function toggleTimelapse(){
     btn_timelapse.innerHTML = html;
     btn_timelapse.className = "timelapse-on";
     isTimelapsing = true;
+    timelapse_iter = 0;
     timelapse_interval = setInterval(report, 3000);
   }
 }
@@ -583,6 +591,14 @@ input_selection_rate.addEventListener("input", () => {
   slider_selection_rate.value = input_selection_rate.value;
 });
 
+input_mutation_prob.addEventListener("input", () => {
+  slider_mutation_prob.value = input_mutation_prob.value;
+});
+
+input_tickout.addEventListener("input", () => {
+  slider_tickout.value = input_tickout.value;
+})
+
 slider_population.addEventListener("input", () => {
   input_population.value = slider_population.value;
 });
@@ -607,12 +623,22 @@ slider_selection_rate.addEventListener("input", () => {
   input_selection_rate.value = slider_selection_rate.value;
 });
 
+slider_mutation_prob.addEventListener("input", () => {
+  input_mutation_prob.value = slider_mutation_prob.value;
+});
+
+slider_tickout.addEventListener("input", () => {
+  input_tickout.value = slider_tickout.value;
+});
+
 btn_create.addEventListener("click", () => {
   createGames();
 });
 
 btn_delete.addEventListener("click", () => {
-  deleteGames();
+  if(deleteGames() == -1){
+    return;
+  }
 });
 
 btn_default.addEventListener("click", () => {
