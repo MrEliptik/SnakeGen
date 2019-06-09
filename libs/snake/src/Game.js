@@ -386,7 +386,7 @@ class Game {
   }
 
   // Draw the grid layout
-  drawGrid() {
+  drawGrid(color="#cccccc") {
     this.canvasCtx.beginPath();
 
     for (var i = 0; i <= this.gridRows; i++) {
@@ -405,7 +405,7 @@ class Game {
       );
     }
 
-    this.canvasCtx.strokeStyle = "#cccccc";
+    this.canvasCtx.strokeStyle = color;
     this.canvasCtx.stroke();
   }
 
@@ -494,6 +494,13 @@ class Game {
     // Draw board after to have the edges
     this.drawGrid();
   }
+
+  drawSnakeInfo(){
+    this.drawGrid("#e2e2e2");
+    this.canvasCtx.font = "15px Arial";
+    this.canvasCtx.fillText("Score:" + String(this.score), 10, 50);
+  }
+
 
   // Checks if the snake object is going out of boundaries
   hitBoundaries(snakeToTest) {
@@ -683,7 +690,8 @@ class Game {
         //this.resetSnake(0);
         if(this.display==true) {
           this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          this.drawGrid(); 
+          //this.drawGrid(); 
+          this.drawSnakeInfo();
         }
         //console.log("game: hitbody");
 
