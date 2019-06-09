@@ -13,13 +13,16 @@
     <!-- Load tensorflow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 </head>
 
 <body>
     <div class="wrapper">
+        <!--
         <div class="title">
             <h1>🐍 SnakeGen</h1>
         </div>
+        -->
         <ul class="top-navbar">
             <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="solo.html"><i class="fas fa-play"></i> Play snake</a></li>
@@ -28,17 +31,28 @@
             </li>
             <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
         </ul>
-        <div class="training-chart-wrapper">
-            <canvas id="training-chart" width="150" height="300"></canvas>
+        <div class="training-info">
+            <div class="training-chart-wrapper">
+                <canvas id="training-chart" width="150" height="300"></canvas>
+            </div>
+            <div id="generation-info">
+                <ul>
+                    <li id="gen_high_score">Generation's highest score: </li>
+                    <li id="agents_alive">Agents alive: </li>
+                    <li id="gen_id">Generation ID: </li>
+                </ul>
+            </div>
         </div>
-        <div class="content">             
-            <div class="canvas-container">        
+
+        <div class="content">
+            <div class="canvas-container">
                 <!-- canvas are added with js -->
             </div>
             <div class="right-navbar">
+                <!-- Find where to put <i class="fas fa-window-minimize"></i> -->
                 <div class="navbar-section">
                     <div class="title">
-                        <h2>Global</h2>
+                        <h2>Global -</h2>
                     </div>
                     <div class="navbar-content">
                         <button id="btn_create">Create</button>
@@ -48,28 +62,55 @@
                             <button class="controls" id="btn_restart"><i class="fas fa-undo-alt"></i></button>
                             <button class="controls" id="btn_start"><i class="fas fa-play"></i></button>
                             <button class="controls" id="btn_stop"><i class="fas fa-stop"></i></button>
-                            <button class="controls-chart-on" id="btn_chart"><i class="fas fa-chart-line"></i></button>   
-                            <!--<button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>-->  
+                            <button class="controls-chart-off" id="btn_chart"><i class="fas fa-chart-line"></i></button>
+                            <!--<button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>-->
+                            <button class="timelapse-off" id="btn_timelapse">Timelapse <i
+                                    class="fas fa-play"></i></button>
                         </div>
-                    </div>
-                    <div>
-                        <label for="speed"><i class="fas fa-tachometer-alt"></i></label>
-                        <input checked="checked" name="speed" type="radio" name="age" value="1">1x
-                        <input name="speed" type="radio" name="age" value="2">2x
-                        <input name="speed" type="radio" name="age" value="10">10x
-                        <input name="speed" type="radio" name="age" value="1000000000000000000000000000000">max
+                        <div>
+                            <label for="speed"><i class="fas fa-tachometer-alt"></i></label>
+                            <input checked="checked" name="speed" type="radio" name="age" value="1">1x
+                            <input name="speed" type="radio" name="age" value="2">2x
+                            <input name="speed" type="radio" name="age" value="10">10x
+                            <input name="speed" type="radio" name="age" value="1000000000000000000000000000000">max
+                        </div>
                     </div>
                 </div>
                 <div class="navbar-section">
                     <div class="title">
-                        <h2>Population</h2>
+                        <h2>Population -</h2>
                     </div>
                     <div class="navbar-content">
                         <div class="slider">
                             <label for="slider_population"><i class="fas fa-users"></i> Population size</label>
-                            <input type="range" min="1" max="100" value="50" class="slider" id="slider_population"
+                            <input type="range" min="2" max="100" value="50" class="slider" id="slider_population"
                                 name="slider_population">
                             <input class="slider-value" type="text" id="input_slider_population" value="50">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_selection_rate"><i class="fas fa-percent"></i> Selection rate</label>
+                            <input type="range" min="1" max="100" value="10" class="slider" id="slider_selection_rate"
+                                name="slider_selection_rate">
+                            <input class="slider-value" type="text" id="input_slider_selection_rate" value="10">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_mutation_prob"><i class="fas fa-prescription-bottle"></i> Mutation
+                                probability</label>
+                            <input type="range" min=".00" max="1.00" value="0.01" step="0.01" class="slider"
+                                id="slider_mutation_prob" name="slider_mutation_prob">
+                            <input class="slider-value" type="text" id="input_slider_mutation_prob" value="0.01">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_grid_size"><i class="fas fa-th"></i> Grid size</label>
+                            <input type="range" min="1" max="40" value="10" class="slider" id="slider_grid_size"
+                                name="slider_grid_size">
+                            <input class="slider-value" type="text" id="input_slider_grid_size" value="10">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_tickout"><i class="fas fa-hourglass-half"></i> Tickout</label>
+                            <input type="range" min="100" max="5000" value="500" step="100" class="slider" id="slider_tickout"
+                                name="slider_tickout">
+                            <input class="slider-value" type="text" id="input_slider_tickout" value="500">
                         </div>
                         <div class="slider">
                             <label for="slider_games_visible"><i class="fas fa-eye"></i> Number of visible games</label>
@@ -77,17 +118,11 @@
                                 name="slider_games_visible">
                             <input class="slider-value" type="text" id="input_slider_games_visble" value="50">
                         </div>
-                        <div class="slider">
-                            <label for="slider_grid_size"><i class="fas fa-th"></i> Grid size</label>
-                            <input type="range" min="1" max="15" value="10" class="slider" id="slider_grid_size"
-                                name="slider_grid_size">
-                            <input class="slider-value" type="text" id="input_slider_grid_size" value="10">
-                        </div>
                     </div>
                 </div>
                 <div class="navbar-section">
                     <div class="title">
-                        <h2>Neural network</h2>
+                        <h2>Neural network -</h2>
                     </div>
                     <div class="navbar-content">
                         <div class="slider">
@@ -103,9 +138,18 @@
                                 name="slider_neurons">
                             <input class="slider-value" type="text" id="input_slider_neurons" value="100">
                         </div>
+                        <div>
+                            <button class="controls" id="btn_upload"><i class="fas fa-upload 2x"></i></button>
+                            <button class="controls" id="btn_save"><i class="far fa-save fas-2x"></i></button>
+                        </div>
+                        <input type="file" accept=".json, .JSON, application/json" id="weight_file"
+                            style="display: none;">
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="container">
+            <img width="75%" class="screen">
         </div>
     </div>
 </body>

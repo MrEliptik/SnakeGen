@@ -241,6 +241,8 @@ class Game {
     var snakeOrientation = this.snakes[0].getOrientation();
     var grid = this.grid;
 
+    
+
     if (snakeOrientation == "down") {
       var beginX  = 0;
       var beginY  = snakePosition[1];
@@ -360,7 +362,7 @@ class Game {
       }
     }
 
-    var totalCell = leftCone[0] + upLeftCone[0] + upRightCone[0] + rightCone[0];
+    var totalCell = (maxX-beginX) * (maxY-beginY) - 1;
 
     return  [[(leftCone[0]-leftCone[1])/totalCell, leftCone[2]/this.fruits.length],
             [(upLeftCone[0]-upLeftCone[1])/totalCell, upLeftCone[2]/this.fruits.length],
@@ -384,7 +386,7 @@ class Game {
   }
 
   // Draw the grid layout
-  drawGrid() {
+  drawGrid(color="#cccccc") {
     this.canvasCtx.beginPath();
 
     for (var i = 0; i <= this.gridRows; i++) {
@@ -403,7 +405,7 @@ class Game {
       );
     }
 
-    this.canvasCtx.strokeStyle = "black";
+    this.canvasCtx.strokeStyle = color;
     this.canvasCtx.stroke();
   }
 
@@ -493,6 +495,13 @@ class Game {
     this.drawGrid();
   }
 
+  drawSnakeInfo(){
+    this.drawGrid("#e2e2e2");
+    this.canvasCtx.font = "15px Arial";
+    this.canvasCtx.fillText("Score:" + String(this.score), 10, 50);
+  }
+
+
   // Checks if the snake object is going out of boundaries
   hitBoundaries(snakeToTest) {
     var posToTest = snakeToTest.getPosition();
@@ -539,6 +548,7 @@ class Game {
         return true;
       }
     }
+    return false;
   }
 
   // Reset the snake with the index given in parameter
@@ -636,6 +646,7 @@ class Game {
   // Update the entire game by moving one snake
   update(direction, toTranslate) {
     if (toTranslate) {
+      
       var state = this.getSnakeState();
       if (state["orientation"] == "down") {
         if (direction == "left") {
@@ -663,6 +674,7 @@ class Game {
         }
       }
     }
+
     // move the snake
     if (this.snakes[0].move(direction)) {
       //console.log("New position : " + this.snakes[0].getPosition());
@@ -673,11 +685,15 @@ class Game {
         this.hitBody(0, this.snakes[0])
       ) {
         //console.log("You died!");
-        this.score = 0;
+        //this.score = -1;
         // Reset the dead snake
         //this.resetSnake(0);
-        this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawGrid();
+        if(this.display==true) {
+          this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          //this.drawGrid(); 
+          this.drawSnakeInfo();
+        }
+        //console.log("game: hitbody");
 
         return false;
       } else {
@@ -693,8 +709,6 @@ class Game {
 
           // Update score
           this.score++;
-
-          //console.log("Fruit eaten, length : " + this.snakes[0].length);
         }
       }
 
@@ -702,10 +716,13 @@ class Game {
         // Draw the game
         this.draw();
       }
-
       // Update and return the grid
       this.upgradeGrid();
       return true;
+    }
+    else{
+      //console.log(this.snakes[0].getPosition(), "game, move false");
+      return false;
     }
   }
 }

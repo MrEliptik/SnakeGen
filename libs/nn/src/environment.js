@@ -20,18 +20,28 @@ class Environment extends Generation {
     hidden_nodes,
     output_nodes,
     tickout,
-    state
+    attemptNumber,
+    state,
+    constants,
+    weights
   ) {
-
     // Generation Constructor
-    super(populationSize,
+    super(
+      populationSize,
       selectionPerCentage,
       stepSizeParameter,
-      mutationProb)
+      mutationProb,
+      constants
+    );
 
     this.speed = speed;
-    this.tickout = tickout;
     this.state = state;
+
+    this.tickout = tickout;
+    this.tickCount = 0;
+
+    this.attemptNumber = attemptNumber; // It is the number of attempts that the snakes will play before a mutation
+    this.attemptCount = 0; // Current attempt number
 
     var visible = 0;
     this.agentsAlive = this.populationSize;
@@ -40,6 +50,12 @@ class Environment extends Generation {
 
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
+      if (weights != null) {
+        var w = weights[i];
+      } else {
+        w = null;
+      }
+
       if (visible < canvases.length) {
         this.agents.push(
           new Agent(
@@ -55,7 +71,8 @@ class Environment extends Generation {
             speed,
             input_nodes,
             hidden_nodes,
-            output_nodes
+            output_nodes,
+            w
           )
         );
         visible++;
@@ -64,9 +81,9 @@ class Environment extends Generation {
           new Agent(
             gridRows,
             gridColumns,
-            canvases[visible].height,
-            canvases[visible].width,
-            canvases[visible],
+            null,
+            null,
+            null,
             nb_snakes,
             nb_fruits,
             mode,
@@ -74,16 +91,15 @@ class Environment extends Generation {
             speed,
             input_nodes,
             hidden_nodes,
-            output_nodes
+            output_nodes,
+            w
           )
         );
       }
     }
-
-    this.tickCount = 0;
   }
 
-  getAllScores() {
+  getAllScores(){
     var scores = [];
     var that = this;
     for (let i = 0; i < this.agents.length; i++) {
@@ -92,15 +108,42 @@ class Environment extends Generation {
     return scores;
   }
 
+  getAllMeanScores() {
+    var scores = [];
+    var that = this;
+    for (let i = 0; i < this.agents.length; i++) {
+      scores.push(this.agents[i].getScoreMean());
+    }
+    return scores;
+  }
+
+  getCurrentGenMeanScore() {
+    var scores = this.getAllMeanScores();
+    var sum = scores.reduce((a, b) => a + b, 0)
+    return sum / this.populationSize;
+  }
+
   getHighestScore() {
     //notImplemented
   }
 
+  getAgentsAlive() {
+    return this.agentsAlive;
+  }
+
   getCurrGenHighestScore() {
-    if (this.currGenHighScore < Math.max(...this.getAllScores())) {
-      this.currGenHighScore = Math.max(...this.getAllScores());
+    if (this.currGenHighScore < Math.max(...this.getAllMeanScores())) {
+      this.currGenHighScore = Math.max(...this.getAllMeanScores());
     }
     return this.currGenHighScore;
+  }
+
+  getCurrScore() {
+    return Math.max(...this.getAllScores());
+  }
+
+  getCurrMeanScore() {
+    return Math.max(...this.getAllMeanScores());
   }
 
   getCurrGenID() {
@@ -128,45 +171,79 @@ class Environment extends Generation {
     // game
     this.agents.forEach(agent => {
       // if return false, agent is dead
-      if (!agent.step()) {
+      if (agent.isAlive) {
+        var ret = agent.step();
+      }
+
+      //console.log(ret);
+      if (ret === false) {
+        agent.isAlive = false;
         this.agentsAlive--;
+        //console.log(this.agentsAlive);
       }
     });
 
-    return this.agentAlive != 0;
+    return this.agentsAlive != 0;
   }
 
-  dispatchNewGenEvent(){
-    var event = new Event('newgeneration');
-
-    window.dispatchEvent(event);
-  }
-
+  /**
+   * @brief   Function that manages the learning
+   * @details The generation will play a number of attemptNumber
+   *          games that each have tickout movement max
+   */
   update() {
-    if (this.state == "play") {
+    if (this.state == "pause") {
       return;
     }
 
-    if (this.tickCount < this.tickout) {
+    // Check if the current attempt is ended
+    if (this.tickCount >= this.tickout) {
+      this.attemptCount++;
 
-      // No agents left, next gen
-      if (!this.tick()) {
+      // Store the stats of the agents
+      this.agents.forEach(agent => {
+        agent.storeStats();
+      });
+
+      // Check if the current set of attempts is ended
+      if (this.attemptCount >= this.attemptNumber) {
+        // Mutation
         this.dispatchNewGenEvent();
-        this.agents = this.createNextGen(this.agents);
+        this.agents = this.createNextGen(
+          this.agents,
+          this.tickout,
+          this.getCurrGenHighestScore()
+        );
+
+        // Reset the parameters before restart the set of attempts
+        this.attemptCount = 0;
         this.tickCount = 0;
+        this.agentsAlive = this.populationSize;
+
         // reset games
         this.agents.forEach(agent => {
           agent.resetGame();
+          agent.isAlive = true;
+          agent.tickALive = 0;
+          agent.statsScore = [];
+          agent.statsTickAlive = [];
+        });
+      } else {
+        // Start a new attempt
+        this.tickCount = 0;
+        this.agentsAlive = this.populationSize;
+
+        // reset games
+        this.agents.forEach(agent => {
+          agent.resetGame();
+          agent.isAlive = true;
+          agent.tickALive = 0;
         });
       }
-    } else {
-      this.dispatchNewGenEvent();
-      this.agents = this.createNextGen(this.agents);
-      this.tickCount = 0;
-      // reset games
-      this.agents.forEach(agent => {
-        agent.resetGame();
-      });
+    }
+
+    if (!this.tick()) {
+      this.tickCount = this.tickout;
     }
 
     var that = this;
@@ -175,5 +252,18 @@ class Environment extends Generation {
       that.tickCount += 1;
       that.update();
     }, 1000 / this.speed);
+  }
+
+  dispatchNewGenEvent() {
+    var event = new CustomEvent("newgeneration", {
+      detail: {
+        id: this.id,
+        maxScore: this.getCurrGenHighestScore(),
+        score: this.getCurrMeanScore(),
+        meanScore: this.getCurrentGenMeanScore()
+      }
+    });
+
+    window.dispatchEvent(event);
   }
 }
