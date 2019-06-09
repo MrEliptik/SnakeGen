@@ -203,13 +203,8 @@ function createEnv(weights = null) {
     nb_input_neurons,
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
-<<<<<<< HEAD
     parseInt(input_tickout.value),
     2, // attemptNumber
-=======
-    500,
-    1, // attemptNumber
->>>>>>> 6759379489f7e8144e0221e1ab28b4447998ae2d
     playPauseState,
     [1, 0.5], // Constants
     weights
