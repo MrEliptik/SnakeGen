@@ -711,7 +711,7 @@ class Game {
         this.hitBody(0, this.snakes[0])
       ) {
         //console.log("You died!");
-        //this.score = -1;
+        this.score = 0;
         // Reset the dead snake
         //this.resetSnake(0);
         if(this.display==true) {
