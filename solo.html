@@ -97,13 +97,13 @@
             const key = event.keyCode;
 
             if (key == "38") {
-                game.update(0, "up");
+                game.update("up", false);
             } else if (key == "40") {
-                game.update(0, "down");
+                game.update("down", false);
             } else if (key == "37") {
-                game.update(0, "left");
+                game.update("left", false);
             } else if (key == "39") {
-                game.update(0, "right");
+                game.update("right", false);
             }
         },
         false
@@ -125,6 +125,7 @@
         },
         false
     );
+
 </script>
 
 </html>
