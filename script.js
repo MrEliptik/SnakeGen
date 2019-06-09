@@ -52,6 +52,8 @@ var nb_output_neurons = 3;
 
 var chart_first_init = true;
 
+var timelapse_iter = 0;
+
 /* set tf backend to cpu as we would lose 
   time copying values to the GPU. Net is too
   small to take advantage of GPU compute
@@ -312,18 +314,6 @@ function askUserConfirmation(msg) {
 }
 
 function toggleChartDisplay() {
-  /*
-  var chart = document.querySelector(".training-chart-wrapper");
-  if (computedStyle(chart, "display") == "none") {
-    chart.style.display = "block";
-    btn_chart.className = "controls-chart-on";
-    if (chart_first_init) {
-      createTrainingChart();
-    }
-  } else {
-    chart.style.display = "none";
-    btn_chart.className = "controls-chart-off";
-  }*/
   var infos = document.querySelector(".training-info");
   if (computedStyle(infos, "display") == "none") {
     infos.style.display = "grid";
@@ -489,7 +479,8 @@ function report() {
         asArray[i] = data.charCodeAt(i);
       }
 
-      download(asArray.buffer, 'screen.png', 'image/png');
+      download(asArray.buffer, 'screen_' + String(timelapse_iter) + '.png', 'image/png');
+      timelapse_iter++;
     },
   });
 }
@@ -500,6 +491,7 @@ function toggleTimelapse(){
     btn_timelapse.innerHTML = html;
     btn_timelapse.className = "timelapse-off";
     isTimelapsing = false;
+    timelapse_iter = 0;
     clearInterval(timelapse_interval);
   }
   else{
@@ -507,6 +499,7 @@ function toggleTimelapse(){
     btn_timelapse.innerHTML = html;
     btn_timelapse.className = "timelapse-on";
     isTimelapsing = true;
+    timelapse_iter = 0;
     timelapse_interval = setInterval(report, 3000);
   }
 }
