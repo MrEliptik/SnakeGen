@@ -48,13 +48,11 @@ class Environment extends Generation {
     this.agents = [];
     this.currGenHighScore = 0;
 
-
     // Create the required number of Agent
     for (var i = 0; i < this.populationSize; i++) {
-      if(weights != null){
+      if (weights != null) {
         var w = weights[i];
-      }
-      else{
+      } else {
         w = null;
       }
 
@@ -114,7 +112,7 @@ class Environment extends Generation {
     //notImplemented
   }
 
-  getAgentsAlive(){
+  getAgentsAlive() {
     return this.agentsAlive;
   }
 
@@ -183,6 +181,11 @@ class Environment extends Generation {
     if (this.tickCount >= this.tickout) {
       this.attemptCount++;
 
+      // Store the stats of the agents
+      this.agents.forEach(agent => {
+        agent.storeStats();
+      });
+
       // Check if the current set of attempts is ended
       if (this.attemptCount >= this.attemptNumber) {
         // Mutation
@@ -207,11 +210,6 @@ class Environment extends Generation {
           agent.statsTickAlive = [];
         });
       } else {
-        // Store the stats of the agents
-        this.agents.forEach(agent => {
-          agent.storeStats();
-        });
-
         // Start a new attempt
         this.tickCount = 0;
         this.agentsAlive = this.populationSize;
