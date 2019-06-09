@@ -112,7 +112,9 @@ function allDefaultUI() {
 
 function createGames() {
   // First delete previously created games
-  deleteGames();
+  if(deleteGames() == -1){
+    return;
+  }
 
   if (parseInt(input_games_visible.value) > parseInt(input_population.value)) {
     if (
@@ -314,6 +316,9 @@ function deleteGames() {
       // Empty the games array object
       env = null;
     }
+    else{
+      return -1;
+    }
   }
 }
 
@@ -438,7 +443,9 @@ function loadWeightsToAgents(weights) {
     }
   }
   else {
-    deleteGames();
+    if(deleteGames() == -1){
+      return;
+    }
     resetChart();
     createEnv(weights);
   }
@@ -629,7 +636,9 @@ btn_create.addEventListener("click", () => {
 });
 
 btn_delete.addEventListener("click", () => {
-  deleteGames();
+  if(deleteGames() == -1){
+    return;
+  }
 });
 
 btn_default.addEventListener("click", () => {
