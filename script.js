@@ -204,9 +204,9 @@ function createEnv(weights = null) {
     parseInt(input_slider_neurons.value),
     nb_output_neurons,
     parseInt(input_tickout.value),
-    2, // attemptNumber
+    1, // attemptNumber
     playPauseState,
-    [1.5, 0.25, 1], // Constants
+    [1, 0, 1], // Constants
     weights
   );
   env.update(0);
