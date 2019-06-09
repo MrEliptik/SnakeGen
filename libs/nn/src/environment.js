@@ -101,7 +101,16 @@ class Environment extends Generation {
     }
   }
 
-  getAllScores() {
+  getAllScores(){
+    var scores = [];
+    var that = this;
+    for (let i = 0; i < this.agents.length; i++) {
+      scores.push(this.agents[i].getScore());
+    }
+    return scores;
+  }
+
+  getAllMeanScores() {
     var scores = [];
     var that = this;
     for (let i = 0; i < this.agents.length; i++) {
@@ -119,8 +128,8 @@ class Environment extends Generation {
   }
 
   getCurrGenHighestScore() {
-    if (this.currGenHighScore < Math.max(...this.getAllScores())) {
-      this.currGenHighScore = Math.max(...this.getAllScores());
+    if (this.currGenHighScore < Math.max(...this.getAllMeanScores())) {
+      this.currGenHighScore = Math.max(...this.getAllMeanScores());
     }
     return this.currGenHighScore;
   }
