@@ -147,7 +147,7 @@ class Game {
 
     // Snake goes away
     if (dist > this.old_dist){
-      this.distance_score-=1.5;
+      this.distance_score--;
     }
     // Snake's getting closer
     else if (dist < this.old_dist){
@@ -718,7 +718,7 @@ class Game {
         this.hitBody(0, this.snakes[0])
       ) {
         //console.log("You died!");
-        this.score = 0;
+        //this.score = 0;
         // Reset the dead snake
         //this.resetSnake(0);
         if(this.display==true) {

@@ -206,7 +206,7 @@ function createEnv(weights = null) {
     parseInt(input_tickout.value),
     2, // attemptNumber
     playPauseState,
-    [10, 0, 1], // Constants
+    [1.5, 0.25, 1], // Constants
     weights
   );
   env.update(0);
