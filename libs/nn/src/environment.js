@@ -142,6 +142,10 @@ class Environment extends Generation {
     return Math.max(...this.getAllScores());
   }
 
+  getCurrMeanScore() {
+    return Math.max(...this.getAllMeanScores());
+  }
+
   getCurrGenID() {
     return this.id;
   }
@@ -255,7 +259,7 @@ class Environment extends Generation {
       detail: {
         id: this.id,
         maxScore: this.getCurrGenHighestScore(),
-        score: this.getCurrScore(),
+        score: this.getCurrMeanScore(),
         meanScore: this.getCurrentGenMeanScore()
       }
     });
