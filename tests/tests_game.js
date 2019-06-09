@@ -50,11 +50,11 @@ console.assert(
   { error: "[ERROR] Calculated COS (x4) don't correspond" }
 );
 
-console.log(">>> Test getDistanceScore");
-console.assert(test_getDistanceScore(10, [9, 9], [0, 0]) === 1,
+console.log(">>> Test calculateEuclideanDistance");
+console.assert(test_calculateEuclideanDistance(10, [9, 9], [0, 0]) === 1,
   { error: "[ERROR] Calculated Euclidean distance doesn't match" }
 );
-console.assert(test_getDistanceScore(10, [5, 5], [9, 9]) === (Math.hypot(5-9, 5-9)/Math.hypot(9, 9)),
+console.assert(test_calculateEuclideanDistance(10, [5, 5], [9, 9]) === (Math.hypot(5-9, 5-9)/Math.hypot(9, 9)),
   { error: "[ERROR] Calculated Euclidean distance doesn't match" }
 );
 
@@ -100,13 +100,13 @@ function test_calculateConesOfSight(
   return result;
 }
 
-function test_getDistanceScore(gridSize, snakePos, fruitPos){
+function test_calculateEuclideanDistance(gridSize, snakePos, fruitPos){
   var game = new Game(gridSize, gridSize, null, null, null, 1, 1, "df", false);
   game.snakes[0].pos = snakePos;
 
   game.fruits[0].pos = fruitPos;
 
-  result = game.getDistanceScore();
+  result = game.calculateEuclideanDistance(snakePos, fruitPos);
 
   return result;
 }
