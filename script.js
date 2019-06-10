@@ -8,17 +8,27 @@ var slider_neurons = document.getElementById("slider_neurons");
 var slider_selection_rate = document.getElementById("slider_selection_rate");
 var slider_mutation_prob = document.getElementById("slider_mutation_prob");
 var slider_tickout = document.getElementById("slider_tickout");
+var slider_score = document.getElementById("slider_score");
+var slider_tickcount = document.getElementById("slider_tickcount")
+var slider_distance_score = document.getElementById("slider_distance_score");
+var slider_average = document.getElementById("slider_average");
 
 var input_population = document.getElementById("input_slider_population");
 var input_games_visible = document.getElementById("input_slider_games_visble");
 var input_grid_size = document.getElementById("input_slider_grid_size");
 var input_hidden_layers = document.getElementById("input_slider_hidden_layers");
-var input_slider_neurons = document.getElementById("input_slider_neurons");
+var input_neurons = document.getElementById("input_slider_neurons");
 var input_selection_rate = document.getElementById(
   "input_slider_selection_rate"
 );
 var input_mutation_prob = document.getElementById("input_slider_mutation_prob");
 var input_tickout = document.getElementById("input_slider_tickout");
+var input_score = document.getElementById("input_slider_score");
+var input_tickcount = document.getElementById("input_slider_tickcount");
+var input_distance_score = document.getElementById("input_slider_distance_score");
+var input_average = document.getElementById("input_slider_average");
+
+var input_interval = document.getElementById("input_interval");
 
 var r_navbar_title_sections = document.querySelectorAll('.navbar-section .title');
 
@@ -88,7 +98,11 @@ function allDefaultUI() {
     slider_neurons.value = 100;
     slider_selection_rate.value = 10;
     slider_mutation_prob.value = 0.01;
-    slider_tickout = 500;
+    slider_tickout.value = 500;
+    slider_score.value = 1.5;
+    slider_tickcount.value = 0.25;
+    slider_distance_score.value = 1.0;
+    slider_average.value = 2;
 
     resetChart();
 
@@ -104,6 +118,10 @@ function allDefaultUI() {
     slider_selection_rate.dispatchEvent(event);
     slider_mutation_prob.dispatchEvent(event);
     slider_tickout.dispatchEvent(event);
+    slider_score.dispatchEvent(event);
+    slider_tickcount.dispatchEvent(event);
+    slider_distance_score.dispatchEvent(event);
+    slider_average.dispatchEvent(event);
 
     // Set speed to '1x'
     radios_speed[0].checked = "checked";
@@ -112,7 +130,7 @@ function allDefaultUI() {
 
 function createGames() {
   // First delete previously created games
-  if(deleteGames() == -1){
+  if (deleteGames() == -1) {
     return;
   }
 
@@ -201,12 +219,12 @@ function createEnv(weights = null) {
     parseFloat(input_mutation_prob.value), // mutationProb
     speed,
     nb_input_neurons,
-    parseInt(input_slider_neurons.value),
+    parseInt(input_neurons.value),
     nb_output_neurons,
     parseInt(input_tickout.value),
-    2, // attemptNumber
+    parseInt(input_average.value), // attemptNumber
     playPauseState,
-    [1.5, 0.25, 1], // Constants
+    [parseFloat(input_score.value), parseFloat(input_tickcount.value), parseFloat(input_distance_score.value)], // Constants
     weights
   );
   env.update(0);
@@ -277,7 +295,7 @@ function updateChart(genID, valueScoreMax, valueScore, valueMeanScore) {
     } else {
       trainingChart.data.datasets[0].data.push(valueScoreMax);
       trainingChart.data.datasets[1].data.push(valueScore);
-      trainingChart.data.datasets[2].data.push(valueMeanScore); 
+      trainingChart.data.datasets[2].data.push(valueMeanScore);
     }
   } else {
     trainingChart.data.datasets[0].data.push(valueScoreMax);
@@ -316,7 +334,7 @@ function deleteGames() {
       // Empty the games array object
       env = null;
     }
-    else{
+    else {
       return -1;
     }
   }
@@ -443,7 +461,7 @@ function loadWeightsToAgents(weights) {
     }
   }
   else {
-    if(deleteGames() == -1){
+    if (deleteGames() == -1) {
       return;
     }
     resetChart();
@@ -480,7 +498,7 @@ function report() {
   html2canvas(region, {
     onrendered: function (canvas) {
       let pngUrl = canvas.toDataURL(); // png in dataURL format
-      
+
       // DISPLAY
       /*
       let img = document.querySelector(".screen");
@@ -500,8 +518,8 @@ function report() {
   });
 }
 
-function toggleTimelapse(){
-  if(isTimelapsing){
+function toggleTimelapse() {
+  if (isTimelapsing) {
     let html = `Timelapse <i class="fas fa-play"></i>`;
     btn_timelapse.innerHTML = html;
     btn_timelapse.className = "timelapse-off";
@@ -509,13 +527,13 @@ function toggleTimelapse(){
     timelapse_iter = 0;
     clearInterval(timelapse_interval);
   }
-  else{
+  else {
     let html = `Timelapse <i class="fas fa-stop"></i>`;
     btn_timelapse.innerHTML = html;
     btn_timelapse.className = "timelapse-on";
     isTimelapsing = true;
     timelapse_iter = 0;
-    timelapse_interval = setInterval(report, 3000);
+    timelapse_interval = setInterval(report, parseInt(input_interval.value)*1000);
   }
 }
 
@@ -554,8 +572,8 @@ input_hidden_layers.addEventListener("input", () => {
   slider_hidden_layers.value = input_hidden_layers.value;
 });
 
-input_slider_neurons.addEventListener("input", () => {
-  slider_neurons.value = input_slider_neurons.value;
+input_neurons.addEventListener("input", () => {
+  slider_neurons.value = input_neurons.value;
 });
 
 input_selection_rate.addEventListener("input", () => {
@@ -568,6 +586,22 @@ input_mutation_prob.addEventListener("input", () => {
 
 input_tickout.addEventListener("input", () => {
   slider_tickout.value = input_tickout.value;
+})
+
+input_score.addEventListener("input", () => {
+  slider_score.value = input_score.value;
+})
+
+input_tickcount.addEventListener("input", () => {
+  slider_tickcount.value = input_tickcount.value;
+})
+
+input_distance_score.addEventListener("input", () => {
+  slider_distance_score.value = input_distance_score.value;
+})
+
+input_average.addEventListener("input", () => {
+  slider_average.value = input_average.value;
 })
 
 slider_population.addEventListener("input", () => {
@@ -587,7 +621,7 @@ slider_hidden_layers.addEventListener("input", () => {
 });
 
 slider_neurons.addEventListener("input", () => {
-  input_slider_neurons.value = slider_neurons.value;
+  input_neurons.value = slider_neurons.value;
 });
 
 slider_selection_rate.addEventListener("input", () => {
@@ -602,12 +636,29 @@ slider_tickout.addEventListener("input", () => {
   input_tickout.value = slider_tickout.value;
 });
 
+slider_score.addEventListener("input", () => {
+  input_score.value = slider_score.value;
+});
+
+slider_tickcount.addEventListener("input", () => {
+  input_tickcount.value = slider_tickcount.value;
+});
+
+slider_distance_score.addEventListener("input", () => {
+  input_distance_score.value = slider_distance_score.value;
+});
+
+slider_average.addEventListener("input", () => {
+  input_average.value = slider_average.value;
+});
+
+
 btn_create.addEventListener("click", () => {
   createGames();
 });
 
 btn_delete.addEventListener("click", () => {
-  if(deleteGames() == -1){
+  if (deleteGames() == -1) {
     return;
   }
 });
@@ -615,16 +666,17 @@ btn_delete.addEventListener("click", () => {
 btn_default.addEventListener("click", () => {
   allDefaultUI();
 });
+/*
+btn_restart.addEventListener("click", () => {});
 
-btn_restart.addEventListener("click", () => {
+btn_stop.addEventListener("click", () => { });
 
-});
+*/
 
 btn_start.addEventListener("click", () => {
   toggleStartPause();
 });
 
-btn_stop.addEventListener("click", () => { });
 
 btn_chart.addEventListener("click", () => {
   toggleChartDisplay();
