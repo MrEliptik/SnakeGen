@@ -84,6 +84,17 @@ Click on the load button in the *neural network* section, select a JSON weight f
 
 *Note: Loading weights will only create the required amounts of agent with the saved weights. Thus, the grid size, tickout, selection rate, etc... could differ. For example, it's possible to load trained weights on a 30x30 grid in a new environment with a grid of only 10x10.*
 
+###### Loading provided weights
+
+A file *good_weights.json* is provided and contains relatively good weights. If you want to import it using the same environment it was created with, simply use the following:
+
+- Population size: 100
+- Selection rate: 10%
+- Grid size: 20x20
+- Tickout: 500
+
+*Note: Because the weights are quite good, you could increase the grid size and use a longer tickout to further train the agents.*
+
 ### Timelapse
 
 **! IMPORTANT: This might only work with Chrome !**  
