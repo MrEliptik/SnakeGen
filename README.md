@@ -2,6 +2,10 @@
 
 Head to this [website](http://projects.victormeunier.com/snakegen/index.html) to test it live!
 
+<p align="center">
+    <img src="ressources/snakegen_demo_maxSpeed.gif" alt="snakegen demo gif"/>
+</p>
+
 ## What is it ?
 
 SnakeGen is an implementation of the basic genetic algorithm applied to neural networks. An **environment** is created and will evolve multiple **generations**. Each of them has a certain amounts of **agents**, that have their owns genes (a neural network) to play snake.
