@@ -74,11 +74,15 @@ This is handy to stop and resume training later on, or to share your weights wit
 
 Simply hit the save button in the *Neural network* section. All of your agent's neural net's weights are saved in a JSON file.
 
+*Note: Saving weights only save the neural nets weights and number, thus all other population information will be lost (grid size, tickout, etc..).*
+
 #### Loading 
 
 ![Snakegen demo loading weights](ressources/snakegen_load_weights.gif)
 
 Click on the load button in the *neural network* section, select a JSON weight file on your computer and accept to create new agents based on the weights. The weights are read and used to create the same number of agents that were when you saved the file.
+
+*Note: Loading weights will only create the required amounts of agent with the saved weights. Thus, the grid size, tickout, selection rate, etc... could differ. For example, it's possible to load trained weights on a 30x30 grid in a new environment with a grid of only 10x10.*
 
 ### Timelapse
 
