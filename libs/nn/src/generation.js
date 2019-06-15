@@ -33,16 +33,11 @@ class Generation {
    */
   calculateQfit(agent, maxScore, tickMax, maxDistanceScore) {
     //console.log(agent,maxScore,tickMax)
-    if(agent.getScoreMean() == 0){
-      return 0;
-    }
-    else{
-      return (
-        (this.constants[0] * agent.getScoreMean()) / maxScore +
-        (this.constants[1] * agent.getTickAliveMean()) / tickMax + 
-        this.constants[2] * agent.getDistanceScoreMean() / maxDistanceScore
-      );
-    }
+    return (
+      (this.constants[0] * agent.getScoreMean()) / maxScore +
+      (this.constants[1] * agent.getTickAliveMean()) / tickMax +
+      this.constants[2] * agent.getDistanceScoreMean() / maxDistanceScore
+    );
   }
 
   randomG(v) {
@@ -333,9 +328,9 @@ class Generation {
       // Select the first parent
       selected[0] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick, maxDistanceScore);
       // Ensure the seoncd parent is different
-      do{
+      do {
         selected[1] = this.rouletteSelection(selectedAgents, maxScore, numberOfTick, maxDistanceScore);
-      }while(JSON.stringify(selected[1]) === JSON.stringify(selected[0]));
+      } while (JSON.stringify(selected[1]) === JSON.stringify(selected[0]));
 
       /* Crossover == create a children from two randoms parents 
         from the selectedAgents */
