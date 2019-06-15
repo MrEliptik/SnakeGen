@@ -34,3 +34,11 @@ On the same principle, 4 more inputs will have the fruit presence in the 4 previ
 ##### Outputs
 
 The outputs are pretty straight forward, again we use the snake's perspective. The agent can go forward, left and right. Going backward is not possible for many reason, but basically because it's not useful and would result in the snake dying instantly when its size is at least two.
+
+#### Snake's performance
+
+First of all, we tried for a long time to judge the snakes only at the end of their game. We would evaluate their score and the time they stay alive at the end of their game. The problem is that it's like trying to monitor the progress of someone with the eyes banded during their training.. It's not very effective ! And that is quickly showing up in the snakes' behavior. They eventually start to go in circle forever. That assure them to stay alive. Because we also monitor the score, they will eventually start by eating a few fruits, but will go back to circles. 
+
+To solve that, we need a way to monitor them continuously. We will still not interfer while they are playing, but we'll evaluate each of their move. At each step, we calculate the euclidean distance between the head and the fruit. If the snake moves away it loses distance point, and the opposite happens if it moves towards the fruit. By doing that, we no longer judge the snake only at the end, we have a vision of its bevahiour through the whole training. It makes it easier to select snakes that tend to go towards the fruit.
+
+In general in reinforcement learning, how you choose to evaluate your agent is key. Keep in mind that your agents will evolve to be better at what you evaluate them.
