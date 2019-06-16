@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 a {
@@ -10,6 +10,16 @@ a {
 h2 {
   margin: 2px 0px 10px 0px;
   color: #fdfdfd;
+}
+
+.text-wrapper h2 {
+  margin: 30px 0px 20px 0px;
+  color: #1f1f1f;
+}
+
+h3 {
+  margin-top: 30px;
+  color: #4d4d4d;
 }
 
 ul {
@@ -83,8 +93,9 @@ label{
 .text-wrapper{
   max-width: 1000px;
   display: inline-block;
-  width: 100%;
+  width: 90%;
   text-align: justify;
+  font-family: 'Roboto', sans-serif;
 }
 
 .controls{
