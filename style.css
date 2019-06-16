@@ -26,6 +26,14 @@ ul {
   list-style: none;
 }
 
+.text-wrapper ul {
+  color: #363636;
+}
+
+.text-wrapper li {
+  margin: 5px 0px 15px 0px;
+}
+
 button {
   background-color: #363636;
   border: none;
