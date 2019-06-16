@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -45,7 +46,7 @@
                     own genes (a neural network) to play snake.
                 </p>
 
-                <h2 style="color:black">Goal</h2>
+                <h2>Goal</h2>
 
                 <p>
                     With this project we are first trying to have a better understanding of 
@@ -62,7 +63,7 @@
                     environment and objective. 
                 </p>
 
-                <h2 style="color:black">Inputs / Outputs</h2>
+                <h2>Inputs / Outputs</h2>
 
                 <p>
                     The agent is the snake, and uses multiple inputs to make its decision.
@@ -116,16 +117,18 @@
                     when its size is at least two.
                 </p>
                 
-                <h2 style="color:black">Genetic algorithm</h2>
+                <h2>Genetic algorithm</h2>
                 
-                There are a lot of implementation of the idea of genetic algorithms. We went with something simple, that mimics what we can observe in nature. The algorithm is as follows:
+                There are a lot of implementation of the idea of genetic algorithms. We went with something simple,
+                that mimics what we can observe in nature. The algorithm is as follows:
                 
                 <ul>
                     <li>
                         1. Create an initial generation of agents with random genes (random weights in the neural net)
                     </li>
                     <li>
-                        2. Let the agents play or train on the task you assigned and keep track of how they're doing (their **fitness**)
+                        2. Let the agents play or train on the task you assigned and keep track of how they're doing 
+                        (their **fitness**)
                     </li>
                     <li>
                         3. Judge the agents based on their **fitness** and class them in descending order
@@ -146,6 +149,26 @@
                         8. Goes to 2 and repeat until goal is reached
                     </li>
                 </ul>
+
+                <h3>Selection</h3>
+                <p>
+                    The selection process is quite important as the selected agents will breed the entire 
+                    next generation. First of all, we selected a low selection percentage. From 6 to 10%
+                    should yield good results. 
+                </p>
+                <p>
+                    Secondly, we introduced roulette-wheel selection. To understand what it is, simply picture
+                    a wheel, where each part is bigger in proportion of the agent's score. The best agents will 
+                    have a bigger section of the wheel, and thus a higher chance of being a parent. This method
+                    ensures that the best parents will make more children, thus spreading better genes to future
+                    generations.
+                </p>
+                <p>
+                    We also chose to use elitism. This means the selected parents will be passed to the next generation
+                    without any genes modification. Because they are the best, they should have the chance to perform
+                    again without restriction. This can help to create better invidividuals faster and avoid losing potentially
+                    good genes.
+                </p>
         
             </div>
         </div>
