@@ -4,10 +4,30 @@
 
 ### Keypoints
 
-- Measuring fitness correctly is hard
+- Correctly measuring fitness is hard
 - Evolution will always take advantage of the flaws of the game, or the scoring system
 - Evolution is strongly dependant on randomness (especially at the beginning)
   - There are ways to counter that though
+
+### Layout
+
+1. Introduction
+    - Origin of the project
+    - What's the goal
+2. Introduce GA
+    - Concept
+    - Selection
+    - Breeding / Crossover
+    - Mutation
+3. Designing the agent
+    - Neural net (inputs, hidden layers, outputs)
+4. Judging fitness intelligently
+    - Judging only the score
+    - Adding death
+    - Adding distance score
+5. Conclusion
+    - Hard to achieve good result but super fun
+    - Evolution comming back (see weightless NN paper)
 
 ### Redacted
 
