@@ -25,6 +25,22 @@ class NeuralNetwork {
         this.output_nodes
       ]);
     }
+
+    this.input_index = [];
+    for(var i=0; i<input_nodes; i++) {
+      this.input_index[i] = [];
+        for(var j=0; j<hidden_nodes; j++) {
+          this.input_index[i][j] = 0;
+        }
+    }
+
+    this.output_index = [];
+    for(var i=0; i<hidden_nodes; i++) {
+      this.output_index[i] = [];
+        for(var j=0; j<output_nodes; j++) {
+          this.output_index[i][j] = 0;
+        }
+    }
   }
 
   /**

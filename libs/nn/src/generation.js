@@ -195,13 +195,11 @@ class Generation {
    * @param   agent   Agent to mutate
    */
   mutate(agent) {
-    var mutationSSP = this.gaussianPertubation(0, 0, this.stepSizeParameter);
-    agent.mutationIntensity += this.gaussianPertubation(0, 0, mutationSSP);
-
+    
     // Weight matrix W1 mutation
     var input_weights = this.matrixMutation(
       agent.nn.input_weights.arraySync(),
-      agent.mutationIntensity,
+      agent.nn.input_index,
       this.mutationProb
     );
     agent.nn.input_weights = tf.tensor(input_weights);
@@ -209,7 +207,7 @@ class Generation {
     // Weight matrix W2 mutation
     var output_weights = this.matrixMutation(
       agent.nn.output_weights.arraySync(),
-      agent.mutationIntensity,
+      agent.nn.output_index,
       this.mutationProb
     );
     agent.nn.output_weights = tf.tensor(output_weights);
@@ -218,16 +216,31 @@ class Generation {
   /**
    * Mutates the weight matrix using the Stochastic
    * mutation policy
-   * @param   matrix            Weight matrix
-   * @param   mutationIntensity Mutation intensity to apply
-   * @param   mutationProb      Probability to apply the mutation
+   * @param   matrix         Weight matrix
+   * @param   index          Weight's indexes matrix
+   * @param   mutationProb   Probability to apply the mutation
    */
-  matrixMutation(matrix, mutationIntensity, mutationProb) {
+  matrixMutation(matrix, index, mutationProb) {
     for (var i = 0; i < matrix.length; i++) {
       for (var j = 0; j < matrix[0].length; j++) {
         if (Math.random() <= mutationProb) {
-          //matrix[i][j] += this.gaussianPertubation(0, mutationIntensity);
-          matrix[i][j] += this.randomG(3);
+          
+          // Get the variance of the Gaussian distribution
+          var variance = this.sigmoid(index[i][j], 50, 200);
+          
+          // Compute the X limits that the gaussian distribution is higher
+          // than 0.001
+          var lim = this.gaussianLimit(variance);
+
+          // Get a random value in [-lim, lim]
+          var randX = Math.random() * 2 * lim - lim;
+
+          // Weight mutation
+          matrix[i][j] += Math.sign(randX) * 
+            this.gaussianDistribution(randX, 0, variance);
+          
+          // Increase the index to reduce the next mutation
+          index[i][j] += 1
         }
       }
     }

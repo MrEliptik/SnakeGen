@@ -155,10 +155,10 @@ plt.legend()
 
 plt.legend()
 
-plot_mutation(limit = 200, limitMutation = 200, method = "ramp")
-plot_mutation(limit = 200, limitMutation = 200, method = "sigmoid")
-plot_mutation(limit = 200, limitMutation = 200, method = "tanh")
-plot_mutation(limit = 200, limitMutation = 200, method = "atan")
+#plot_mutation(limit = 200, limitMutation = 200, method = "ramp")
+plot_mutation(limit = 50, limitMutation = 200, method = "sigmoid")
+#plot_mutation(limit = 200, limitMutation = 200, method = "tanh")
+#plot_mutation(limit = 200, limitMutation = 200, method = "atan")
 
 """
 fig = plt.figure()
