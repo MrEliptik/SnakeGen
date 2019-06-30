@@ -243,7 +243,7 @@ class Generation {
    * @returns gaussian pertubation
    */
   gaussianDistribution(x, mu, variance) {
-    sigma = Math.sqrt(variance)
+    var sigma = Math.sqrt(variance)
     return 1/(sigma*Math.sqrt(2*Math.PI)) * Math.exp(-1/2*Math.pow((x-mu)/sigma,2));
   }
 

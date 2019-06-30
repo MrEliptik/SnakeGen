@@ -1,10 +1,52 @@
 // RUN TESTS WHEN LAUNCHING
 console.log("[INFO] Testing generation started..");
 
-console.log(">>> Test gaussianPerturbation");
-// TODO
-console.assert(false, { error: "[ERROR] " });
-console.assert(false, { error: "[ERROR] " });
+console.log(">>> Test gaussianDistribution");
+// Variance test
+console.assert(test_gaussianDistribution(
+  [
+    [0, 0, 0.16],
+    [0, 0, 0.2],
+    [0, 0, 1],
+    [0, 0, 5],
+    [0, 0, 100]
+  ],
+  [0.997355701,
+  0.892062058,
+  0.398942280,
+  0.178412412,
+  0.039894228]
+), { error: "[Variance tests]" });
+// X test
+console.assert(test_gaussianDistribution(
+  [
+    [0.005, 0, 0.16],
+    [0.004, 0, 0.2],
+    [-2.5, 0, 1],
+    [-4.45, 0, 5],
+    [15793, 0, 100]
+  ],
+  [0.997277786,
+  0.892026376,
+  0.017528300,
+  0.024627108,
+  0]
+), { error: "[X tests]" });
+// X test
+console.assert(test_gaussianDistribution(
+  [
+    [0, 0, 5],
+    [0, 0.01, 5],
+    [10, 10, 5],
+    [8.5, 5, 5],
+    [-2.4, 5, 5]
+  ],
+  [0.178412412,
+  0.178410628,
+  0.178412412,
+  0.052410020,
+  0.000746842]
+), { error: "[mu tests]" });
 
 console.log(">>> Test matrixMutation");
 
@@ -162,9 +204,6 @@ function test_crossOver() { }
 
 /* SELECTION TEST */
 function test_selection() { }
-
-/* GAUSSIAN PERTURBATION TEST */
-function test_gaussianPerturbation() { }
 
 /* MATRIX MUTATION TEST */
 function test_matrixMutation(matrix, mutationIntensity, mutationProb) {
@@ -410,4 +449,27 @@ function test_crossOver(type) {
   }
 
   return JSON.stringify(res1) === JSON.stringify(res2);
+}
+
+/* GAUSSIAN DISTRIBUTION TEST */
+function test_gaussianDistribution(parameters, results) {
+  
+  // Object creation
+  var generation = new Generation(0, 10, 5, 10, [1, 0.2]);
+
+  for(var i = 0; i < parameters.length; i++) {
+    
+    var value = Math.round(generation.gaussianDistribution(
+      parameters[i][0],
+      parameters[i][1],
+      parameters[i][2]) * 1000000000) / 1000000000
+
+    //console.log(value);
+
+    if(results[i] != value ) {
+      return false;
+    }
+  }
+
+  return true;
 }
