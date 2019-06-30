@@ -236,10 +236,10 @@ class Generation {
   }
 
   /**
-   * Return the value of the Gaussian Distribution at x=0
+   * Return the value of the Gaussian Distribution
    * @param   x     x value
    * @param   mu    expected value
-   * @param   sigma standard deviation
+   * @param   variance variance
    * @returns gaussian pertubation
    */
   gaussianDistribution(x, mu, variance) {
@@ -247,6 +247,12 @@ class Generation {
     return 1/(sigma*Math.sqrt(2*Math.PI)) * Math.exp(-1/2*Math.pow((x-mu)/sigma,2));
   }
 
+   /**
+   * Return the limit of the Gaussian Distribution. The limit is the x value 
+   * from where the guassian is under 0.001
+   * @param   variance variance
+   * @returns gaussian limit
+   */
   gaussianLimit(variance) {
     var yLimit = 0.001;
     return Math.abs(Math.sqrt(-1 * variance * (2 * Math.log(Y_limit) + 
