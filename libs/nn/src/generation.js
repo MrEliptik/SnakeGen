@@ -255,7 +255,7 @@ class Generation {
    */
   gaussianLimit(variance) {
     var yLimit = 0.001;
-    return Math.abs(Math.sqrt(-1 * variance * (2 * Math.log(Y_limit) + 
+    return Math.abs(Math.sqrt(-1 * variance * (2 * Math.log(yLimit) + 
       Math.log(2 * Math.PI * variance))))
   }
 

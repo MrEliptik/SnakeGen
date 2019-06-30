@@ -48,6 +48,21 @@ console.assert(test_gaussianDistribution(
   0.000746842]
 ), { error: "[mu tests]" });
 
+console.log(">>> Test gaussianLimit");
+// Variance test
+console.assert(test_gaussianLimit(
+  [0.16,
+  0.2,
+  1,
+  5,
+  100],
+  [1.486483903,
+  1.648458153,
+  3.460871782,
+  7.200067909,
+  27.152280393]
+), { error: "[Limit tests]" });
+
 console.log(">>> Test matrixMutation");
 
 console.assert(
@@ -463,6 +478,27 @@ function test_gaussianDistribution(parameters, results) {
       parameters[i][0],
       parameters[i][1],
       parameters[i][2]) * 1000000000) / 1000000000
+
+    //console.log(value);
+
+    if(results[i] != value ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/* GAUSSIAN LIMT TEST */
+function test_gaussianLimit(parameters, results) {
+  
+  // Object creation
+  var generation = new Generation(0, 10, 5, 10, [1, 0.2]);
+
+  for(var i = 0; i < parameters.length; i++) {
+    
+    var value = Math.round(generation.gaussianLimit(
+      parameters[i]) * 1000000000) / 1000000000
 
     //console.log(value);
 
