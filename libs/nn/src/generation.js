@@ -243,8 +243,14 @@ class Generation {
    * @returns gaussian pertubation
    */
   gaussianDistribution(x, mu, variance) {
-    var sigma = Math.sqrt(variance)
+    var sigma = Math.sqrt(variance);
     return 1/(sigma*Math.sqrt(2*Math.PI)) * Math.exp(-1/2*Math.pow((x-mu)/sigma,2));
+  }
+
+  gaussianLimit(variance) {
+    var yLimit = 0.001;
+    return Math.abs(Math.sqrt(-1 * variance * (2 * Math.log(Y_limit) + 
+      Math.log(2 * Math.PI * variance))))
   }
 
   /**
