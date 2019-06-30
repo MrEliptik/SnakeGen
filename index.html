@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>🐍 SnakeGen</title>
+    <title>SnakeGen</title>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
@@ -14,6 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -59,13 +60,17 @@
                         <button class="danger" id="btn_delete">Delete</button>
                         <button class="warning" id="btn_default">Reset</button>
                         <div>
-                            <button class="controls" id="btn_restart"><i class="fas fa-undo-alt"></i></button>
+                            <!--<button class="controls" id="btn_restart"><i class="fas fa-undo-alt"></i></button>-->
                             <button class="controls" id="btn_start"><i class="fas fa-play"></i></button>
-                            <button class="controls" id="btn_stop"><i class="fas fa-stop"></i></button>
+                            <!--<button class="controls" id="btn_stop"><i class="fas fa-stop"></i></button>-->
                             <button class="controls-chart-off" id="btn_chart"><i class="fas fa-chart-line"></i></button>
                             <!--<button class="controls" id="btn_stop"><i class="fas fa-pause"></i></button>-->
+                        </div>
+                        <div>
                             <button class="timelapse-off" id="btn_timelapse">Timelapse <i
                                     class="fas fa-play"></i></button>
+                            <label for="input_interval"><i class="fas fa-stopwatch"></i> Interval (s)</label>
+                            <input class="slider-value" type="text" id="input_interval" value="2">
                         </div>
                         <div>
                             <label for="speed"><i class="fas fa-tachometer-alt"></i></label>
@@ -88,17 +93,10 @@
                             <input class="slider-value" type="text" id="input_slider_population" value="50">
                         </div>
                         <div class="slider">
-                            <label for="slider_selection_rate"><i class="fas fa-percent"></i> Selection rate</label>
-                            <input type="range" min="1" max="100" value="10" class="slider" id="slider_selection_rate"
-                                name="slider_selection_rate">
-                            <input class="slider-value" type="text" id="input_slider_selection_rate" value="10">
-                        </div>
-                        <div class="slider">
-                            <label for="slider_mutation_prob"><i class="fas fa-prescription-bottle"></i> Mutation
-                                probability</label>
-                            <input type="range" min=".00" max="1.00" value="0.01" step="0.01" class="slider"
-                                id="slider_mutation_prob" name="slider_mutation_prob">
-                            <input class="slider-value" type="text" id="input_slider_mutation_prob" value="0.01">
+                            <label for="slider_average"><i class="far fa-chart-bar"></i> Average game</label>
+                            <input type="range" min="1" max="10" value="2" class="slider" id="slider_average"
+                                name="slider_average">
+                            <input class="slider-value" type="text" id="input_slider_average" value="2">
                         </div>
                         <div class="slider">
                             <label for="slider_grid_size"><i class="fas fa-th"></i> Grid size</label>
@@ -108,15 +106,54 @@
                         </div>
                         <div class="slider">
                             <label for="slider_tickout"><i class="fas fa-hourglass-half"></i> Tickout</label>
-                            <input type="range" min="100" max="5000" value="500" step="100" class="slider" id="slider_tickout"
-                                name="slider_tickout">
+                            <input type="range" min="100" max="5000" value="500" step="100" class="slider"
+                                id="slider_tickout" name="slider_tickout">
                             <input class="slider-value" type="text" id="input_slider_tickout" value="500">
                         </div>
                         <div class="slider">
-                            <label for="slider_games_visible"><i class="fas fa-eye"></i> Number of visible games</label>
+                            <label for="slider_games_visible"><i class="fas fa-eye"></i> Visible games</label>
                             <input type="range" min="1" max="100" value="50" class="slider" id="slider_games_visible"
                                 name="slider_games_visible">
                             <input class="slider-value" type="text" id="input_slider_games_visble" value="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="navbar-section">
+                    <div class="title">
+                        <h2>Genetic Algorithm -</h2>
+                    </div>
+                    <div class="navbar-content">
+                        <div class="slider">
+                            <label for="slider_selection_rate"><i class="fas fa-percent"></i> Selection rate</label>
+                            <input type="range" min="1" max="100" value="10" class="slider" id="slider_selection_rate"
+                                name="slider_selection_rate">
+                            <input class="slider-value" type="text" id="input_slider_selection_rate" value="10">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_mutation_prob"><i class="fas fa-dna"></i> Mutation
+                                probability</label>
+                            <input type="range" min=".00" max="1.00" value="0.01" step="0.01" class="slider"
+                                id="slider_mutation_prob" name="slider_mutation_prob">
+                            <input class="slider-value" type="text" id="input_slider_mutation_prob" value="0.01">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_score"><i class="fas fa-clipboard-list"></i> Score factor</label>
+                            <input type="range" min=".00" max="10.0" value="1.25" step="0.01" class="slider"
+                                id="slider_score" name="slider_score">
+                            <input class="slider-value" type="text" id="input_slider_score" value="1.25">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_tickcount"><i class="fas fa-clipboard-list"></i> Tickcount factor</label>
+                            <input type="range" min=".00" max="10.0" value="0.25" step="0.01" class="slider"
+                                id="slider_tickcount" name="slider_tickcount">
+                            <input class="slider-value" type="text" id="input_slider_tickcount" value="0.25">
+                        </div>
+                        <div class="slider">
+                            <label for="slider_distance_score"><i class="fas fa-clipboard-list"></i> Distance
+                                factor</label>
+                            <input type="range" min=".00" max="10.0" value="1.0" step="0.01" class="slider"
+                                id="slider_distance_score" name="slider_distance_score">
+                            <input class="slider-value" type="text" id="input_slider_distance_score" value="1.0">
                         </div>
                     </div>
                 </div>
@@ -132,7 +169,7 @@
                             <input class="slider-value" type="text" id="input_slider_hidden_layers" value="1">
                         </div>
                         <div class="slider">
-                            <label for="slider_neurons"><i class="fas fa-genderless"></i> Neurons in hidden
+                            <label for="slider_neurons"><i class="fas fa-dot-circle"></i> Neurons in hidden
                                 layer</label>
                             <input type="range" min="1" max="1000" value="100" class="slider" id="slider_neurons"
                                 name="slider_neurons">

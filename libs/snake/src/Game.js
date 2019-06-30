@@ -27,6 +27,10 @@ class Game {
     this.gridRows = parseInt(gridRows);
     this.gridColumns = parseInt(gridColumns);
 
+    // -1 to have proper scaling. When calculating hypot between snake and
+    // fruit we are using index (0 to 9) 
+    this.maxGridDistance = Math.hypot(this.gridRows-1, this.gridColumns-1);
+
     var row = this.gridRows;
     var col = this.gridColumns;
 
@@ -94,6 +98,9 @@ class Game {
 
     this.score = 0;
 
+    this.distance_score = 0;
+    this.old_dist = 0;
+
     // Choose the food position
     var fruit_x = Math.floor(Math.random() * (gridColumns - 1 - 0 + 1)) + 0;
     var fruit_y = Math.floor(Math.random() * (gridRows - 1 - 0 + 1)) + 0;
@@ -122,6 +129,32 @@ class Game {
 
   getGrid() {
     return this.grid;
+  }
+
+  /**
+   * Returns the euclidean distance between point a and b (ax, ay) (bx, by)
+   * @returns {distance} - The distance normalized by the max grid distance
+   */
+  calculateEuclideanDistance(a, b){
+    return Math.hypot(b[0]-a[0], b[1]-a[1])/this.maxGridDistance;
+  }
+  
+  getDistanceScore(){
+    var snakePos = this.snakes[0].getPosition();
+    var fruitPos = this.fruits[0].getPosition();
+
+    var dist = this.calculateEuclideanDistance(snakePos, fruitPos);
+
+    // Snake goes away
+    if (dist > this.old_dist){
+      this.distance_score--;
+    }
+    // Snake's getting closer
+    else if (dist < this.old_dist){
+      this.distance_score++;
+    }
+    this.old_dist = dist;
+    return this.distance_score;
   }
 
   /**
@@ -685,7 +718,7 @@ class Game {
         this.hitBody(0, this.snakes[0])
       ) {
         //console.log("You died!");
-        //this.score = -1;
+        //this.score = 0;
         // Reset the dead snake
         //this.resetSnake(0);
         if(this.display==true) {

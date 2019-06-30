@@ -14,7 +14,6 @@ console.assert(
 );
 
 console.log(">>> Test calculateConesOfSight");
-// TODO
 console.assert(
   JSON.stringify(test_calculateConesOfSight(10, [5, 5], "up", [5, 0])) ===
     JSON.stringify([
@@ -49,6 +48,14 @@ console.assert(
       [(14 - 3) / 49, 0]
     ]),
   { error: "[ERROR] Calculated COS (x4) don't correspond" }
+);
+
+console.log(">>> Test calculateEuclideanDistance");
+console.assert(test_calculateEuclideanDistance(10, [9, 9], [0, 0]) === 1,
+  { error: "[ERROR] Calculated Euclidean distance doesn't match" }
+);
+console.assert(test_calculateEuclideanDistance(10, [5, 5], [9, 9]) === (Math.hypot(5-9, 5-9)/Math.hypot(9, 9)),
+  { error: "[ERROR] Calculated Euclidean distance doesn't match" }
 );
 
 console.log("[INFO] Testing game done!");
@@ -89,6 +96,17 @@ function test_calculateConesOfSight(
   result = game.calculateConesOfSight();
 
   //console.log(result);
+
+  return result;
+}
+
+function test_calculateEuclideanDistance(gridSize, snakePos, fruitPos){
+  var game = new Game(gridSize, gridSize, null, null, null, 1, 1, "df", false);
+  game.snakes[0].pos = snakePos;
+
+  game.fruits[0].pos = fruitPos;
+
+  result = game.calculateEuclideanDistance(snakePos, fruitPos);
 
   return result;
 }

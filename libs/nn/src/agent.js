@@ -27,12 +27,15 @@ class Agent {
 
     this.mutationIntensity = 0;
 
+    this.distanceScore = 0;
+
     this.tickAlive = 0;
     this.isAlive = true;
 
     this.statsScore = [];
     this.statsTickAlive = [];
-      
+    this.statsDistanceScore = [];
+
     this.nn = new NeuralNetwork(
       input_nodes,
       hidden_nodes,
@@ -88,6 +91,7 @@ class Agent {
 
     if (ret) {
       this.tickAlive++;
+      this.distanceScore = this.game.getDistanceScore();
     }
 
     return ret;
@@ -121,9 +125,20 @@ class Agent {
     return sum / this.statsTickAlive.length;
   }
 
+  getDistanceScoreMean() {
+    var sum = 0;
+
+    for (var i = 0; i < this.statsDistanceScore.length; i++) {
+      sum += this.statsDistanceScore[i];
+    }
+
+    return sum / this.statsDistanceScore.length;
+  }
+
   storeStats() {
     this.statsScore.push(this.game.score);
     this.statsTickAlive.push(this.tickAlive);
+    this.statsDistanceScore.push(this.distanceScore);
   }
 
   resetGame() {

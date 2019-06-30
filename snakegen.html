@@ -1,57 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>🐍 SnakeGen</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-</head>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
+  <body>
     <div class="wrapper">
-        <div class="title">
-            <h1>🐍 SnakeGen</h1>
-        </div>
-        <ul class="top-navbar">
-            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="solo.html"><i class="fas fa-play"></i> Play snake</a></li>
-            <li><a href="snakegen.html">🐍 SnakeGen?</a></li>
-            <li><a target="_blank" href="https://github.com/MrEliptik/SnakeGen"><i class="fab fa-github"></i> GitHub</a>
+      <ul class="top-navbar">
+        <li>
+          <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li>
+          <a href="solo.html"><i class="fas fa-play"></i> Play snake</a>
+        </li>
+        <li><a href="snakegen.html">🐍 SnakeGen?</a></li>
+        <li>
+          <a target="_blank" href="https://github.com/MrEliptik/SnakeGen"
+            ><i class="fab fa-github"></i> GitHub</a
+          >
+        </li>
+        <li>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+        </li>
+      </ul>
+      <div class="content-text">
+        <div class="text-wrapper">
+          <h1>What is SnakeGen?</h1>
+
+          <p align="center">
+            <img
+              src="ressources/snakegen_demo_maxSpeed.gif"
+              alt="snakegen demo gif"
+            />
+          </p>
+
+          <p>
+            SnakeGen is a neuro-evolution of the snake game, built from the
+            ground up, with just html, css and js. A basic genetic algorithm is
+            used to evolve a neural network. Tensorflow.js is used to simplify
+            the Neural Network definition, but it could easily be replaced as
+            the architecture is fairly simple.
+          </p>
+
+          <p>
+            An environment is created and will evolve multiple generations. Each
+            of them has a certain amounts of agents, that have their own genes
+            (a neural network) to play snake.
+          </p>
+
+          <h2>Goal</h2>
+
+          <p>
+            With this project we are first trying to have a better understanding
+            of genetic algorithms (GA) and how they can be used to find the
+            optimal weights of a neural network on a given task. The task here
+            is the game snake. The goal for the agent, is to maximize its score
+            (number of fruit eaten).
+          </p>
+          <p>
+            The interesting about GA is the ability of letting agents evolve to
+            find themselves the best way to resolve a problem. In our approach,
+            we are trying to be "as real" as possible, by giving kind of a
+            realistic vision of the snake's environment to the agent. We want to
+            give the agent the most unbiased view possible, in hope that it's
+            going to be able to create a good internal representation of its
+            environment and objective.
+          </p>
+
+          <h2>Inputs / Outputs</h2>
+
+          <p>
+            The agent is the snake, and uses multiple inputs to make its
+            decision.
+          </p>
+
+          <p align="center">
+            <img
+              src="/docs/snake_lines_of_sight_4zones.png"
+              alt="snake inputs"
+              width="400"
+            />
+          </p>
+          <p>
+            When you want an agent to play a human game, you have to think about
+            what vision of the game your agent will have. Us human, see the
+            entire grid of the game at once, with the position of our snake and
+            the food. That could be a way for our agent to see the world, each
+            cell of the grid or even every pixel could be an input. 
+          </p>
+
+          <p>
+            In our case,
+            we chose the second opton, which is to take the snake's perspective.
+            This case is closer to what a robot would see. We wanted to give it
+            a more realistic view and that's why we went with a combination of
+            "lines of sight", "cones of sight" and a sens for fruit presence.
+            That gives us a total of 11 inputs (3 lines of sight, 4 cones of
+            sight, 4 cones of fruit presence). Let us explain you what they are
+            precisely.
+          </p>
+
+          <h3>Lines of sight</h3>
+          <p>
+            From the snake's head, 3 "beam" will travel to its left, its right
+            and forward, giving him a sense of the distance between its head and
+            an eventual obstacle. These lines of sight are basically infinite in
+            our case, but they could easily be limited, to simulate a more real
+            environment.
+          </p>
+
+          <h3>Cones of sight / Fruit presence</h3>
+          <p>
+            To give our agent a more "realistic view", we wanted to add some
+            kind of "continous" vision of the world. We added what we call
+            "cones of sight" which are basically 4 cones. The inputs are simply
+            the area of each cones. On the same principle, 4 more inputs will
+            have the fruit presence in the 4 previously defined cones. 
+          </p>
+          <p>
+            By having 4 separate inputs for the fruit presence we give the agent the
+            ability to prioritze what is important for him. The cones of sight
+            could be used to determine the best path (where there are more space
+            to move) while the fruit presence input give the agent a general
+            direction towards the goal.
+          </p>
+
+          <h3>Outputs</h3>
+
+          <p>
+            The outputs are pretty straight forward, again we use the snake's
+            perspective. The agent can go forward, left and right. Going
+            backward is not possible for multiple reasons, but basically because
+            it's not useful and would result in the snake dying instantly when
+            its size is at least two.
+          </p>
+
+          <h2>Genetic algorithm</h2>
+
+          There are a lot of implementation of the idea of genetic algorithms.
+          We went with something simple, that mimics what we can observe in
+          nature. The algorithm is as follows:
+
+          <ul>
+            <li>
+              1. Create an initial generation of agents with random genes
+              (random weights in the neural net)
             </li>
-            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-        </ul>
-        <div class="content-text">
-            <div class="text-wrapper">
-                <h1>What is SnakeGen?</h1>
-                <p>
-                    SnakeGen is a neuro-evolution of the snake game,
-                    built from the ground up, with just html, css and js.
-                    Tensorflow.js is used to simplify the Neural Network
-                    definition, but it could easily be replaced as the
-                    architecture is fairly simple.
-                </p>
+            <li>
+              2. Let the agents play or train on the task you assigned and keep
+              track of how they're doing (their **fitness**)
+            </li>
+            <li>
+              3. Judge the agents based on their **fitness** and class them in
+              descending order
+            </li>
+            <li>
+              4. Select X% of the fittest agents
+            </li>
+            <li>
+              5. Use these selected agents to breed a new population (create
+              offsprings)
+            </li>
+            <li>
+              6. (Optional) Keep the selected agents untouched for the next
+              generation (elitism)
+            </li>
+            <li>
+              7. Randomly mutate X genes of Y amount of the newly bred agents
+            </li>
+            <li>
+              8. Goes to 2 and repeat until goal is reached
+            </li>
+          </ul>
 
-                <p>
-                    The goal with this project is to learn more about genetic
-                    algorithm, and how they can be used to modify a neural network
-                    in order to make the agent "learn".
-                </p>
+          <h3>Selection</h3>
+          <p>
+            The selection process is quite important as the selected agents will
+            breed the entire next generation. First of all, we selected a low
+            selection percentage. From 6 to 10% should yield good results.
+          </p>
+          <p>
+            Secondly, we introduced roulette-wheel selection. To understand what
+            it is, simply picture a wheel, where each part is bigger in
+            proportion of the agent's score. The best agents will have a bigger
+            section of the wheel, and thus a higher chance of being a parent.
+            This method ensures that the best parents will make more children,
+            thus spreading better genes to future generations.
+          </p>
+          <p>
+            We also chose to use elitism. This means the selected parents will
+            be passed to the next generation without any genes modification.
+            Because they are the best, they should have the chance to perform
+            again without restriction. This can help to create better
+            invidividuals faster and avoid losing potentially good genes.
+          </p>
 
-                <p>
-                    The agent is the snake, and uses multiple inputs to make its decision.
-                </p>
-                <img src="/docs/snake_lines_of_sight_4zones.png" alt="snake inputs">
-                <p>
-                    It
-                </p>
-            </div>
+          <h3>Breeding (crossover)</h3>
+          <p>
+            To breed a new population you basically breed an offspring by mating
+            two parents together. This called a gendered breeding, and it's what
+            we decided to use. Note that other types of breeding exist
+            (non-gendered breeding for example).
+          </p>
+
+          <p>
+            More specifically, the breeding process makes use of crossover. This
+            is the process of mixing part of parent A's genes with parent B's
+            genes to create the offspring. By doing that randomly you ensure
+            your offspring is king of unique and will, by chance, keep the good
+            genes of its parents.
+          </p>
+
+          <p>
+            There are multiple ways of doing crossover. We chose to implement
+            two types:
+          </p>
+
+          <ul>
+            <li>
+              • Line/Row: A (or multiple) line(s) (or row(s)) are randomly
+              selected from parent A to be swapped with parent B's genes.
+            </li>
+            <li>
+              • Patch: A randomly sized and placed patch is selected from parent
+              A to be swapped with parent B's genes.
+            </li>
+          </ul>
+
+          <h3>Mutation</h3>
+          <p>
+            If we were to only select and breed offspring the way we described
+            above, our population would not really evolve because the genes in itself
+            would not evolve, they would just get mixed infinitely.
+          </p>
+
+          <p>
+            That's were mutation comes into play! By adding a small chance for a gene 
+            to randomly mutate, we make it possible for genes to evolve. In practice, after
+            the crossover, each genes will have a chance to mutate by a small amount. 
+          </p>
+          <p>
+            In our case, that mutation probability is fixed at 1% by default. It must be 
+            kept relatively low, otherwise, the genetic patrimony would be destroyed by 
+            random mutation at each breeding and the selection process would be useless.
+          </p>
+
+          <h3>Wrapping up</h3>
+          <p>
+            By doing the three steps described above, you should have a descent genetic algorithm
+            capable of mimicking what's happening in nature. If your selection is right
+            you should see your agents converge to a descent result. The convergence can be very long
+            depending on the complexity of your task but also on your population size.
+          </p>
+          <p>
+            By allowing a bigger population, you have more chance to encounter good genes for you task.
+            The downside is that it requires more processing power.
+          </p>
+
         </div>
+      </div>
     </div>
-</body>
-
+  </body>
 </html>
