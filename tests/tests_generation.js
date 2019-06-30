@@ -63,6 +63,53 @@ console.assert(test_gaussianLimit(
   27.152280393]
 ), { error: "[Limit tests]" });
 
+console.log(">>> Test sigmoid");
+// X test
+console.assert(test_sigmoid(
+  [
+    [0, 1, 1],
+    [1, 1, 1],
+    [10, 1, 1],
+    [0.1, 1, 1],
+    [0.7, 1, 1]
+  ],
+  [0.000552779,
+  0.999447221,
+  1,
+  0.002472623,
+  0.952574127]
+), { error: "[X tests]" });
+// limitX test
+console.assert(test_sigmoid(
+  [
+    [5, 1, 1],
+    [5, 5, 1],
+    [5, 30, 1],
+    [5, 0.1, 1],
+    [5, 120, 1]
+  ],
+  [1,
+  0.999447221,
+  0.006692851,
+  1,
+  0.001032231]
+), { error: "[limitX tests]" });
+// limitY test
+console.assert(test_sigmoid(
+  [
+    [5, 30, 1],
+    [5, 30, 10],
+    [5, 30, 100],
+    [5, 30, 0.01],
+    [5, 30, -5]
+  ],
+  [0.006692851,
+  0.066928509,
+  0.669285092,
+  0.000066929,
+  -0.033464255]
+), { error: "[limitY tests]" });
+
 console.log(">>> Test matrixMutation");
 
 console.assert(
@@ -499,6 +546,29 @@ function test_gaussianLimit(parameters, results) {
     
     var value = Math.round(generation.gaussianLimit(
       parameters[i]) * 1000000000) / 1000000000
+
+    //console.log(value);
+
+    if(results[i] != value ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/* SIGMOID TEST */
+function test_sigmoid(parameters, results) {
+  
+  // Object creation
+  var generation = new Generation(0, 10, 5, 10, [1, 0.2]);
+
+  for(var i = 0; i < parameters.length; i++) {
+    
+    var value = Math.round(generation.sigmoid(
+      parameters[i][0],
+      parameters[i][1],
+      parameters[i][2]) * 1000000000) / 1000000000
 
     //console.log(value);
 

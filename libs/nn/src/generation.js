@@ -260,6 +260,21 @@ class Generation {
   }
 
   /**
+   * Compute the sigmoid value. The function is extened (Yaxis) by the factor
+   * limitY and dilated (Xaxis) by the value limitX
+   * @param  x      value of the input
+   * @param  limitX Extention factor
+   * @param  limitY Dilation factor
+   */
+  sigmoid(x, limitX, limitY) {
+    var factor = 30; // Factor that is used to increase the angle of the sigmoid
+    
+    var X = (x - limitX / 2) * factor / (limitX * 2);
+    
+    return limitY / (1 + Math.exp(-X));
+  }
+
+  /**
    * Return an array of selected agents from the list
    * @param   agents  Array of agents that we have to divide
    * @returns Agents selected
