@@ -11,21 +11,20 @@ class NeuralNetwork {
     this.hidden_nodes = hidden_nodes;
     this.output_nodes = output_nodes;
     // Load weights from file
-    if(weights != null){
-      this.input_weights = tf.tensor(weights['input_weights']);
-      this.output_weights = tf.tensor(weights['output_weights']);
+    if (weights != null) {
+      this.input_weights = tf.tensor(weights["input_weights"]);
+      this.output_weights = tf.tensor(weights["output_weights"]);
+    } else {
+      // Initialize random weights
+      this.input_weights = tf.randomNormal([
+        this.input_nodes,
+        this.hidden_nodes
+      ]);
+      this.output_weights = tf.randomNormal([
+        this.hidden_nodes,
+        this.output_nodes
+      ]);
     }
-    else{
-    // Initialize random weights
-    this.input_weights = tf.randomNormal([this.input_nodes, this.hidden_nodes]);
-    this.output_weights = tf.randomNormal([
-      this.hidden_nodes,
-      this.output_nodes
-    ]);
-
-    // Initialize the threshold vectors
-    this.input_threshold = new Array(input_nodes).fill(0);
-    this.hidden_threshold = new Array(hidden_nodes).fill(0);
   }
 
   /**
