@@ -14,22 +14,43 @@
 1. Introduction
     - Origin of the project
     - What's the goal
+      - Learn the principle of MGNN
+      - Training tool
 2. Introduce GA
     - Concept
     - Selection
     - Breeding / Crossover
     - Mutation
-3. Designing the agent
+3. Computation
     - Neural net (inputs, hidden layers, outputs)
-4. Judging fitness intelligently
-    - Judging only the score
-    - Adding death
-    - Adding distance score
-5. Conclusion
+    - Selection
+    - Breeding / Crossover
+    - Mutation
+    - Judging fitness intelligently
+      - Judging only the score
+      - Adding death
+      - Adding distance score
+4. Conclusion
     - Hard to achieve good result but super fun
+      - Genetic patrimony destruction
+      - Parameters influence on the results
     - Evolution comming back (see weightless NN paper)
 
 ### Redacted
+
+#### Breeding/Crossover
+
+In Genetic Algorithm, you don't necesseraly use breeding to produce new offspring. In our case, we decided to use a gendered breeding to mimic what we can't see in nature. More precisely, we are using a technique called **crossover**. The idea is to take part of parent A and part of parent B to create one or more offspring. The 'genes' we are taking from the parents are the neural network's weights. Because we are dealing with a 2D matrix of weights, be can implement the crossover in many ways. We chose to implement two techniques:
+
+![example of line crossover](../line_crossover.png)
+
+![example of patch crossover](../patch_crossover.png)
+
+1. Line crossover: One or more line in the parentB matrix is chosen and will replace the ones of parentA to create the offspring. The number of lines and their place in the matrix can et must be random.
+2. Patch crossover: A 'patch' or a small 2D matrix is chosen from parentB to replace the corresponding part in parentA. The size and the placement of the patch are random. You can limit the size of the patch otherwise it can be as big as the weights matrix itself, basically using only the genes of one parent.
+
+Now that we know how it works, we understand the importance of this method to mix genes. Without that, we would rely only on random mutaion to evolve, and it could be a really long and tedious process, that would eventually never converge. By mixing the best parent's weights, we try to create offspring that have all the qualities of their parents. Obviously it also means that some of them will actually get the 'bad weights' and will probably perfome really poorly. This is not a problem, as they will eventually die and not reproduce.
+
 
 #### Goal
 
