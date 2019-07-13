@@ -34,13 +34,33 @@
     - Hard to achieve good result but super fun
       - Genetic patrimony destruction
       - Parameters influence on the results
-    - Evolution comming back (see weightless NN paper)
+    - Evolution coming back (see weightless NN paper)
 
 ### Redacted
 
+#### Selection
+
+When you're trying to evolve a population, you have to select part of it to create the next one. In our world, natural selection occurs when people die. It could be of old age, a disease, an accident, etc.. In the case of our snake game, there's no real death, at least in the way we implemented it. Will artificially select the best individuals to breed the next generation. Usually, you want a very selective process where you get a low percentage of the present generation. This is to ensure that you'll pass only the best genes, and that your snakes will converge fast enough. In our case, we always stay below 10% of the population, and that is already quite high. This is a good starting point, but we can do better.
+
+##### Let's play roulette
+
+In order to be a bit more fair, we'll give a proportional chance of reproduction based on the fitness. This can be seen as a roulette, where each agent as a part of it, proportional to its score. This means that the higher the score, the higher the chance of reproduction. Please note that we are talking of **chance** of reproduction. This is not for sure, because we are still using randomness, but biased with the scores.
+
+![roulette selection example](../roulette_selection.png)
+
+##### Elitism FTW
+
+To make the convergence even faster we can be elitist with our agents, meaning we'll keep the best agents untouched for the next generation. This means that we ensure the top performing agents we'll have a chance to shine again. It's possible to limit the elitism, by selecting only few agents in the already selected agents. In our case, all the selected agents are considered the elite, and thus passed to the next generation unchanged. When we say untouched we mean that no mutation is occurring. Mutation only happens when there's a breeding, it's a inherent part of the reproduction process.
+
+##### Sprinkle some randomness on top
+
+One last thing that could be done to improve the selection process is to add randomness. In real life, some individual are not particularly good but get lucky and survive long enough to breed. In the case of our game, this could be seen as an agent not performing really well, but getting luckily selected to breed. But, why would you select a not well performing agent? It doesn't make sense! Well... it's possible that this agent as some interesting weights in its genes but they are hidden because of some other bad weights. By allowing him to breed, it might give its potentially good weights to its children, which might lead to a good performing agent.
+
+All of that is really interesting, but we still don't know how we get the agent's scores! Don't worry, we'll see that soon.
+
 #### Breeding/Crossover
 
-In Genetic Algorithm, you don't necesseraly use breeding to produce new offspring. In our case, we decided to use a gendered breeding to mimic what we can't see in nature. More precisely, we are using a technique called **crossover**. The idea is to take part of parent A and part of parent B to create one or more offspring. The 'genes' we are taking from the parents are the neural network's weights. Because we are dealing with a 2D matrix of weights, be can implement the crossover in many ways. We chose to implement two techniques:
+In Genetic Algorithm, you don't necessarily use breeding to produce new offspring. In our case, we decided to use a gendered breeding to mimic what we can't see in nature. More precisely, we are using a technique called **crossover**. The idea is to take part of parent A and part of parent B to create one or more offspring. The 'genes' we are taking from the parents are the neural network's weights. Because we are dealing with a 2D matrix of weights, be can implement the crossover in many ways. We chose to implement two techniques:
 
 ![example of line crossover](../line_crossover.png)
 
@@ -49,18 +69,21 @@ In Genetic Algorithm, you don't necesseraly use breeding to produce new offsprin
 1. Line crossover: One or more line in the parentB matrix is chosen and will replace the ones of parentA to create the offspring. The number of lines and their place in the matrix can et must be random.
 2. Patch crossover: A 'patch' or a small 2D matrix is chosen from parentB to replace the corresponding part in parentA. The size and the placement of the patch are random. You can limit the size of the patch otherwise it can be as big as the weights matrix itself, basically using only the genes of one parent.
 
-Now that we know how it works, we understand the importance of this method to mix genes. Without that, we would rely only on random mutaion to evolve, and it could be a really long and tedious process, that would eventually never converge. By mixing the best parent's weights, we try to create offspring that have all the qualities of their parents. Obviously it also means that some of them will actually get the 'bad weights' and will probably perfome really poorly. This is not a problem, as they will eventually die and not reproduce.
+Now that we know how it works, we understand the importance of this method to mix genes. Without that, we would rely only on random mutation to evolve, and it could be a really long and tedious process, that would eventually never converge. By mixing the best parent's weights, we try to create offspring that have all the qualities of their parents. Obviously it also means that some of them will actually get the 'bad weights' and will probably perform really poorly. This is not a problem, as they will eventually die and not reproduce.
 
+---
+
+**BELOW IS NOT WHAT I WAS SUPPOSE TO REDACT, JUST SOME THOUGHTS AND OBSERVATION**
 
 #### Goal
 
-Our goal was to use genetic algorithm (selection, breedind and mutation) to evolve an agent's neural network to play snake.
+Our goal was to use genetic algorithm (selection, breeding and mutation) to evolve an agent's neural network to play snake.
 
 #### Inputs / outputs
 
 When you want an agent to play a human game, you have to think about what vision of the game your agent will have. Us human, see the entire grid of the game at once, with the position of our snake and the food. That could be a way for our agent to see the world, each cell of the grid or even every pixel could be an input.
 
-In our case, we chose the second opton, which is to take the snake's perspective. This case is closer to what a robot would see. We wanted to give it a more realistic view and that's why we went with a combination of "lines of sight", "cones of sight" and a sens for fruit presence. That gives us a total of 11 inputs (3 lines of sight, 4 cones of sight, 4 cones of fruit presence).
+In our case, we chose the second option, which is to take the snake's perspective. This case is closer to what a robot would see. We wanted to give it a more realistic view and that's why we went with a combination of "lines of sight", "cones of sight" and a sens for fruit presence. That gives us a total of 11 inputs (3 lines of sight, 4 cones of sight, 4 cones of fruit presence).
 
 Let us explain you what they are precisely.
 
@@ -70,9 +93,9 @@ From the snake's head, 3 "beam" will travel to its left, its right and forward, 
 
 ##### Cones of sight / Fruit presence
 
-To give our agent a more "realistic view", we wanted to add some kind of "continous" vision of the world. We added what we call "cones of sight" which are basically 4 cones. The inputs are simply the area of each cones.
+To give our agent a more "realistic view", we wanted to add some kind of "continuous" vision of the world. We added what we call "cones of sight" which are basically 4 cones. The inputs are simply the area of each cones.
 
-On the same principle, 4 more inputs will have the fruit presence in the 4 previously defined cones. By having 4 separate inputs for the fruit presence we give the agent the ability to prioritze what is important for him. The cones of sight could be used to determine the best path (where there are more space to move) while the fruit presence input give the agent a general direction towards the goal.
+On the same principle, 4 more inputs will have the fruit presence in the 4 previously defined cones. By having 4 separate inputs for the fruit presence we give the agent the ability to prioritize what is important for him. The cones of sight could be used to determine the best path (where there are more space to move) while the fruit presence input give the agent a general direction towards the goal.
 
 ##### Outputs
 
@@ -82,13 +105,13 @@ The outputs are pretty straight forward, again we use the snake's perspective. T
 
 First of all, we tried for a long time to judge the snakes only at the end of their game. We would evaluate their score and the time they stay alive. The problem is that it's like trying to monitor the progress of someone with the eyes banded during their training.. It's not very effective, and that's quickly showing up in the snakes' behavior. They eventually start to go in circle forever. That assure them to stay alive. Because we also monitor the score, they will eventually start by eating a few fruits, but will go back to circles. 
 
-To solve that, we need a way to monitor them continuously. We will still not interfer while they are playing, but we'll evaluate each of their move. At each step, we calculate the euclidean distance between the head and the fruit. If the snake moves away it looses distance points, and the opposite happens if it moves towards the fruit. By doing that, we no longer judge the snake only at the end, we have a vision of its bevahiour through the whole training. It makes it easier to select snakes that tend to go towards the fruit.
+To solve that, we need a way to monitor them continuously. We will still not interfere while they are playing, but we'll evaluate each of their move. At each step, we calculate the euclidean distance between the head and the fruit. If the snake moves away it looses distance points, and the opposite happens if it moves towards the fruit. By doing that, we no longer judge the snake only at the end, we have a vision of its behavior through the whole training. It makes it easier to select snakes that tend to go towards the fruit.
 
 In general in reinforcement learning, how you choose to evaluate your agent is key. Keep in mind that your agents will evolve to be better at what you evaluate them.
 
-### General obervations
+### General observations
 
 - **Population size** is quite important. A bigger population will converge faster. This is because we have more chance of finding good genes.
 - Parameters such as **grid size** and **tickout** can be limiting factors. At first, you don't want a tickout too big because most snakes will probably die or go in circle. As generation pass, agents are better and a bigger tickout allow them to grow longer by eating more fruit. If you see your agents being stuck on a maximum score for a few generations, save the weights, make the tickout bigger and reload the weights. That way, your agents will have more time and will thus continue to evolve and grow.
 - **Selection rate** is important and keeping low generally result in better individuals faster. That is because by having a strict selection, you only keep the best of the available genes. Also, because selection is elitist, the best agents will go to the next generation unchanged, having the possibility to shine again.
-- Playing with score factor can lead to interesting behaviour. Take the **tickcount** factor for example. If pushed to high compared to the score and the distance score, agents will be rewarded more if they stay alive, no matter if they eat fruits or not. Because of that, they'll tend to go in circle. On the opposite side, if the *distance factor* is too high, agents are rewarded by moving towards the fruit. No matter if they eat the fruit or not, they are better just moving towards it. They'll basically move in straight lines towards the fruit and die. Finding the balance between these 3 factors is hard. One could think about a way to choose these algorithmically... with genetic evolution for example... ;)
+- Playing with score factor can lead to interesting behavior. Take the **tickcount** factor for example. If pushed to high compared to the score and the distance score, agents will be rewarded more if they stay alive, no matter if they eat fruits or not. Because of that, they'll tend to go in circle. On the opposite side, if the *distance factor* is too high, agents are rewarded by moving towards the fruit. No matter if they eat the fruit or not, they are better just moving towards it. They'll basically move in straight lines towards the fruit and die. Finding the balance between these 3 factors is hard. One could think about a way to choose these algorithmically... with genetic evolution for example... ;)
